@@ -1,0 +1,35 @@
+@import "../assets/webfonts/sahel/sahel.css";
+@import "../assets/webfonts/vazirmatn/vazirmatn.css";
+@import "../assets/webfonts/tanha/tanha.css";
+@import "../assets/webfonts/fontawesome-pro.min.css";
+:root {
+    --font: 'VazirMatn', sans-serif;
+    --font-alt: 'Sahel', sans-serif;
+    --font-azmoon: 'TanhaAzmoon', sans-serif;
+    --font-monospace: 'Fira Code', monospace;
+    --font-size: 14px;
+}
+
+
+* {
+    font-family: var(--font);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6{
+    font-family: var(--font-alt);
+}
+
+h1, h2, h3,
+.h1, .h2, .h3 {
+    font-weight: 600 !important;;
+}
+
+h4, h5, h6,
+.h4, .h5, .h6 {
+    font-weight: 400 !important;;
+}
+
+.is-font-azmoon {
+    font-family: --font-azmoon;
+}

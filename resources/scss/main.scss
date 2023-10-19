@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+SCSS Imports
+========================================================================== */
+@import 'bootstrap/dist/css/bootstrap.css';
+@import 'vue3-toastify/dist/index.css';
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light-border';
+@import 'vue-advanced-cropper/dist/style.css';
+@import 'vue3-colorpicker/style.css';
+@import 'vue3-carousel/dist/carousel.css';
+@import "@egjs/vue3-flicking/dist/flicking.css";
+
+@import '../css/theme.css';
+@import '../css/app.css';
+@import './fonts';

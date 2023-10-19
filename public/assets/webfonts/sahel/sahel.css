@@ -1,0 +1,39 @@
+@font-face {
+    font-family: Sahel;
+    src: url('./Sahel-FD.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Sahel;
+    src: url('./Sahel-Bold-FD.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Sahel;
+    src: url('./Sahel-Black-FD.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Sahel;
+    src: url('./Sahel-SemiBold-FD.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: Sahel;
+    src: url('./Sahel-Light-FD.woff2') format('woff2');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}

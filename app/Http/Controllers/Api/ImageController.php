@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjectImageResource;
+use App\Http\Resources\ProjectResource;
+use App\Models\Image;
+use App\Models\Project;
+use Illuminate\Http\Request;
+
+class ImageController extends Controller
+{
+    public function renameAlt(Request $request)
+    {
+        $response = [
+            'status' => false,
+            'message' => 'بروز خطا هنگام ویرایش عنوان/وضعیت تصویر',
+            'result' => null
+        ];
+
+        try {
+            $image = Image::whereId($request->image)->first();
+            if ($image) {
+                $image->update([
+                    'alt' => $request->alt,
+                    'type' => $request->type
+                ]);
+                if ($image->imageable_type === 'App\Models\Project') {
+                    $project = Project::whereId($image->imageable_id)->first();
+                    $response['result'] = [
+                        'covers' => count($project->covers) > 0 ? ProjectImageResource::collection($project->covers) : [['id' => -1, 'filename' => asset('assets/images/png/no-image.png')]],
+                        'images' => ProjectImageResource::collection($project->images),
+                    ];
+                }
+
+                $response['status'] = true;
+                $response['message'] = 'ویرایش عنوان/وضعیت تصویر مورد نظر با موفقیت انجام شد';
+            } else {
+                $response['status'] = false;
+                $response['message'] = 'تصویر مورد نظر یافت نشد';
+            }
+        } catch (\Exception $e) {
+            $response['message'] = $e->getMessage();
+
+            return response()->json($response, 500);
+        }
+
+        return response()->json($response, 200);
+    }
+
+    public function deleteImage(Request $request)
+    {
+        $response = [
+            'status' => false,
+            'message' => 'بروز خطا هنگام حذف تصویر',
+            'result' => null
+        ];
+
+        try {
+            $image = Image::whereId($request->image)->first();
+
+            if ($image) {
+                if ($image->imageable_type === 'App\Models\Project') {
+                    $project = Project::whereId($image->imageable_id)->first();
+                    $response['result'] = [
+                        'covers' => count($project->covers) > 0 ? ProjectImageResource::collection($project->covers) : [['id' => -1, 'filename' => asset('assets/images/png/no-image.png')]],
+                        'images' => ProjectImageResource::collection($project->images),
+                    ];
+                }
+                $image->delete();
+                $response['status'] = true;
+                $response['message'] = 'تصویر مورد نظر با موفقیت حذف شد';
+            } else {
+                $response['status'] = false;
+                $response['message'] = 'تصویر مورد نظر یافت نشد';
+            }
+        } catch (\Exception $e) {
+            $response['message'] = $e->getMessage();
+
+            return response()->json($response, 500);
+        }
+
+        return response()->json($response, 200);
+    }
+}

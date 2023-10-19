@@ -1,0 +1,10 @@
+@font-face {
+    font-family: TanhaAzmoon;
+    src: url('./Tanha.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+}
+
+.tanha {
+    font-family: Tanha !important;
+}
