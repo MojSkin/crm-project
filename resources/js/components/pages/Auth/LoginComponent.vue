@@ -137,7 +137,7 @@ export default {
             loading: false,
             action: 'login',
             responseErrors: {},
-            defaultRedirect: '/admin',
+            defaultRedirect: (import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX && import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX.length) ? '/'+import.meta.env.VITE_ADMIN_ROUTE_PREFIX : '/',
         }
     },
     validations () {
