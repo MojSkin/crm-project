@@ -2,7 +2,7 @@ git init
 git add README.md
 git commit -m "first commit"
 git branch -M main
-git remote add origin https://mojskin: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@github.com/MojSkin/afzar-kimia.git
-git remote set-url origin https://mojskin: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@github.com/MojSkin/afzar-kimia.git
+git remote add origin https://mojskin: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@github.com/MojSkin/crm-project.git
+git remote set-url origin https://mojskin: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@github.com/MojSkin/crm-project.git
 git push --set-upstream origin main
 git pull --set-upstream origin main
