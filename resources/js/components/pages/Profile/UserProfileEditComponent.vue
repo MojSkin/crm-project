@@ -520,19 +520,17 @@
                         <div class="form-foot stuck-header">
                             <div class="form-head-inner">
                                 <div class="left">
-                                    <span class="light-text">جهت اعمال هرگونه تغییر انجام شده، دکمه</span>
-                                    <span class="has-text-success mx-2 is-weight-700">ذخیره تغییرات</span>
-                                    <span class="light-text">را کلیک کنید</span>
+                                    <span class="light-text">جهت اعمال هرگونه تغییر انجام شده، دکمه </span>
+                                    <span class="has-text-success mx-1 is-weight-700">ذخیره تغییرات</span>
+                                    <span class="light-text"> را کلیک کنید</span>
                                 </div>
                                 <div class="right">
                                     <div class="buttons">
-<!--                                        <RouterLink :to="{ name: 'admin.profile' }" class="button h-button is-light is-dark-outlined">-->
-<!--                                            <span class="icon">-->
-<!--                                                <i class="fa fa-chevron-right"></i>-->
-<!--                                            </span>-->
-<!--                                            <span>بازگشت</span>-->
-<!--                                        </RouterLink>-->
-                                        <button class="button h-button is-success is-raised" @click="saveData">ذخیره تغییرات</button>
+                                        <button class="button h-button is-success is-raised" @click="saveData" :disabled="loading">
+                                            <i class="fal fa-save" v-if="!loading"></i>
+                                            <i class="fal fa-spinner-third fa-spin" v-else></i>
+                                            <span class="ml-2">ذخیره تغییرات</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -887,7 +885,6 @@ export default {
                 if (this.validator.userProfile.$invalid) {
                     return
                 }
-                this.loading = true
                 form['avatar'] = this.userProfile.avatar || -1
                 form['fName'] = this.userProfile.fName
                 form['lName'] = this.userProfile.lName
@@ -906,6 +903,7 @@ export default {
                 form['detail'] = this.userProfile[key]
                 form['key'] = key
             }
+            this.loading = true
             Requests.updateProfile(form).then(res => {
                 if (res?.status) {
                     this.$helpers.notify(res?.message || 'تغییرات مورد نظر اعمال شد')
@@ -937,12 +935,12 @@ export default {
             }).catch(err => {
 
             }).finally(res => {
-                this.loading = false
                 this.validator.$reset()
                 this.$helpers.toDataURL(this.userProfile.avatar, res => {
                     this.userProfile.avatar = res
                 })
                 this.userProfile.avatar = res?.avatar || this.userProfile.avatar
+                this.loading = false
             })
         },
         addUserDetail() {
@@ -973,8 +971,11 @@ export default {
             for (const key in this.userProfile) {
                 this.userProfile[key] = profile[key] || this.userProfile[key]
             }
+            if (this.userProfile?.avatar && this.userProfile?.avatar.includes('placeholder')) {
+                delete(this.userProfile.avatar)
+            }
             if (this.userProfile?.avatar) {
-                this.$helpers.toDataURL(this.base_url+'/storage/uploads/user_avatars/'+this.userProfile?.avatar, res => {
+                this.$helpers.toDataURL(this.userProfile?.avatar, res => {
                     this.avatar = res
                     this.userProfile.avatar = res
                 })
