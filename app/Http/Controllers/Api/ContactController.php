@@ -174,7 +174,7 @@ class ContactController extends Controller
 
     public function getSingleContact(Request $request)
     {
-        $contact = Contact::whereId($request->id)->tags()->first();
+        $contact = Contact::whereId($request->id)->with('tags')->first();
         $response = [
             'status' => false,
             'message' => 'مخاطب مورد نظر یافت نشد!',

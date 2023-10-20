@@ -283,7 +283,7 @@
                 </div>
             </div>
             <hr>
-            <div class="columns is-multiline is-flex is-vcentered" v-for="(info, key) in additional_infos" :key="'additionalInfo-'+index">
+            <div class="columns is-multiline is-vcentered" v-for="(info, key) in additional_infos" :key="'additionalInfo-'+index">
                 <h3 class="column is-12 is-flex is-align-items-center">
                     <b-dropdown @change="chooseAdditional(key, $event)" key="key" :options="info.options || []" no-caret no-border>
                         <template #placeholder>
@@ -295,7 +295,7 @@
                     <span class="ml-2" v-text="info.title"/>
                 </h3>
                 <div class="column is-12 m-0 p-0 pl-6" v-for="(additional_info, subKey) in form.additional_infos">
-                    <div class="columns is-multiline" v-if="additional_info.section == key">
+                    <div class="columns is-multiline is-flex" v-if="additional_info.section == key">
                         <div class="column is-6-mobile is-6-tablet is-4-desktop is-4-widescreen" v-if="additional_info.is_other">
                             <b-input
                                 label='عنوان:'
