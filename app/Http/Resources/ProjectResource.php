@@ -23,7 +23,7 @@ class ProjectResource extends JsonResource
             'contacts' => ProjectContactResource::collection($this->contacts),
             'covers' => count($this->covers) > 0 ? ProjectImageResource::collection($this->covers) : [['id' => -1, 'filename' => asset('assets/images/png/no-image.png')]],
             'images' => ProjectImageResource::collection($this->images),
-            'files' => ProjectImageResource::collection($this->files),
+            'files' => ProjectFileResource::collection($this->files),
             'comments' => CommentResource::collection($this->comments),
             'notes' => ProjectNoteResource::collection($this->notes),
             'last_note' => new ProjectNoteResource($this->notes->last()),

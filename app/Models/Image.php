@@ -49,4 +49,9 @@ class Image extends _BaseModel
         }
         return $result;
     }
+
+    public function u()
+    {
+        return $this->belongsTo(User::class, 'user')->with('details');
+    }
 }

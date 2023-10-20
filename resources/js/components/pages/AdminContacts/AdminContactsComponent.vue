@@ -322,7 +322,6 @@
                                         input-class="is-ltr has-text-left input"
                                         :key="additional_info.section+key"
                                     ></date-picker>
-                                    {{ form.additional_infos[subKey].value }}
                                 </template>
                             </b-input>
                         </div>

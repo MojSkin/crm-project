@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjectFileResource;
 use App\Http\Resources\ProjectImageResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Image;
@@ -15,7 +16,7 @@ class ImageController extends Controller
     {
         $response = [
             'status' => false,
-            'message' => 'بروز خطا هنگام ویرایش عنوان/وضعیت تصویر',
+            'message' => 'بروز خطا هنگام ویرایش عنوان/وضعیت',
             'result' => null
         ];
 
@@ -24,21 +25,22 @@ class ImageController extends Controller
             if ($image) {
                 $image->update([
                     'alt' => $request->alt,
-                    'type' => $request->type
+                    'type' => $request->type ?? $image->type ?? 'IMAGE'
                 ]);
                 if ($image->imageable_type === 'App\Models\Project') {
                     $project = Project::whereId($image->imageable_id)->first();
                     $response['result'] = [
                         'covers' => count($project->covers) > 0 ? ProjectImageResource::collection($project->covers) : [['id' => -1, 'filename' => asset('assets/images/png/no-image.png')]],
                         'images' => ProjectImageResource::collection($project->images),
+                        'files'  => ProjectFileResource::collection($project->files),
                     ];
                 }
 
                 $response['status'] = true;
-                $response['message'] = 'ویرایش عنوان/وضعیت تصویر مورد نظر با موفقیت انجام شد';
+                $response['message'] = 'ویرایش عنوان/وضعیت با موفقیت انجام شد';
             } else {
                 $response['status'] = false;
-                $response['message'] = 'تصویر مورد نظر یافت نشد';
+                $response['message'] = 'آیتم مورد نظر یافت نشد';
             }
         } catch (\Exception $e) {
             $response['message'] = $e->getMessage();

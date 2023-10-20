@@ -399,6 +399,16 @@ export default {
         return res?.data
     },
 
+    async addProjectAttachment(form, _callback = null) {
+        let headers = this.tokenHeader()
+        headers['Content-Type'] = 'multipart/form-data'
+        if (_callback) {
+            headers['onUploadProgress'] = _callback
+        }
+        const res = await axios.post(route('api.projects.addProjectAttachment'), form, headers)
+        return res?.data
+    },
+
     async renameAlt(form) {
         const res = await axios.post(route('api.images.renameAlt'), this.makeFormData(form), this.tokenHeader())
         return res?.data

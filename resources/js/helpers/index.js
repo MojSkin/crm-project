@@ -14,22 +14,16 @@ export default {
     humanReadableFileSize(size) {
         let result = ''
         size = parseInt(size)
+        const units = ['بایت', 'کیلوبایت', 'مگابایت', 'گیگابایت', 'ترابایت']
         if (typeof size=='number' && !isNaN(size)) {
-            if (size<1024) {
-                result = (size).toFixed(2)
-                result = result == parseInt(result) ? parseInt(result) : result
-                result += ' کیلوبایت'
-            } else if (size>=1024 && size<=819200) {
-                result = (size/1024).toFixed(2)
-                result = result == parseInt(result) ? parseInt(result) : result
-                result += ' مگابایت'
-            } else {
-                result = (size/1048576).toFixed(2)
-                result = result == parseInt(result) ? parseInt(result) : result
-                result += ' گیگابایت'
+            let u = 0
+            for (let i = 0; size >= 1024 && i < units.length; i++) {
+                size = (size/1024)
+                u = i
             }
+            result = size.toFixed(2)+' '+units[u]
         } else {
-            result ='ورودی نامعتبر'
+            result ='صفر بایت'
         }
         return result
     },

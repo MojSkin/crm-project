@@ -520,10 +520,10 @@
                                 <div class="column is-12 pb-2">
                                     <b-dropzone v-model="files" @dropped="fileDropped" :is-busy="saving" accept="image/jpeg, image/png" />
                                     <span class="small pl-3">
-                                    <span>فقط تصاویر با پسوند</span>
-                                    <span class="mx-2 has-text-primary">jpg / jpeg / png</span>
-                                    <span>مورد تایید است.</span>
-                                </span>
+                                        <span>فقط تصاویر با پسوند</span>
+                                        <span class="mx-2 has-text-primary">jpg / jpeg / png</span>
+                                        <span>مورد تایید است.</span>
+                                    </span>
                                 </div>
                                 <div class="column is-12 pt-0">
                                     <progress class="progress is-success is-tiny" :value="uploadProgress" max="100" v-if="saving"/>
@@ -556,7 +556,7 @@
                                 </div>
                                 <div class="column is-6-mobile is-4-tablet is-3-desktop is-2-widescreen is-flex align-items-center flex-wrap image-thumb-wrapper" v-for="(image, imageIndex) in form?.images">
                                     <div class="image-thumb">
-                                        <button @click.stop="deleteImage(image.id)">
+                                        <button @click.stop="deleteImage(image.id, 1)">
                                             <i class="fal fa-trash-alt"></i>
                                         </button>
                                         <div class="image" :style="{ 'background-image': 'url('+image.filename+')' }" @click="previewImage(image)"></div>
@@ -566,10 +566,10 @@
                                         </div>
                                         <div class="field has-addons pb-1" :class="{ 'is-disabled': updatingAlts === image.id }">
                                             <div class="control is-expanded">
-                                                <input v-model="image.alt" class="input is-small" type="text" placeholder="عنوان تصویر" :disabled="updatingAlts === image.id" @keydown.enter="changeAlt(image)">
+                                                <input v-model="image.alt" class="input is-small" type="text" placeholder="عنوان تصویر" :disabled="updatingAlts === image.id" @keydown.enter="changeAlt(image, 1)">
                                             </div>
                                             <div class="control">
-                                                <a class="button is-light is-small is-clickable" v-if="updatingAlts != image.id" @click="changeAlt(image)">
+                                                <a class="button is-light is-small is-clickable" v-if="updatingAlts != image.id" @click="changeAlt(image, 1)">
                                                     <i class="fal fa-check has-text-success mx-1 is-clickable"></i>
                                                 </a>
                                                 <a class="button is-static is-small" v-else>
@@ -585,9 +585,9 @@
                     <template #files>
                         <div class="px-5">
                             <div class="columns is-multiline">
-                                <div class="column is-6 pb-2">
-                                    <div class="file is-boxed is-flex-direction-column">
-                                        <label class="file-label is-block">
+                                <div class="column is-12 pb-2">
+                                    <div class="file is-boxed is-align-items-center">
+                                        <label class="file-label is-block" v-if="attachment === null">
                                             <input class="file-input" type="file" @change="handleFileSelect" :multiple="false" accept=".zip, .rar, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3">
                                             <span class="file-cta">
                                                 <span class="file-icon">
@@ -596,21 +596,71 @@
                                                 <span class="file-label">انتخاب کنید...</span>
                                             </span>
                                         </label>
-                                        <span class="small is-block">
-                                            <span class="mr-2">فرمت‌های مورد قبول:</span><bdi>zip, rar, pdf, doc, docx, xls, xlsx, ppt, pptx, mp3</bdi>
-                                        </span>
+                                        <div class="is-inline-block" v-if="attachment != null">
+                                            <i class="fad fa-3x has-text-warning mx-3" :class="fileTypes[attachment.name.split('.').pop()] ?? 'unknown'"></i>
+                                        </div>
+                                        <div class="is-inline-block" v-if="attachment != null">
+                                            <div v-text="attachment.name"></div>
+                                            <span class="tag is-light" v-text="getFileSize(attachment.size)"/>
+                                        </div>
+                                        <button class="button is-danger is-light is-hoverable ml-2 is-clickable" @click="attachment = null" v-if="attachment != null" :disabled="updatingAlts !== null">
+                                            <i class="fal fa-times"></i>
+                                            <span class="ml-2">حذف</span>
+                                        </button>
+                                        <button class="button is-success is-light ml-2" @click="uploadSelectedFile" :disabled="updatingAlts !== null" v-if="attachment != null">
+                                            <i class="fal fa-upload" v-if="updatingAlts === null"></i>
+                                            <i class="fas fa-spinner-third fa-spin" v-else></i>
+                                            <span class="ml-2">افزودن پیوست</span>
+                                        </button>
+                                    </div>
+                                    <div class="column is-12 pt-0">
+                                        <span class="mr-2">فرمت‌های مورد قبول:</span><bdi>zip, rar, pdf, doc, docx, xls, xlsx, ppt, pptx, mp3</bdi>
+                                    </div>
+                                    <div class="column is-12 pt-0">
+                                        <progress class="progress is-success is-tiny w-100" :value="uploadProgress" max="100" v-if="updatingAlts !== null"/>
                                     </div>
                                 </div>
-                                <div class="column is-6 pb-2">
-                                    <button class="button is-info is-light">
-                                        <i class="fal fa-upload" v-if="!saving"></i>
-                                        <i class="fal fa-spinner-third fa-spin" v-else></i>
-                                        <span class="ml-2">افزودن فایل به پروژه</span>
-                                    </button>
-                                </div>
                             </div>
-                            <div class="columns is-multiline" v-for="file in form.files">
-                                <div class="column is-6 pb-2">
+                            <div class="columns is-multiline mt-6">
+                                <div class="column is-6-mobile is-4-tablet is-3-desktop is-2-widescreen is-flex align-items-center flex-wrap image-thumb-wrapper" v-for="(file, fileIndex) in form?.files">
+                                    <div class="image-thumb">
+                                        <button @click.stop="deleteImage(file.id, 2)">
+                                            <i class="fal fa-trash-alt"></i>
+                                        </button>
+                                        <div class="image pt-4 has-text-centered cursor-normal">
+                                            <i class="fad fa-6x" :class="fileTypes[file.ext]"></i>
+                                        </div>
+                                        <div class="image-type w-100 is-flex mb-2">
+                                            <span class="mx-auto tag has-text-centered is-info">{{ getFileSize(file.size) }}</span>
+                                            <span class="mx-auto tag has-text-centered is-primary is-clickable" @click="downloadImage(file)">
+                                                <i class="fal fa-download"></i>
+                                                <span class="ml-2">دریافت</span>
+                                            </span>
+                                        </div>
+                                        <div class="image-type w-100 mb-2">
+                                            <div class="is-flex is-align-items-center">
+                                                <i class="fal fa-user-circle mr-1 has-text-info-dark"></i>
+                                                <span class="small" v-text="file.user.display_name ?? 'نامشخص'"/>
+                                            </div>
+                                            <div class="is-flex is-align-items-center">
+                                                <i class="fal fa-calendar mr-1 has-text-info-dark"></i>
+                                                <span class="small" v-text="$helpers.jDate(file.created_at)"/>
+                                            </div>
+                                        </div>
+                                        <div class="field has-addons pb-1" :class="{ 'is-disabled': updatingAlts === file.id }">
+                                            <div class="control is-expanded">
+                                                <input v-model="file.alt" class="input is-small" type="text" placeholder="عنوان فایل" :disabled="updatingAlts === file.id" @keydown.enter="changeAlt(file, 2)">
+                                            </div>
+                                            <div class="control">
+                                                <a class="button is-light is-small is-clickable" v-if="updatingAlts != file.id" @click="changeAlt(file, 2)">
+                                                    <i class="fal fa-check has-text-success mx-1 is-clickable"></i>
+                                                </a>
+                                                <a class="button is-static is-small" v-else>
+                                                    <i class="fal fa-spinner-third fa-spin mx-1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -634,11 +684,11 @@
     >
         <b-card no-header class="no-margin no-padding" body-class="no-padding no-margin">
             <div class="w-100 p-5 has-text-centered" style="">
-                <img :src="imageToPreview.filename" :alt="imageToPreview.alt" class="is-rounded rounded-3 mb-3">
+                <img :src="imageToPreview?.filename" :alt="imageToPreview?.alt" class="is-rounded rounded-3 mb-3">
                 <span v-text="imageToPreview.alt"/>
             </div>
             <template #footer-left>
-                <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="دانلود تصویر"><i @click="downloadImage()" class="fas fa-download has-text-success"></i></span>
+                <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="دانلود تصویر"><i @click="downloadImage(imageToPreview)" class="fas fa-download has-text-success"></i></span>
                 <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="بستن پنجره"><i @click="imageToPreview: null; $refs.previewImage.modalClose()" class="fas fa-times has-text-grey-light"></i></span>
             </template>
         </b-card>
@@ -704,17 +754,19 @@ export default {
             default_result: null,
             uploadProgress: 0,
             files: [],
+            attachment: null,
             fileTypes: {
-                zip:  'fa-file-archive',
-                rar:  'fa-file-archive',
-                doc:  'fa-file-word',
-                docx: 'fa-file-word',
-                xls:  'fa-file-excel',
-                xlsx: 'fa-file-excel',
-                ppt:  'fa-file-powerpoint',
-                pptx: 'fa-file-powerpoint',
-                pdf:  'fa-file-pdf',
-                mp3:  'fa-file-music',
+                zip:     'fa-file-archive',
+                rar:     'fa-file-archive',
+                doc:     'fa-file-word',
+                docx:    'fa-file-word',
+                xls:     'fa-file-excel',
+                xlsx:    'fa-file-excel',
+                ppt:     'fa-file-powerpoint',
+                pptx:    'fa-file-powerpoint',
+                pdf:     'fa-file-pdf',
+                mp3:     'fa-file-music',
+                unknown: 'fa-file'
             },
             updatingAlts: null,
             editingItem: [],
@@ -749,6 +801,10 @@ export default {
                 {
                     id: 'files',
                     text: 'پیوست‌های پروژه',
+                },
+                {
+                    id: 'comments',
+                    text: 'دیدگاه‌ها',
                 },
                 {
                     id: 'notes',
@@ -1301,6 +1357,10 @@ export default {
                     text: 'پیوست‌های پروژه',
                 },
                 {
+                    id: 'comments',
+                    text: 'دیدگاه‌ها',
+                },
+                {
                     id: 'notes',
                     text: 'پیگیری‌ها',
                 },
@@ -1517,8 +1577,10 @@ export default {
         fileDropped(e) {
             this.files = e
         },
-        changeAlt(image) {
+        changeAlt(image, type=1) {
             if (this.updatingAlts !== image.id) {
+                const target = (type===1 ? 'تصویر' : 'پیوست')
+                const targetType = (type===1 ? 'images' : 'files')
                 if (image.alt?.trim()?.length > 1) {
                     this.updatingAlts = image.id
                     const formData = {
@@ -1528,14 +1590,15 @@ export default {
                     }
                     Requests.renameAlt(formData).then(res => {
                         if (res?.status) {
-                            for (let i = 0; i < this.form.images.length; i++) {
-                                if (this.form.images[i].id === image.id) {
-                                    this.form.images[i].alt = image.alt
-                                    this.form.images[i].type = image.type
+                            for (let i = 0; i < this.form[targetType].length; i++) {
+                                if (this.form[targetType][i].id === image.id) {
+                                    this.form[targetType][i].alt = image.alt
+                                    this.form[targetType][i].type = image.type
                                     for (let k = 0; k < this.projects.length; k++) {
                                         if (this.projects[k].id === this.editingItem.id) {
                                             this.projects[k].images = res.result.images
                                             this.projects[k].covers = res.result.covers
+                                            this.projects[k].files = res.result.files
                                             break;
                                         }
                                     }
@@ -1543,25 +1606,27 @@ export default {
                                 }
                             }
                         } else {
-                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ویرایش عنوان/وضعیت تصویر', { type: 'error' })
+                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ویرایش عنوان/وضعیت '+target, { type: 'error' })
                         }
                     }).catch(err => {
                         console.error(err)
-                        this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام ویرایش عنوان/وضعیت تصویر', { type: 'error' })
+                        this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام ویرایش عنوان/وضعیت '+target, { type: 'error' })
                     }).finally(() => {
                         this.updatingAlts = null
                         this.loading = false
                     })
                 } else {
-                    this.$helpers.notify('خطا', 'عنوان تصویر نمی‌تواند خالی باشد', { type: 'error' })
+                    this.$helpers.notify('خطا', 'عنوان '+target+' نمی‌تواند خالی باشد', { type: 'error' })
                 }
             }
         },
-        deleteImage(image) {
-            if (!this.updatingAlts.includes(image.id)) {
+        deleteImage(image, type = 1) {
+            if (this.updatingAlts === null) {
+                const target = (type===1 ? 'تصویر' : 'پیوست')
+                const targetType = (type===1 ? 'images' : 'files')
                 this.$swal.fire({
-                    title: "حذف تصویر",
-                    text: "تصویر مورد نظر حذف گردد؟",
+                    title: "حذف "+target,
+                    text: target+" مورد نظر حذف گردد؟",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: "بلی",
@@ -1572,32 +1637,30 @@ export default {
                         this.updatingAlts = image
                         Requests.deleteImage({image: image}).then(res => {
                             if (res?.status) {
-                                for (let i = 0; i < this.form?.images?.length; i++) {
-                                    if (this.form.images[i].id === image) {
-                                        this.form.images.splice(i, 1);
+                                for (let i = 0; i < this.form[targetType]?.length; i++) {
+                                    if (this.form[targetType][i].id === image) {
+                                        this.form[targetType].splice(i, 1);
                                         for (let k = 0; k < this.projects.length; k++) {
                                             if (this.projects[k].id === this.editingItem.id) {
                                                 this.projects[k].images = res.result.images
                                                 this.projects[k].covers = res.result.covers
+                                                this.projects[k].files = res.result.files
                                                 break;
                                             }
                                         }
-                                        this.$helpers.notify('تصویر مورد نظر با موفقیت حذف گردید.')
+                                        this.$helpers.notify(target+' مورد نظر با موفقیت حذف گردید.')
                                         break
                                     }
                                 }
                             } else {
-                                this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام حذف تصویر مورد نظر', {type: "error"})
+                                this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام حذف '+target+' مورد نظر', {type: "error"})
                             }
                         }).catch(err => {
-                            this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام حذف تصویر مورد نظر', {type: 'error'})
+                            this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام '+target+' تصویر مورد نظر', {type: 'error'})
                             console.log(err);
                         }).finally(res => {
-                            for (let i = 0; i < this.updatingAlts.length; i++) {
-                                if (this.updatingAlts[i] === image.id) {
-                                    this.updatingAlts.splice(i, 1)
-                                }
-                            }
+                            this.uploadProgress = 0
+                            this.updatingAlts = null
                         })
                     }
                 });
@@ -1607,16 +1670,73 @@ export default {
             this.imageToPreview = image
             this.$refs.previewImage.modalOpen()
         },
-        downloadImage() {
-            if (this.imageToPreview && this.imageToPreview?.filename) {
+        downloadImage(target) {
+            if (target && target?.filename) {
                 const a = document.createElement("a")
-                a.href = this.imageToPreview.filename
-                a.download = this.editingItem.title+' - '+this.imageToPreview.alt
+                a.href = target.filename
+                a.download = this.editingItem.title+' - '+target.alt
                 document.body.appendChild(a)
                 a.click();
                 document.body.removeChild(a)
             }
-        }
+        },
+        getFileSize(size) {
+            return this.$helpers.humanReadableFileSize(size) ?? 'صفر بایت'
+        },
+        handleFileSelect(event) {
+            if (!this.saving && !this.loading) {
+                this.attachment = event.target.files[0]
+
+                if (this.attachment.size / 1024 > 51200) {
+                    this.$helpers.notify('اخطار', 'حجم فایل انتخاب شده نباید بزرگتر از 50 مگابایت باشد', { type: 'error' })
+                    this.attachment = null
+                    return
+                }
+            }
+        },
+        uploadSelectedFile() {
+            if (!this.saving && !this.loading && this.updatingAlts === null) {
+                const file = this.attachment
+
+                if (file.size / 1024 > 51200) {
+                    this.$helpers.notify('اخطار', 'حجم فایل انتخاب شده نباید بزرگتر از 50 مگابایت باشد', { type: 'error' })
+                    return
+                }
+
+                this.updatingAlts = -1
+
+                let formData = new FormData()
+                formData.append('project', this.editingItem.id)
+                formData.append('attachment', file)
+                Requests.addProjectAttachment(formData, (progressEvent) => {
+                    this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                }).then(res => {
+                    if (res?.status) {
+                        if (this.editing) {
+                            for (let i = 0; i < this.projects.length; i++) {
+                                if (this.projects[i].id === this.editingItem.id) {
+                                    this.projects[i] = res.result
+                                    this.form.files = res?.result?.files ?? []
+                                    break;
+                                }
+                            }
+                        } else {
+                            this.projects.push(res.result)
+                        }
+                        this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
+                    } else {
+                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه')
+                    }
+                }).catch(err => {
+                    console.error(err)
+                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه')
+                }).finally(res => {
+                    this.uploadProgress = 0
+                    this.updatingAlts = null
+                    this.attachment = null
+                })
+            }
+        },
     }
 };
 </script>
@@ -1685,6 +1805,10 @@ export default {
     pointer-events: auto;
     transition: 200ms all ease-in-out;
 }
+.image-thumb .image.cursor-normal {
+    cursor: default;
+}
+
 .image-thumb:hover {
     box-shadow: 0 0 5px #646464;
     scale: 1.05;

@@ -82,7 +82,7 @@ class ProjectController extends Controller
             'result' => null
         ];
         try {
-            $path = public_path('storage/'.$this->project_path);
+            $path = public_path('storage/'.$this->project_path.'/images');
             MojSkin::makeDir($path);
 
             $projectData = [
@@ -192,7 +192,6 @@ class ProjectController extends Controller
         }
 
         return response()->json($response, 200);
-
     }
 
     public function deleteProject(Request $request)
@@ -212,6 +211,51 @@ class ProjectController extends Controller
 
     public function addProjectAttachment(Request $request)
     {
+        $response = [
+            'status' => false,
+            'message' => 'بروز خطا هنگام ذخیره پروژه',
+            'result' => null
+        ];
+        try {
+            $path = public_path('storage/'.$this->project_path.'/attachments');
+            MojSkin::makeDir($path);
 
+            $project = Project::whereId($request->project)->first();
+
+            if ($project) {
+                $file = $request->attachment;
+                if (gettype($file) === 'object' and ($file->isValid() ?? false)) {
+                    $extension   = $file->getClientOriginalExtension();
+                    $alt         = str_replace('.'.$extension, '', $file->getClientOriginalName());
+                    $target      = MojSkin::randomFileName(35, $path, 'project-'.$project->id, '', $extension);
+                    $stored_file = Storage::disk('public')->putFileAs($this->project_path, new File($file), $target);
+
+                    Image::create([
+                        'imageable_id' => $project->id,
+                        'imageable_type' => 'App\Models\Project',
+                        'file_name' => '/storage/'.$this->project_path.'/'.$target,
+                        'user' => Auth::id(),
+                        'alt' => $alt,
+                        'type' => 'PROJECT_ATTACHMENT',
+                    ]);
+
+                    $project = Project::whereId($project->id)->with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+
+                    $response['result'] = new ProjectResource($project);
+                    $response['status'] = true;
+                    $response['message'] = 'پیوست پروژه با موفقیت ذخیره شد';
+                } else {
+                    $response['message'] = 'پیوست ارسالی معتبر نیست';
+                }
+            } else {
+                $response['message'] = 'پروژه مورد نظر یافت نشد';
+            }
+        } catch (\Exception $e) {
+            $response['message'] = $e->getMessage();
+
+            return response()->json($response, 500);
+        }
+
+        return response()->json($response, 200);
     }
 }

@@ -39,7 +39,7 @@ class Project extends Model
 
     public function files(): MorphMany
     {
-        return $this->morphMany(Image::class, 'imageable')->orderBy('created_at', 'desc')->whereType('PROJECT_FILES');
+        return $this->morphMany(Image::class, 'imageable')->orderBy('created_at', 'desc')->whereType('PROJECT_ATTACHMENT')->with('u');
     }
 
     public function covers(): MorphMany
@@ -49,7 +49,7 @@ class Project extends Model
 
     public function images(): MorphMany
     {
-        return $this->morphMany(Image::class, 'imageable')->orderBy('created_at', 'desc');
+        return $this->morphMany(Image::class, 'imageable')->orderBy('created_at', 'desc')->where('type', 'in', ['PROJECT_COVER', 'PROJECT_IMAGE']);
     }
 
     public function comments():MorphMany
