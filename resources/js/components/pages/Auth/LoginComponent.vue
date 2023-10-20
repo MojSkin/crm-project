@@ -21,7 +21,7 @@
                         </div>
                         <div class="column has-text-centered pt-5" style="height: 100vh;">
                             <RouterLink to="/" class="mt-5" style="display: inline-block; height: 120px">
-                                <img class="light-image" style="max-height: 120px;" :src="$store.state.logo" alt="تبیان">
+                                <img class="light-image" style="max-height: 260px;" :src="this.base_url+'/assets/img/logo-main.png'" alt="لوگو">
                             </RouterLink>
                             <div class="is-form">
                                 <div class="hero-body">
@@ -127,6 +127,7 @@ const isMobile = /^(\+989|989|09|9)(0|1|2|3|9)\d{8}/;
 export default {
     name: "LoginComponent",
     props: {},
+    inject: ['base_url'],
     setup () {
         return { validator: useVuelidate() }
     },
