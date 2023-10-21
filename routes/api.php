@@ -87,8 +87,9 @@ Route::middleware('auth:sanctum')->name('api.')->group(function() {
     });
 
     Route::prefix('/images')->name('images.')->group(function () {
-        Route::post('/renameAlt',   [ImageController::class, 'renameAlt'])->name('renameAlt');
-        Route::post('/deleteImage', [ImageController::class, 'deleteImage'])->name('deleteImage');
+        Route::post('/renameAlt',    [ImageController::class, 'renameAlt'])->name('renameAlt');
+        Route::post('/deleteImage',  [ImageController::class, 'deleteImage'])->name('deleteImage');
+        Route::get('/downloadFile',  [ImageController::class, 'downloadFile'])->name('downloadFile');
     });
 
     Route::prefix('/forms')->name('forms.')->group(function () {

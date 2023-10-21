@@ -418,4 +418,18 @@ export default {
         const res = await axios.post(route('api.images.deleteImage'), this.makeFormData(form), this.tokenHeader())
         return res?.data
     },
+
+    async downloadFile(file) {
+        let headers = {
+            headers: {
+                Authorization: 'Bearer ' + this.token()
+            },
+            responseType: 'blob',
+            params: {
+                file: file
+            }
+        }
+        const res = await axios.get(route('api.images.downloadFile'), headers)
+        return res?.data
+    },
 }

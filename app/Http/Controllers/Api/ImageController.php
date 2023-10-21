@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\MojSkin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectFileResource;
 use App\Http\Resources\ProjectImageResource;
@@ -71,6 +72,9 @@ class ImageController extends Controller
                     ];
                 }
                 $image->delete();
+                if (file_exists(public_path($image->file_name))) {
+                    MojSkin::unlinkFile(public_path($image->file_name));
+                }
                 $response['status'] = true;
                 $response['message'] = 'تصویر مورد نظر با موفقیت حذف شد';
             } else {
@@ -84,5 +88,22 @@ class ImageController extends Controller
         }
 
         return response()->json($response, 200);
+    }
+
+    public function downloadFile(Request $request)
+    {
+        if ($request->file) {
+            $file = Image::whereId($request->file)->with('imageable')->first();
+            $owner = $file->imageable;
+            if ($file) {
+                $fileName  = str_replace(' ', '-', $owner->title ?? '');
+                $fileName .= (strlen($fileName) > 0 ? '-' : '').str_replace(' ', '-', $file->alt);
+                $fileName .= '-'.time();
+                $mime_type = mime_content_type(public_path($file->file_name));
+                $f = public_path($file->file_name);
+                return response()->download($f, $fileName, ['Content-Type: '.$mime_type]);
+            }
+        }
+        return response()->json(null, 404);
     }
 }

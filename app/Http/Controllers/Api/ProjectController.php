@@ -162,12 +162,12 @@ class ProjectController extends Controller
                     $extension   = $file->getClientOriginalExtension();
                     $alt         = str_replace('.'.$extension, '', $file->getClientOriginalName());
                     $target      = MojSkin::randomFileName(35, $path, 'project-'.$project->id, '', $extension);
-                    $stored_file = Storage::disk('public')->putFileAs($this->project_path, new File($file), $target);
+                    $stored_file = Storage::disk('public')->putFileAs($this->project_path.'/images', new File($file), $target);
 
                     $files[] = [
                         'imageable_id' => $project->id,
                         'imageable_type' => 'App\Models\Project',
-                        'file_name' => '/storage/'.$this->project_path.'/'.$target,
+                        'file_name' => '/storage/'.$this->project_path.'/images/'.$target,
                         'user' => Auth::id(),
                         'alt' => $alt,
                         'type' => $project->id !== $projectData['id'] ? 'PROJECT_COVER' : 'PROJECT_IMAGE',
@@ -216,10 +216,9 @@ class ProjectController extends Controller
             'message' => 'بروز خطا هنگام ذخیره پروژه',
             'result' => null
         ];
+        $path = public_path('storage/'.$this->project_path.'/attachments');
+        MojSkin::makeDir($path);
         try {
-            $path = public_path('storage/'.$this->project_path.'/attachments');
-            MojSkin::makeDir($path);
-
             $project = Project::whereId($request->project)->first();
 
             if ($project) {
@@ -228,12 +227,12 @@ class ProjectController extends Controller
                     $extension   = $file->getClientOriginalExtension();
                     $alt         = str_replace('.'.$extension, '', $file->getClientOriginalName());
                     $target      = MojSkin::randomFileName(35, $path, 'project-'.$project->id, '', $extension);
-                    $stored_file = Storage::disk('public')->putFileAs($this->project_path, new File($file), $target);
+                    $stored_file = Storage::disk('public')->putFileAs($this->project_path.'/attachments', new File($file), $target);
 
                     Image::create([
                         'imageable_id' => $project->id,
                         'imageable_type' => 'App\Models\Project',
-                        'file_name' => '/storage/'.$this->project_path.'/'.$target,
+                        'file_name' => '/storage/'.$this->project_path.'/attachments/'.$target,
                         'user' => Auth::id(),
                         'alt' => $alt,
                         'type' => 'PROJECT_ATTACHMENT',

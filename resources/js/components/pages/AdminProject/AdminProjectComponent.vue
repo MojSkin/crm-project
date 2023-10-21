@@ -178,7 +178,7 @@
                     </div>
                 </div>
             </div>
-            <b-overlay :show="saving || loading" :loader-text="'در حال ذخیره پروژه، لطفا کمی صبور باشید... '+uploadProgress+'%'" v-else>
+            <b-overlay :show="saving || loading" loader-custom-class="has-text-info" :loader-text="'در حال ذخیره پروژه، لطفا کمی صبور باشید... '+uploadProgress+'%'" v-else>
                 <b-tabs v-model="active_tab" :headers="tabs">
                     <template #general>
                         <div class="px-5">
@@ -518,7 +518,7 @@
                         <div class="px-5">
                             <div class="columns is-multiline">
                                 <div class="column is-12 pb-2">
-                                    <b-dropzone v-model="files" @dropped="fileDropped" :is-busy="saving" accept="image/jpeg, image/png" />
+                                    <b-dropzone v-model="files" @dropped="fileDropped" accept="image/jpeg, image/png"/>
                                     <span class="small pl-3">
                                         <span>فقط تصاویر با پسوند</span>
                                         <span class="mx-2 has-text-primary">jpg / jpeg / png</span>
@@ -586,42 +586,48 @@
                         <div class="px-5">
                             <div class="columns is-multiline">
                                 <div class="column is-12 pb-2">
-                                    <div class="file is-boxed is-align-items-center">
-                                        <label class="file-label is-block" v-if="attachment === null">
+                                    <div class="file is-boxed is-align-items-center" style="min-height: 170px">
+                                        <label class="has-background-light is-rounded rounded-2 p-5 w-100 file-label is-block" v-if="attachment === null">
                                             <input class="file-input" type="file" @change="handleFileSelect" :multiple="false" accept=".zip, .rar, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3">
-                                            <span class="file-cta">
+                                            <span class="file-cta has-background-info has-text-white">
                                                 <span class="file-icon">
                                                     <i class="fal fa-upload"></i>
                                                 </span>
-                                                <span class="file-label">انتخاب کنید...</span>
+                                                <span class="file-label is-weight-700">انتخاب کنید...</span>
                                             </span>
+                                            <div class="column is-12 mt-2">
+                                                <span class="mr-2">فرمت‌های مورد قبول:</span><bdi>zip, rar, pdf, doc, docx, xls, xlsx, ppt, pptx, mp3</bdi>
+                                            </div>
                                         </label>
-                                        <div class="is-inline-block" v-if="attachment != null">
-                                            <i class="fad fa-3x has-text-warning mx-3" :class="fileTypes[attachment.name.split('.').pop()] ?? 'unknown'"></i>
+                                        <div class="has-background-light is-rounded rounded-2 p-5 is-flex w-100 is-align-items-center is-flex-direction-column" v-if="attachment != null">
+                                            <div class="is-flex w-100 is-align-items-center">
+                                                <div class="is-inline-block">
+                                                    <i class="fad fa-5x has-text-warning mx-3" :class="fileTypes[attachment.name.split('.').pop().toLowerCase()] ?? 'fa-file'"></i>
+                                                </div>
+                                                <div class="is-inline-block">
+                                                    <div v-text="attachment.name"></div>
+                                                    <span class="tag is-light" v-text="getFileSize(attachment.size)"/>
+                                                </div>
+                                            </div>
+                                            <div class="is-flex w-100 is-align-items-center my-3">
+                                                <button class="button is-danger is-hoverable ml-auto is-clickable" @click="attachment = null" :disabled="updatingAlts !== null">
+                                                    <i class="fal fa-times"></i>
+                                                    <span class="ml-2">انصراف</span>
+                                                </button>
+                                                <button class="button is-info ml-2" @click="uploadSelectedFile" :disabled="updatingAlts !== null">
+                                                    <i class="fal fa-upload" v-if="updatingAlts === null"></i>
+                                                    <i class="fas fa-spinner-third fa-spin" v-else></i>
+                                                    <span class="ml-2">افزودن پیوست</span>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="is-inline-block" v-if="attachment != null">
-                                            <div v-text="attachment.name"></div>
-                                            <span class="tag is-light" v-text="getFileSize(attachment.size)"/>
-                                        </div>
-                                        <button class="button is-danger is-light is-hoverable ml-2 is-clickable" @click="attachment = null" v-if="attachment != null" :disabled="updatingAlts !== null">
-                                            <i class="fal fa-times"></i>
-                                            <span class="ml-2">حذف</span>
-                                        </button>
-                                        <button class="button is-success is-light ml-2" @click="uploadSelectedFile" :disabled="updatingAlts !== null" v-if="attachment != null">
-                                            <i class="fal fa-upload" v-if="updatingAlts === null"></i>
-                                            <i class="fas fa-spinner-third fa-spin" v-else></i>
-                                            <span class="ml-2">افزودن پیوست</span>
-                                        </button>
                                     </div>
-                                    <div class="column is-12 pt-0">
-                                        <span class="mr-2">فرمت‌های مورد قبول:</span><bdi>zip, rar, pdf, doc, docx, xls, xlsx, ppt, pptx, mp3</bdi>
-                                    </div>
-                                    <div class="column is-12 pt-0">
+                                    <div class="w-100 pt-0">
                                         <progress class="progress is-success is-tiny w-100" :value="uploadProgress" max="100" v-if="updatingAlts !== null"/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="columns is-multiline mt-6">
+                            <div class="columns is-multiline mt-6" id="files-zone">
                                 <div class="column is-6-mobile is-4-tablet is-3-desktop is-2-widescreen is-flex align-items-center flex-wrap image-thumb-wrapper" v-for="(file, fileIndex) in form?.files">
                                     <div class="image-thumb">
                                         <button @click.stop="deleteImage(file.id, 2)">
@@ -1117,6 +1123,8 @@ export default {
                                     }
                                     if (item.title && item.title.length) {
                                         name += ' - '+item.title
+                                        name += ' - '+item.title
+                                        name += ' - '+item.title
                                     }
                                     if (item.organization && item.organization.length) {
                                         name += '('+item.organization+')'
@@ -1312,8 +1320,6 @@ export default {
                                 this.projects.push(res.result)
                             }
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
-                            this.newItem()
-                            this.newRec = false
                         } else {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه')
                         }
@@ -1324,6 +1330,8 @@ export default {
                         this.uploadProgress = 0
                         this.files = []
                         this.saving = false
+                        this.newRec = false
+                        this.editing = false
                     })
                 } else {
                     console.log(this.validator.$errors)
@@ -1672,12 +1680,22 @@ export default {
         },
         downloadImage(target) {
             if (target && target?.filename) {
-                const a = document.createElement("a")
-                a.href = target.filename
-                a.download = this.editingItem.title+' - '+target.alt
-                document.body.appendChild(a)
-                a.click();
-                document.body.removeChild(a)
+                Requests.downloadFile(target.id).then(res => {
+                    if (res) {
+                        let a = document.createElement('a')
+                        let url = window.URL.createObjectURL(new Blob([res], {type: target.mime}));
+                        a.href = url
+                        a.download  = this.editingItem.title+' '+target.alt+'.'+(target.ext ?? target.filename.split('.').pop())
+                        a.innerText = a.download
+                        a.download  = a.download.toLowerCase().replace(/ /g, "-")
+                        console.log(a.download)
+                        document.body.appendChild(a)
+                        a.click();
+                        document.body.removeChild(a)
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
             }
         },
         getFileSize(size) {

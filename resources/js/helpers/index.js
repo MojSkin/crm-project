@@ -16,12 +16,12 @@ export default {
         size = parseInt(size)
         const units = ['بایت', 'کیلوبایت', 'مگابایت', 'گیگابایت', 'ترابایت']
         if (typeof size=='number' && !isNaN(size)) {
-            let u = 0
-            for (let i = 0; size >= 1024 && i < units.length; i++) {
+            let i = 0
+            while (size >= 1024 && i < units.length) {
                 size = (size/1024)
-                u = i
+                i++
             }
-            result = size.toFixed(2)+' '+units[u]
+            result = size.toFixed(2)+' '+units[i]
         } else {
             result ='صفر بایت'
         }

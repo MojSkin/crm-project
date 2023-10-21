@@ -20,8 +20,9 @@ class ProjectFileResource extends JsonResource
             'filename' => asset($this->file_name),
             'alt' => $this->alt,
             'ext' => strlen($ext)>0 ? $ext : 'unknown',
-            'size' => filesize(public_path($this->file_name)) ?? 0,
+            'size' => file_exists(public_path($this->file_name)) ? filesize(public_path($this->file_name)) : 0,
             'user' => new ProjectUserResource($this->u),
+            'mime' => file_exists(public_path($this->file_name)) ? mime_content_type(public_path($this->file_name)) : 'unknown',
             'created_at' => $this->created_at,
         ];
     }

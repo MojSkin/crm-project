@@ -49,7 +49,7 @@ class Project extends Model
 
     public function images(): MorphMany
     {
-        return $this->morphMany(Image::class, 'imageable')->orderBy('created_at', 'desc')->where('type', 'in', ['PROJECT_COVER', 'PROJECT_IMAGE']);
+        return $this->morphMany(Image::class, 'imageable')->orderBy('created_at', 'desc')->whereIn('type', ['PROJECT_COVER', 'PROJECT_IMAGE']);
     }
 
     public function comments():MorphMany

@@ -19,6 +19,7 @@ class ProjectImageResource extends JsonResource
             'filename' => asset($this->file_name),
             'alt' => $this->alt,
             'type' => $this->type,
+            'mime' => mime_content_type(public_path($this->file_name)),
         ];
     }
 }
