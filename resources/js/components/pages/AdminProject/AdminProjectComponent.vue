@@ -700,13 +700,104 @@
                                 </div>
                                 <div class="message-field-wrapper" style="padding: 0 35px;">
                                     <div class="control">
-                                        <input v-model="comment" class="input is-rounded" type="text" placeholder="دیدگاه شما چیست؟" ref="commentInput"/>
+                                        <input v-model="comment" class="input is-rounded" type="text" placeholder="دیدگاه شما چیست؟" ref="commentInput" @keydown.enter="savingComment"/>
                                         <div class="send-message">
                                             <button class="button is-primary is-raised is-rounded" :disabled="savingComment" @click="saveComment">
                                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA7UlEQVR4nO3UrU5DQRCG4UNJShMSEjBcQAUYFI5yCzWQWiQWieUeUKgmvQUktkGgGgwYFAaBA0P4eTBTsmnooQ17jurndjPzvbszs1sUC9UpNNDFMLfxKo5xL5TLeBNneB4bZwFgB328JZ5DHPwLgH1c4it8PmO9l8TMB0ATR7hNTvuCC2z9Ej8bAGs4wWNi/BQ13yjJKwegjXO8JsajuEWzJG8F21MB2MUA7xON62IpYtYjrofTKNMVHvBROkWVAyovUW1NnjKmPdxkHdM5H1onC6Dyr6K2z25SaMWU3VUCGAvLOMT1z+ZCxR/6BkTjZthcylLUAAAAAElFTkSuQmCC" v-if="!savingComment">
                                                 <i class="fas fa-spinner-third fa-spin" v-else></i>
                                             </button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template #notes>
+                        <div class="p-3 mx-5">
+                            <div class="columns is-multiline is-flex pb-0">
+                                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">
+                                    <b-input
+                                        label="<span>متن پیگیری</span><i class='far fa-circle has-text-danger ml-2'></i>"
+                                        :is-error="validator?.note?.note?.$errors?.length"
+                                        :error-message="validator?.note?.note?.$errors[0]?.$message || ''"
+                                        v-model="form.note"
+                                    >
+                                        <template #input>
+                                        <textarea
+                                            v-model="note.note"
+                                            rows="3"
+                                            class="textarea no-resize"
+                                            :class="{'is-error': validator?.note?.note?.$errors?.length}"
+                                        />
+                                        </template>
+                                    </b-input>
+                                </div>
+                                <div class="column is-6-mobile is-6-tablet is-4-desktop is-4-widescreen">
+                                    <b-input
+                                        label="<span>وضعیت پروژه</span><i class='far fa-circle has-text-danger ml-2'></i>"
+                                        :error-message="validator?.note?.project_status?.$errors[0]?.$message || ''"
+                                        v-model="note.project_status"
+                                    >
+                                        <template #input>
+                                            <b-select
+                                                autoclose
+                                                searchable
+                                                clearable
+                                                v-model="note.project_status"
+                                                :options="this.statuses"
+                                                :is-error="validator?.note?.project_status?.$errors?.length"
+                                            />
+                                        </template>
+                                    </b-input>
+                                </div>
+                                <div class="column is-6-mobile is-6-tablet is-4-desktop is-4-widescreen">
+                                    <b-input
+                                        label="<span>نتیجه پروژه</span><i class='far fa-circle has-text-danger ml-2'></i>"
+                                        :error-message="validator?.note?.project_result?.$errors[0]?.$message || ''"
+                                        v-model="note.project_result"
+                                    >
+                                        <template #input>
+                                            <b-select
+                                                autoclose
+                                                searchable
+                                                clearable
+                                                v-model="note.project_result"
+                                                :options="this.results"
+                                                :is-error="validator?.note?.project_result?.$errors?.length"
+                                            />
+                                        </template>
+                                    </b-input>
+                                </div>
+                                <div class="column is-12-mobile is-12-tablet is-4-desktop is-4-widescreen is-flex pt-5">
+                                    <button class="button is-info ml-auto mt-3" @click="saveNote" :disabled="savingComment">
+                                        <i class="fal fa-save" v-if="!savingComment"></i>
+                                        <i class="fas fa-spinner-third fa-spin" v-else></i>
+                                        <span class="ml-2">ثبت پیگیری</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <hr v-if="form.notes.length" class="mt-0">
+                            <div class="columns is-multiline is-rounded rounded-3 is-note overflow-hidden is-relative" v-for="(note, noteIndex) in form.notes">
+                                <div class="column is-12 is-flex">
+                                    <span class="current-status has-background-warning" v-if="noteIndex === 0 & (noteIndex !== form.notes.length-1)">هم‌اکنون</span>
+                                    <span class="current-status has-background-success" v-if="noteIndex === form.notes.length-1">شـروع</span>
+                                    <div class="note-meta">
+                                        <div class="h-avatar is-large">
+                                            <img class="avatar" :src="note.user.avatar" alt="">
+                                        </div>
+                                        <div class="flex-meta">
+                                            <div class="small">{{ note.user.display_name }}</div>
+                                            <bdi class="small">{{ $helpers.jDate(note.created_at, 'jYYYY/jMM/jDD - H:mm') }}</bdi>
+                                            <div class="w-100 mt-2 mb-1">
+                                                <span v-text="note?.project_status?.title" class="has-text-centered tag w-100" :style="{backgroundColor: note?.project_status?.bgColor, color: note?.project_status?.textColor}"/>
+                                            </div>
+                                            <div class="w-100 mb-2">
+                                                <span v-text="note?.project_result?.title" class="has-text-centered tag w-100" :style="{backgroundColor: note?.project_result?.bgColor, color: note?.project_result?.textColor}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="note-comment">
+                                        {{ note.note }}
                                     </div>
                                 </div>
                             </div>
@@ -773,9 +864,9 @@ export default {
             form: {
                 title: '',
                 description: '',
-                project_type: { id: 0, title: '' },
-                project_status: { id: 0, title: '' },
-                project_result: { id: 0, title: '' },
+                project_type: {id: 0, title: ''},
+                project_status: {id: 0, title: ''},
+                project_result: {id: 0, title: ''},
                 user_percentage: 0,
                 images: [],
                 files: [],
@@ -783,7 +874,7 @@ export default {
                 notes: [],
                 members: [],
                 contacts: [],
-                city: { id: 728, title: '' },
+                city: {id: 728, title: ''},
                 region: '',
                 main_street: '',
                 aux1: '',
@@ -804,6 +895,11 @@ export default {
             uploadProgress: 0,
             files: [],
             attachment: null,
+            note: {
+                note: '',
+                project_status: null,
+                project_result: null,
+            },
             fileTypes: {
                 zip:     'fa-file-archive',
                 rar:     'fa-file-archive',
@@ -955,7 +1051,7 @@ export default {
                 },
                 city: {
                     id: {
-                      required: {
+                        required: {
                             $validator: (val) => {
                                 return (val > 0)
                             },
@@ -1092,6 +1188,44 @@ export default {
                         },
                         $message: 'فقط ورود اعداد قابل قبول است'
                     },
+                },
+            },
+            note: {
+                note: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length != 0)
+                        },
+                        $message: 'متن پیگیری الزامی است'
+                    },
+                    min: {
+                        $validator: (val) => {
+                            return (val?.length >= 5)
+                        },
+                        $message: 'متن پیگیری باید حداقل 5 کاراکتر باشد'
+                    },
+                    max: {
+                        $validator: (val) => {
+                            return (val?.length <= 100)
+                        },
+                        $message: 'متن پیگیری باید حداکثر 1000 کاراکتر باشد'
+                    },
+                },
+                project_status: {
+                    required: {
+                        $validator: (val) => {
+                            return (val > 0)
+                        },
+                        $message: 'انتخاب وضعیت پروژه الزامی است'
+                    }
+                },
+                project_result: {
+                    required: {
+                        $validator: (val) => {
+                            return (val > 0)
+                        },
+                        $message: 'انتخاب نتیجه پروژه الزامی است'
+                    }
                 },
             }
         }
@@ -1285,6 +1419,11 @@ export default {
                 units: 1,
                 floors: 1,
             }
+            this.note = {
+                note: '',
+                project_status: null,
+                project_result: null,
+            }
             this.tabs = [
                 {
                     id: 'general',
@@ -1330,8 +1469,8 @@ export default {
                 return false
             }
             if (!this.loading) {
-                this.validator.$touch();
-                if (!this.validator.$invalid) {
+                this.validator.form.$touch();
+                if (!this.validator.form.$invalid) {
                     this.saving = true
                     let record = new FormData()
                     const contacts = JSON.stringify(this.form.contacts)
@@ -1383,7 +1522,6 @@ export default {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه')
                         }
                     }).catch(err => {
-                        console.error(err)
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه')
                     }).finally(res => {
                         this.uploadProgress = 0
@@ -1393,7 +1531,6 @@ export default {
                         this.editing = false
                     })
                 } else {
-                    console.log(this.validator.$errors)
                     this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید')
                 }
             }
@@ -1484,9 +1621,10 @@ export default {
                 cancelButtonText: "خیر",
                 showCloseButton: true,
             }).then(result => {
+                return
                 if (result.value) {
                     this.saving = true
-                    Requests.deleteProjectResult(item_id).then(res => {
+                    Requests.deleteProject(item_id).then(res => {
                         if (res?.status) {
                             for (let i = 0; i < this.projects.length; i++) {
                                 if (this.projects[i].id == item_id) {
@@ -1540,7 +1678,6 @@ export default {
                     this.form.region = this.form.region.replace("منطقه ", "");
                     this.form.po_code = this.form.po_code.replace(/-/g, "");
                 }).catch(err => {
-                    console.log(err)
                     this.$helpers.notify('خطا', 'خطا هنگام دریافت اطلاعات تکمیلی موقعیت مورد نظر.', { type: 'error' })
                 }).finally(res => {
                     this.gettingLocationInfo = false
@@ -1595,7 +1732,6 @@ export default {
 
                 this.$refs.memberSelect.clearSelect()
             }
-            console.log(this.form.members)
         },
         removeMember(user_id) {
             if (user_id) {
@@ -1631,7 +1767,6 @@ export default {
             }
         },
         removeContact(contact_id, position_id) {
-            console.log(this.form.contacts)
             if (contact_id) {
                 for (let i = 0; i < this.form.contacts.length; i++) {
                     if (this.form.contacts[i].id === contact_id && this.form.contacts[i].position.id === position_id) {
@@ -1676,7 +1811,6 @@ export default {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ویرایش عنوان/وضعیت '+target, { type: 'error' })
                         }
                     }).catch(err => {
-                        console.error(err)
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام ویرایش عنوان/وضعیت '+target, { type: 'error' })
                     }).finally(() => {
                         this.updatingAlts = null
@@ -1724,7 +1858,6 @@ export default {
                             }
                         }).catch(err => {
                             this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام '+target+' تصویر مورد نظر', {type: 'error'})
-                            console.log(err);
                         }).finally(res => {
                             this.uploadProgress = 0
                             this.updatingAlts = null
@@ -1747,7 +1880,6 @@ export default {
                         a.download  = this.editingItem.title+' '+target.alt+'.'+(target.ext ?? target.filename.split('.').pop())
                         a.innerText = a.download
                         a.download  = a.download.toLowerCase().replace(/ /g, "-")
-                        console.log(a.download)
                         document.body.appendChild(a)
                         a.click();
                         document.body.removeChild(a)
@@ -1840,8 +1972,46 @@ export default {
                     console.error(err)
                     this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره دیدگاه')
                 }).finally(res => {
-                    this.comment = null
                     this.savingComment = null
+                    this.comment = null
+                })
+            }
+        },
+        saveNote() {
+            if (!this.savingComment)
+            this.validator.note.$touch();
+            if (!this.validator.note.$invalid) {
+                this.savingComment = true
+                const formData = {
+                    project: this.editingItem.id,
+                    note: this.note.note,
+                    status: this.note.project_status,
+                    result: this.note.project_result,
+                }
+                Requests.addProjectNote(formData).then(res => {
+                    if (res?.status) {
+                        for (let i = 0; i < this.projects.length; i++) {
+                            if (this.projects[i].id === this.editingItem.id) {
+                                this.form.notes = res.result
+                                this.projects[i].notes = res.result
+                                this.projects[i].last_note = res.result[0]
+                                break;
+                            }
+                        }
+                        this.$helpers.notify(res?.message || 'پیگیری شما ثبت شد')
+                    } else {
+                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پیگیری')
+                    }
+                }).catch(err => {
+                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پیگیری')
+                }).finally(res => {
+                    this.savingComment = null
+                    this.note = {
+                        note: '',
+                        project_status: null,
+                        project_result: null,
+                    }
+                    this.validator.note.$reset()
                 })
             }
         },
@@ -1868,7 +2038,7 @@ export default {
     width: 100%;
     height: 30px;
     bottom: 0;
-    background-image: linear-gradient(to top, #FFF, rgba(255, 255, 255, 0.35));;
+    background-image: linear-gradient(to top, #FFF, rgba(255, 255, 255, 0.35));
 }
 .is-4by3 {
     aspect-ratio: 4/3 !important;
@@ -2000,6 +2170,38 @@ export default {
 }
 .visible {
     visibility: visible !important;
+}
+.is-note {
+    border: 1px dashed #9a9a9a;
+    margin: 10px 0;
+}
+.is-note:nth-child(odd) {
+    background-color: rgb(245, 245, 245);
+}
+.note-meta {
+    width: 145px;
+}
+.note-comment {
+    margin: 5px 30px 5px 5px;
+    padding: 5px 15px;
+    border-right: 5px solid rgb(215, 215, 215);
+    background-image: linear-gradient(to left, rgba(225, 225, 225, 0.35), transparent);
+    width: 100%;
+    min-height: 80px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.current-status {
+    padding: 20px 0 4px 0;
+    width: 110px;
+    color: #fff;
+    font-weight: bold;
+    position: absolute;
+    top: -12px;
+    left: -38px;
+    transform: rotate(-35deg);
+    text-align: center;
+    display: inline-block;
 }
 </style>
 

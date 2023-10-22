@@ -59,7 +59,7 @@ class Project extends Model
 
     public function notes(): HasMany
     {
-        return $this->hasMany(ProjectNote::class)->orderBy('created_at');
+        return $this->hasMany(ProjectNote::class)->orderBy('created_at', 'desc');
     }
 
     public function lastNote()

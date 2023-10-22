@@ -56,6 +56,22 @@ class MojSkin
 
         return $directory;
     }
+    public static function replaceDigits(string $str, $to='fa', $from='en')
+    {
+        $numbers = [
+            'en' => ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+            'fa' => ["۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹", "۰"],
+            'ar' => ["١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩", "٠"],
+        ];
+
+        for ($i = 0; $i < count($numbers[$from]); $i++) {
+            $str = str_replace(
+                $numbers[$from][$i],
+                $numbers[$to][$i],
+                $str);
+        }
+        return $str;
+    }
 
     public static function unlinkFile($pathToDelete)
     {

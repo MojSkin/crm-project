@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\MojSkin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectCommentResource;
+use App\Http\Resources\ProjectNoteResource;
 use App\Http\Resources\ProjectResource;
 use App\Models\Comment;
 use App\Models\ContactProject;
@@ -69,7 +70,7 @@ class ProjectController extends Controller
             $response['status'] = true;
             $response['message'] = 'اطلاعات تکمیلی پروژه‌ها با موفقیت دریافت شد';
         } catch (\Exception $e) {
-            $response['message'] = $e->getMessage();
+            $response['message'] = $e->getMessage().' at line '.$e->getLine().' in '.$e->getFile();
 
             return response()->json($response, 500);
         }
@@ -89,26 +90,27 @@ class ProjectController extends Controller
             MojSkin::makeDir($path);
 
             $projectData = [
-                'id' => $request->id ?? null,
+                'id' => (isset($request->id) && $request->id != null && $request->id > 0) ? (int) $request->id : null,
                 'title' => $request->title,
                 'description' => $request->description,
                 'project_type_id' => $request->project_type_id,
                 'user_percentage' => $request->user_percentage,
                 'city_id' => $request->city_id,
-                'region' => $request->region,
-                'main_street' => $request->main_street,
-                'aux1' => $request->aux1,
-                'aux2' => $request->aux2,
-                'alley1' => $request->alley1,
-                'alley2' => $request->alley2,
-                'address' => $request->address,
-                'po_code' => $request->po_code,
+                'region' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->region ?? '', 'en', 'fa'), 'en', 'ar'),
+                'main_street' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->main_street ?? '', 'en', 'fa'), 'en', 'ar'),
+                'aux1' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->aux1 ?? '', 'en', 'fa'), 'en', 'ar'),
+                'aux2' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->aux2 ?? '', 'en', 'fa'), 'en', 'ar'),
+                'alley1' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->alley1 ?? '', 'en', 'fa'), 'en', 'ar'),
+                'alley2' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->alley2 ?? '', 'en', 'fa'), 'en', 'ar'),
+                'address' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->address ?? '', 'en', 'fa'), 'en', 'ar'),
+                'po_code' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->po_code ?? '', 'en', 'fa'), 'en', 'ar'),
                 'lat' => $request->lat,
                 'long' => $request->long,
-                'blocks' => $request->blocks,
-                'units' => $request->units,
-                'floors' => $request->floors,
+                'blocks' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->blocks ?? '1', 'en', 'fa'), 'en', 'ar'),
+                'units' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->units ?? '1', 'en', 'fa'), 'en', 'ar'),
+                'floors' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->floors ?? '1', 'en', 'fa'), 'en', 'ar'),
             ];
+
 
             if ($projectData['id'] === null) {
                 $projectData['user_id'] = Auth::id();
@@ -189,7 +191,7 @@ class ProjectController extends Controller
             $response['status'] = true;
             $response['message'] = 'پروژه با موفقیت ذخیره شد';
         } catch (\Exception $e) {
-            $response['message'] = $e->getMessage();
+            $response['message'] = $e->getMessage().' at line '.$e->getLine().' in '.$e->getFile();
 
             return response()->json($response, 500);
         }
@@ -206,7 +208,7 @@ class ProjectController extends Controller
     {
         $response = [
             'status' => false,
-            'message' => 'بروز خطا هنگام ذخیره پروژه',
+            'message' => 'بروز خطا هنگام ذخیره دیدگاه',
             'result' => null
         ];
         try {
@@ -218,7 +220,7 @@ class ProjectController extends Controller
                     'commentable_id' => $project->id,
                     'commentable_type' => 'App\\Models\\Project',
                 ]);
-                $comments = Comment::whereCommentableId($project->id)->whereCommentableType('App\\Models\\Project')->get();
+                $comments = Comment::whereCommentableId($project->id)->orderBy('created_at', 'asc')->whereCommentableType('App\\Models\\Project')->get();
                 $response['result'] = ProjectCommentResource::collection($comments);
                 $response['status'] = true;
                 $response['message'] = 'دیدگاه شما با موفقیت ذخیره شد';
@@ -232,19 +234,47 @@ class ProjectController extends Controller
         }
 
         return response()->json($response, 200);
-
     }
 
     public function addProjectNote(Request $request)
     {
+        $response = [
+            'status' => false,
+            'message' => 'بروز خطا هنگام ذخیره پیگیری',
+            'result' => null
+        ];
+        try {
+            $project = Project::whereId($request->project)->first();
 
+            if ($project) {
+                ProjectNote::create([
+                    'user_id' => Auth::id(),
+                    'note' => $request->note,
+                    'project_id' => $project->id,
+                    'project_status_id' => $request->status,
+                    'project_result_id' => $request->result,
+                ]);
+                $notes = ProjectNote::whereProjectId($project->id)->orderBy('created_at', 'desc')->get();
+                $response['result'] = ProjectNoteResource::collection($notes);
+                $response['status'] = true;
+                $response['message'] = 'دیدگاه شما با موفقیت ذخیره شد';
+            } else {
+                $response['message'] = 'پروژه مورد نظر یافت نشد';
+            }
+        } catch (\Exception $e) {
+            $response['message'] = $e->getMessage();
+
+            return response()->json($response, 500);
+        }
+
+        return response()->json($response, 200);
     }
 
     public function addProjectAttachment(Request $request)
     {
         $response = [
             'status' => false,
-            'message' => 'بروز خطا هنگام ذخیره پروژه',
+            'message' => 'بروز خطا هنگام ذخیره پیوست',
             'result' => null
         ];
         $path = public_path('storage/'.$this->project_path.'/attachments');

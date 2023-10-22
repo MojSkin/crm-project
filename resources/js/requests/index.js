@@ -414,6 +414,11 @@ export default {
         return res?.data
     },
 
+    async addProjectNote(form) {
+        const res = await axios.post(route('api.projects.addProjectNote'), this.makeFormData(form), this.tokenHeader())
+        return res?.data
+    },
+
     async renameAlt(form) {
         const res = await axios.post(route('api.images.renameAlt'), this.makeFormData(form), this.tokenHeader())
         return res?.data
