@@ -698,7 +698,6 @@
                                         </li>
                                     </ol>
                                 </div>
-                                <input class="input is-rounded" type="text" placeholder="دیدگاه شما چیست؟" ref="commentInput"/>
                                 <div class="message-field-wrapper" style="padding: 0 35px;">
                                     <div class="control">
                                         <input v-model="comment" class="input is-rounded" type="text" placeholder="دیدگاه شما چیست؟" ref="commentInput"/>
