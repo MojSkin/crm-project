@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\MojSkin;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjectCommentResource;
 use App\Http\Resources\ProjectResource;
+use App\Models\Comment;
 use App\Models\ContactProject;
 use App\Models\Image;
 use App\Models\Project;
@@ -37,7 +39,8 @@ class ProjectController extends Controller
             $response['status'] = true;
             $response['message'] = 'فهرست پروژه‌ها با موفقیت دریافت شد';
         } catch (\Exception $e) {
-            $response['message'] = $e->getMessage();
+            $response['message'] = $e->getMessage().' at line '.$e->getLine().' in '.$e->getFile();
+            $response['trace'] = $e->getTrace();
 
             return response()->json($response, 500);
         }
@@ -201,6 +204,34 @@ class ProjectController extends Controller
 
     public function addProjectComment(Request $request)
     {
+        $response = [
+            'status' => false,
+            'message' => 'بروز خطا هنگام ذخیره پروژه',
+            'result' => null
+        ];
+        try {
+            $project = Project::whereId($request->project)->first();
+
+            if ($project) {
+                Comment::make([
+                    'comment' => $request->comment,
+                    'commentable_id' => $project->id,
+                    'commentable_type' => 'App\\Models\\Project',
+                ]);
+                $comments = Comment::whereCommentableId($project->id)->whereCommentableType('App\\Models\\Project')->get();
+                $response['result'] = ProjectCommentResource::collection($comments);
+                $response['status'] = true;
+                $response['message'] = 'دیدگاه شما با موفقیت ذخیره شد';
+            } else {
+                $response['message'] = 'پروژه مورد نظر یافت نشد';
+            }
+        } catch (\Exception $e) {
+            $response['message'] = $e->getMessage();
+
+            return response()->json($response, 500);
+        }
+
+        return response()->json($response, 200);
 
     }
 

@@ -147,7 +147,7 @@
                                     </Slide>
                                 </Carousel>
                             </div>
-                            <span v-text="project?.title" class="is-font-alt has-text-grey is-rounded rounded-1 is-weight-900" :style="{position: 'absolute', top: '5px', right: '5px', width: 'calc(100% - 10px)', padding: '3px 5px', backgroundColor: 'rgba(250, 250, 250, 0.85)', boxShadow: '0 0 4px rgba(0, 0, 0, 0.95)'}"/>
+                            <span v-text="project?.title" class="is-font-alt has-text-grey is-rounded rounded-2 is-weight-900" :style="{position: 'absolute', top: '5px', right: '5px', width: 'calc(100% - 10px)', padding: '3px 5px', backgroundColor: 'rgba(250, 250, 250, 0.85)', boxShadow: '0 0 4px rgba(0, 0, 0, 0.95)'}"/>
                             <span v-text="project?.project_type?.title" class="tag" :style="{position: 'absolute', bottom: '5px', right: '5px', backgroundColor: project?.project_type?.bgColor, color: project?.project_type?.textColor}"/>
                             <span v-text="$helpers.jDate(project.created_at)" class="tag" :style="{position: 'absolute', bottom: '5px', left: '5px'}"/>
                         </div>
@@ -587,7 +587,7 @@
                             <div class="columns is-multiline">
                                 <div class="column is-12 pb-2">
                                     <div class="file is-boxed is-align-items-center" style="min-height: 170px">
-                                        <label class="has-background-light is-rounded rounded-2 p-5 w-100 file-label is-block" v-if="attachment === null">
+                                        <label class="has-background-light is-rounded rounded-3 p-5 w-100 file-label is-block" v-if="attachment === null">
                                             <input class="file-input" type="file" @change="handleFileSelect" :multiple="false" accept=".zip, .rar, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3">
                                             <span class="file-cta has-background-info has-text-white">
                                                 <span class="file-icon">
@@ -599,7 +599,7 @@
                                                 <span class="mr-2">فرمت‌های مورد قبول:</span><bdi>zip, rar, pdf, doc, docx, xls, xlsx, ppt, pptx, mp3</bdi>
                                             </div>
                                         </label>
-                                        <div class="has-background-light is-rounded rounded-2 p-5 is-flex w-100 is-align-items-center is-flex-direction-column" v-if="attachment != null">
+                                        <div class="has-background-light is-rounded rounded-3 p-5 is-flex w-100 is-align-items-center is-flex-direction-column" v-if="attachment != null">
                                             <div class="is-flex w-100 is-align-items-center">
                                                 <div class="is-inline-block">
                                                     <i class="fad fa-5x has-text-warning mx-3" :class="fileTypes[attachment.name.split('.').pop().toLowerCase()] ?? 'fa-file'"></i>
@@ -671,6 +671,48 @@
                             </div>
                         </div>
                     </template>
+                    <template #comments>
+                        <div class="mx-5 px-5 has-background-light is-rounded rounded-3" style="height: 60vh">
+                            <div class="is-chat animated preFadeInUp fadeInUp">
+                                <div class="chat-body-wrap overflow-hidden">
+                                    <ol class="chat-body" ref="chatBody">
+                                        <li class="no-messages" v-if="form?.comments?.length === 0">
+                                            <img class="light-image" :src="base_url+'/assets/img/illustrations/placeholders/search-1.svg'" alt="" />
+                                            <img class="dark-image" :src="base_url+'/assets/img/illustrations/placeholders/search-1-dark.svg'" alt="" />
+                                            <div class="text">
+                                                <h3>هنوز دیدگاهی وجود ندارد</h3>
+                                            </div>
+                                        </li>
+                                        <li v-for="comment in form.comments" :class="comment.user.username === currentUser.username ? 'self' : 'other'">
+                                            <div class="avatar" :class="{ visible: prevUser !== comment.user.id }">
+                                                <img :src="comment.user.avatar" :alt="comment.user.display_name" draggable="false">
+                                            </div>
+                                            <div class="msg">
+                                                <span class="name" :class="{ visible: prevUser !== comment.user.id }">{{ comment.user.display_name }}</span>
+                                                <div class="msg-inner">
+                                                    <p v-text="comment.comment"/>
+                                                </div>
+                                                <time class="is-ltr">{{ $helpers.jDate(comment.created_at, 'jYYYY/jMM/jDD - H:mm') }}</time>
+                                            </div>
+                                            {{ changePrevUser(comment.user.id) }}
+                                        </li>
+                                    </ol>
+                                </div>
+                                <input class="input is-rounded" type="text" placeholder="دیدگاه شما چیست؟" ref="commentInput"/>
+                                <div class="message-field-wrapper" style="padding: 0 35px;">
+                                    <div class="control">
+                                        <input v-model="comment" class="input is-rounded" type="text" placeholder="دیدگاه شما چیست؟" ref="commentInput"/>
+                                        <div class="send-message">
+                                            <button class="button is-primary is-raised is-rounded" :disabled="savingComment" @click="saveComment">
+                                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA7UlEQVR4nO3UrU5DQRCG4UNJShMSEjBcQAUYFI5yCzWQWiQWieUeUKgmvQUktkGgGgwYFAaBA0P4eTBTsmnooQ17jurndjPzvbszs1sUC9UpNNDFMLfxKo5xL5TLeBNneB4bZwFgB328JZ5DHPwLgH1c4it8PmO9l8TMB0ATR7hNTvuCC2z9Ej8bAGs4wWNi/BQ13yjJKwegjXO8JsajuEWzJG8F21MB2MUA7xON62IpYtYjrofTKNMVHvBROkWVAyovUW1NnjKmPdxkHdM5H1onC6Dyr6K2z25SaMWU3VUCGAvLOMT1z+ZCxR/6BkTjZthcylLUAAAAAElFTkSuQmCC" v-if="!savingComment">
+                                                <i class="fas fa-spinner-third fa-spin" v-else></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </b-tabs>
             </b-overlay>
             <template #footer-left>
@@ -727,6 +769,7 @@ export default {
             saving: false,
             newRec: false,
             editing: false,
+            savingComment: false,
             gettingLocationInfo: false,
             form: {
                 title: '',
@@ -756,6 +799,7 @@ export default {
                 units: 1,
                 floors: 1,
             },
+            comment: null,
             default_status: null,
             default_result: null,
             uploadProgress: 0,
@@ -833,6 +877,8 @@ export default {
                 conditions: this['ol-selectconditions'],
             },
             imageToPreview: null,
+            currentUser: null,
+            prevUser: null,
         }
     },
     validations() {
@@ -1053,9 +1099,21 @@ export default {
     },
     created() {
         this.refreshTable(false)
+        let crmState = JSON.parse(localStorage?.getItem('crmState'))
+        this.currentUser = crmState.userData
     },
     mounted() {
         this.getCurrentPosition(false)
+    },
+    watch: {
+        active_tab(o, n) {
+            if (this.active_tab==='comments' && o !== n) {
+                setTimeout(() => {
+                    this.$refs.chatBody.scrollTop = this.$refs.chatBody.scrollTopMax;
+                }, 300);
+                const commentInput = this.$refs.commentInput
+            }
+        },
     },
     methods: {
         refreshTable(filters = false) {
@@ -1249,6 +1307,8 @@ export default {
             this.$nextTick(res => {
                 this.getCurrentPosition(true)
             })
+            this.comment = null
+            this.savingComment = false
         },
         saveItem() {
             let perm = false
@@ -1755,6 +1815,37 @@ export default {
                 })
             }
         },
+        changePrevUser(id) {
+            this.prevUser = id
+        },
+        saveComment() {
+            if (!this.savingComment && this.comment != null && this.comment.length > 0) {
+                this.savingComment = true
+                Requests.addProjectComment({project: this.editingItem.id, comment: this.comment}).then(res => {
+                    if (res?.status) {
+                        for (let i = 0; i < this.projects.length; i++) {
+                            if (this.projects[i].id === this.editingItem.id) {
+                                this.form.comments = res.result
+                                this.projects[i].comments = res.result
+                                break;
+                            }
+                        }
+                        setTimeout(() => {
+                            this.$refs.chatBody.scrollTop = this.$refs.chatBody.scrollTopMax;
+                        }, 300);
+                        this.$helpers.notify(res?.message || 'دیدگاه شما ارسال شد')
+                    } else {
+                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره دیدگاه')
+                    }
+                }).catch(err => {
+                    console.error(err)
+                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره دیدگاه')
+                }).finally(res => {
+                    this.comment = null
+                    this.savingComment = null
+                })
+            }
+        },
     }
 };
 </script>
@@ -1874,6 +1965,42 @@ export default {
 .image-thumb .image-type span:nth-child(2){
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
+}
+.message-field-wrapper .control input {
+    padding-right: 20px;
+    padding-left: 100px;
+}
+.message-field-wrapper {
+    width: 100%;
+}
+.chat-body {
+    width: 100%;
+    height: calc(100% - 70px);
+    padding: 0 30px 0 30px;
+    scroll-behavior: smooth;
+}
+.chat-body .no-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.message-field-wrapper .control .send-message .button {
+    width: 37px !important;
+    height: 37px !important;
+    max-width: 37px !important;
+    max-height: 37px !important;
+    min-width: 37px !important;
+    min-height: 37px !important;
+    border-radius: 50% !important;
+    padding: 2px 2px 2px 2px !important;
+}
+.message-field-wrapper .control .send-message .button img {
+    margin-right:4px;
+}
+.visible {
+    visibility: visible !important;
 }
 </style>
 

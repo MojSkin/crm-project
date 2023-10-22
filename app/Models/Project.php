@@ -54,7 +54,7 @@ class Project extends Model
 
     public function comments():MorphMany
     {
-        return $this->morphMany(Comment::class, 'commentable')->whereNull('comment_id')->with(['comments', 'user'])->orderBy('created_at', 'desc');
+        return $this->morphMany(Comment::class, 'commentable')->orderBy('created_at', 'asc');
     }
 
     public function notes(): HasMany

@@ -63753,22 +63753,32 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
     display: none
 }
 
+.chat-body .other+.other .name,
+.chat-body .self+.self .name {
+    visibility: hidden;
+}
 .chat-body .other+.other .avatar,
 .chat-body .self+.self .avatar {
-    visibility: hidden !important
+    visibility: hidden;
 }
 
 .chat-body .other.is-multi+.other.is-multi .avatar {
     visibility: visible !important
 }
 
+.chat-body .other {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+
+}
 .chat-body .other .msg {
     -webkit-box-ordinal-group: 2;
     -ms-flex-order: 1;
     order: 1;
-    min-width: 230px;
+    min-width: 160px;
     max-width: 40%;
-    margin-right: 20px
+    margin-left: 20px
 }
 
 .chat-body .other .msg p {
@@ -63779,14 +63789,25 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
 .chat-body .other .msg .msg-inner {
     background: #fff;
     color: #283252;
-    border-radius: 12px 0 12px 12px;
+    border-radius: 0 12px 12px 12px;
     padding: 16px;
     position: relative
 }
 
+.chat-body .self .msg .name,
+.chat-body .other .msg .name {
+    display: block;
+    text-align: right;
+    font-size: .8rem;
+    color: #a2a5b9;
+    width: 100%
+}
+.chat-body .other .msg .name {
+    text-align: left;
+}
 .chat-body .other .msg time {
     display: block;
-    text-align: left;
+    text-align: right;
     font-size: .8rem;
     color: #a2a5b9;
     margin-top: 3px;
@@ -63803,8 +63824,15 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
     height: 10px;
     width: 10px;
     stroke: #fff;
-    margin-right: 3px
+    margin-left: 3px
 }
+
+.chat-body .other .avatar {
+    -webkit-box-ordinal-group: 3;
+    -ms-flex-order: 2;
+    order: 2
+}
+
 
 .chat-body .other .msg.is-link-image {
     background: #e6e5ed;
@@ -63816,9 +63844,9 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
 }
 
 .chat-body .self {
-    -webkit-box-pack: end;
-    -ms-flex-pack: end;
-    justify-content: flex-end;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
     -webkit-box-align: stretch;
     -ms-flex-align: stretch;
     align-items: stretch
@@ -63826,10 +63854,10 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
 
 .chat-body .self .msg {
     -webkit-box-ordinal-group: 2;
-    -ms-flex-order: 1;
-    order: 1;
-    margin-left: 20px;
-    min-width: 230px;
+    -ms-flex-order: 2;
+    order: 2;
+    margin-right: 20px;
+    min-width: 160px;
     max-width: 40%;
     position: relative
 }
@@ -63837,7 +63865,7 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
 .chat-body .self .msg .msg-inner {
     background: #e6e5ed;
     color: #283252;
-    border-radius: 0 12px 12px 12px;
+    border-radius: 12px 0 12px 12px;
     padding: 12px
 }
 
@@ -63847,7 +63875,7 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
 
 .chat-body .self .msg time {
     display: block;
-    text-align: right;
+    text-align: left;
     font-size: .8rem;
     color: #a2a5b9;
     margin-top: 3px;
@@ -63864,7 +63892,7 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
     height: 10px;
     width: 10px;
     stroke: #283252;
-    margin-left: 3px
+    margin-right: 3px
 }
 
 .chat-body .self .msg.is-link-image {
@@ -63878,8 +63906,8 @@ body.is-dark .project-details .project-details-inner .task-grid .task-card .titl
 
 .chat-body .self .avatar {
     -webkit-box-ordinal-group: 3;
-    -ms-flex-order: 2;
-    order: 2
+    -ms-flex-order: 1;
+    order: 1
 }
 
 .chat-body .self .avatar:before {
