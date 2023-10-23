@@ -28,8 +28,8 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
     if (typeof to?.meta?.middleware?.toUpperCase() != 'undefined' && to?.meta?.middleware?.toUpperCase() === 'AUTH') {
-        const crmState = JSON.parse(localStorage?.crmState)
-
+        let crmState = localStorage?.crmState
+        crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
         if (typeof crmState?.userData === undefined || typeof crmState?.userData?.token !== 'string' || crmState?.userData?.token?.length < 30) {
             router.push('/login')
         }

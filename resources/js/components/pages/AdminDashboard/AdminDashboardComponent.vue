@@ -153,7 +153,6 @@ export default {
     created() {
         let crmState = JSON.parse(localStorage?.getItem('crmState'))
         this.currentUser = crmState.userData
-        console.log(this.currentUser)
     },
     mounted() {
         this.getProjects()

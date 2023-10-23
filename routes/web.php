@@ -15,8 +15,8 @@ use App\Models\Setting;
 */
 
 Route::get('/', function () {
-    return redirect()->to('/login');
-//    return view('welcome');
+//    return redirect()->to('/login');
+    return view('welcome');
 });
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');

@@ -35,6 +35,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware('auth:sanctum')->name('api.')->group(function() {
 
+    Route::post('/checkUserStatus', [UserController::class, 'checkUserStatus'])->name('checkUserStatus');
+
     Route::prefix('/contacts')->name('contacts.')->group(function () {
         Route::post('/getContactsList',    [ContactController::class, 'getContactsList'])->name('getContactsList');
         Route::post('/getContactsExtData', [ContactController::class, 'getContactsExtData'])->name('getContactsExtData');

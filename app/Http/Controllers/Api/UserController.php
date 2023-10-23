@@ -360,6 +360,14 @@ class UserController extends Controller
         return response()->json($response, 200);
     }
 
+    public function checkUserStatus(Request $request)
+    {
+        if (Auth::check() && Auth::user()->username == $request->user) {
+            return response()->json(200);
+        }
+        return response()->json(403);
+    }
+
     private static function check_mobile($mobile) {
         if ($mobile === null) {
             return null;

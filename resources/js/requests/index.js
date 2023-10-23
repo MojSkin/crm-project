@@ -250,6 +250,11 @@ export default {
         return response
     },
 
+    async checkUserStatus(user) {
+        const res = await axios.post(route('api.checkUserStatus'), { user: user }, this.tokenHeader())
+        return res?.data
+    },
+
     async saveUserRole(formData) {
         const res = await axios.post(route('api.permissions.save'), this.makeFormData(formData), this.tokenHeader())
         return res?.data

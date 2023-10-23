@@ -21,9 +21,26 @@ import AdminRoles               from "../components/pages/AdminUsers/AdminRolesC
 import UserProfileEdit          from "../components/pages/Profile/UserProfileEditComponent.vue";
 // ==================================================
 
-const adminRoutePrefix = (import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX && import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX.length) ? '/'+import.meta.env.VITE_ADMIN_ROUTE_PREFIX : ''
+// const adminRoutePrefix = (import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX && import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX.length) ? '/'+import.meta.env.VITE_ADMIN_ROUTE_PREFIX : ''
 
 const adminRoutes = [
+    {
+        path: '/dashboard',
+        component: AdminDashboard,
+        name: 'admin.dashboard',
+        meta: {
+            pageTitle: 'پیشخوان مدیریت',
+            breadcrumbs: [],
+            middleware: 'AUTH'
+        }
+    },
+    {
+        path: '/',
+        redirect: {name: 'admin.dashboard'},
+        meta: {
+            middleware: 'AUTH'
+        }
+    },
     {
         path: '/login',
         component: Login,
@@ -35,18 +52,7 @@ const adminRoutes = [
         }
     },
     {
-        path: '/preview/:form_id',
-        component: Preview,
-        name: 'preview',
-        props: true,
-        meta: {
-            pageTitle: 'پیش‌نمایش فرم',
-            breadcrumbs: [],
-            middleware: 'WEB'
-        }
-    },
-    {
-        path: adminRoutePrefix+'/under-construction',
+        path: '/under-construction',
         name: 'admin.under-construction',
         component: AdminUnderConstruction,
         meta: {
@@ -56,24 +62,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix,
-        redirect: {name: 'admin.dashboard'},
-        meta: {
-            middleware: 'AUTH'
-        }
-    },
-    {
-        path: adminRoutePrefix+'/dashboard',
-        component: AdminDashboard,
-        name: 'admin.dashboard',
-        meta: {
-            pageTitle: 'پیشخوان مدیریت',
-            breadcrumbs: [],
-            middleware: 'AUTH'
-        }
-    },
-    {
-        path: adminRoutePrefix+'/form-builder',
+        path: '/form-builder',
         component: AdminFormBuilder,
         name: 'admin.formBuilder',
         meta: {
@@ -83,7 +72,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/form-inbox',
+        path: '/form-inbox',
         component: AdminFormInbox,
         name: 'admin.formInbox',
         meta: {
@@ -93,7 +82,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/contacts',
+        path: '/contacts',
         component: AdminContacts,
         name: 'admin.contacts',
         meta: {
@@ -103,7 +92,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/base/contact-positions',
+        path: '/base/contact-positions',
         component: AdminContactPositions,
         name: 'admin.contact-positions',
         meta: {
@@ -113,7 +102,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/base/project-statuses',
+        path: '/base/project-statuses',
         component: AdminProjectStatus,
         name: 'admin.project-statuses',
         meta: {
@@ -123,7 +112,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/base/project-types',
+        path: '/base/project-types',
         component: AdminProjectType,
         name: 'admin.project-types',
         meta: {
@@ -133,7 +122,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/base/project-results',
+        path: '/base/project-results',
         component: AdminProjectResult,
         name: 'admin.project-results',
         meta: {
@@ -143,7 +132,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/base/categories',
+        path: '/base/categories',
         component: AdminProductCategory,
         name: 'admin.shop.categories',
         meta: {
@@ -153,7 +142,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/projects',
+        path: '/projects',
         component: AdminProjects,
         name: 'admin.projects',
         props: false,
@@ -165,7 +154,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/project/:project_id',
+        path: '/project/:project_id',
         component: AdminProject,
         name: 'admin.project.single',
         meta: {
@@ -175,7 +164,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/users',
+        path: '/users',
         component: AdminUsers,
         name: 'admin.users',
         meta: {
@@ -185,7 +174,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/users/permissions',
+        path: '/users/permissions',
         component: AdminRoles,
         name: 'admin.permissions',
         meta: {
@@ -195,7 +184,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/file-manager',
+        path: '/file-manager',
         component: AdminFileManager,
         name: 'admin.filemanager',
         meta: {
@@ -205,7 +194,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/profile',
+        path: '/profile',
         component: UserProfileEdit,
         name: 'admin.profile',
         props: { layout: 'AdminLayoutComponent', changeable: true, username: false },
@@ -216,7 +205,7 @@ const adminRoutes = [
         }
     },
     {
-        path: adminRoutePrefix+'/settings',
+        path: '/settings',
         component: AdminSettings,
         name: 'admin.settings',
         meta: {

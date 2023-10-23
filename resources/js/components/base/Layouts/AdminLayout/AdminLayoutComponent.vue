@@ -120,7 +120,7 @@
     </div>
     <!-- Content Wrapper -->
     <div class="view-wrapper" :class="{ 'is-pushed-full': activeSidebar }">
-
+        <CheckUserStatusComponent/>
         <div class="page-content-wrapper">
             <div class="page-content is-relative">
 
@@ -217,10 +217,11 @@ import AdminProfileDropdown from "./_Partials/AdminProfileDropdown.vue";
 import AdminActivityPanel from "./_Partials/AdminActivityPanel.vue";
 import AdminSearchPanel from "./_Partials/AdminSearchPanel.vue";
 import AdminAsideIconMenu from "./_Partials/AdminAsideIconMenu.vue";
+import CheckUserStatusComponent from "@/components/base/Layouts/AdminLayout/_Partials/CheckUserStatusComponent.vue";
 const url = import.meta.env.VITE_APP_URL_FULL
 export default {
     name: "AdminLayoutComponent",
-    components: { AdminAsideIconMenu, AdminSearchPanel, AdminActivityPanel, AdminProfileDropdown, AdminAsideMenuItems },
+    components: {CheckUserStatusComponent, AdminAsideIconMenu, AdminSearchPanel, AdminActivityPanel, AdminProfileDropdown, AdminAsideMenuItems },
     data() {
         return {
             darkMode: true,
