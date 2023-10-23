@@ -777,27 +777,29 @@
                                 </div>
                             </div>
                             <hr v-if="form.notes.length" class="mt-0">
-                            <div class="columns is-multiline is-rounded rounded-3 is-note overflow-hidden is-relative" v-for="(note, noteIndex) in form.notes">
-                                <div class="column is-12 is-flex">
-                                    <span class="current-status has-background-warning" v-if="noteIndex === 0 & (noteIndex !== form.notes.length-1)">هم‌اکنون</span>
-                                    <span class="current-status has-background-success" v-if="noteIndex === form.notes.length-1">شـروع</span>
-                                    <div class="note-meta">
-                                        <div class="h-avatar is-large">
-                                            <img class="avatar" :src="note.user.avatar" alt="">
-                                        </div>
-                                        <div class="flex-meta">
-                                            <div class="small">{{ note.user.display_name }}</div>
-                                            <bdi class="small">{{ $helpers.jDate(note.created_at, 'jYYYY/jMM/jDD - H:mm') }}</bdi>
-                                            <div class="w-100 mt-2 mb-1">
-                                                <span v-text="note?.project_status?.title" class="has-text-centered tag w-100" :style="{backgroundColor: note?.project_status?.bgColor, color: note?.project_status?.textColor}"/>
+                            <div class="w-100 overflow-scroll" style="max-height: 480px;">
+                                <div class="columns is-multiline is-rounded rounded-3 is-note overflow-hidden is-relative" v-for="(note, noteIndex) in form.notes">
+                                    <div class="column is-12 is-flex">
+                                        <span class="current-status has-background-warning" v-if="noteIndex === 0 & (noteIndex !== form.notes.length-1)">هم‌اکنون</span>
+                                        <span class="current-status has-background-success" v-if="noteIndex === form.notes.length-1">شـروع</span>
+                                        <div class="note-meta">
+                                            <div class="h-avatar is-large">
+                                                <img class="avatar" :src="note.user.avatar" alt="">
                                             </div>
-                                            <div class="w-100 mb-2">
-                                                <span v-text="note?.project_result?.title" class="has-text-centered tag w-100" :style="{backgroundColor: note?.project_result?.bgColor, color: note?.project_result?.textColor}"/>
+                                            <div class="flex-meta">
+                                                <div class="small">{{ note.user.display_name }}</div>
+                                                <bdi class="small">{{ $helpers.jDate(note.created_at, 'jYYYY/jMM/jDD - H:mm') }}</bdi>
+                                                <div class="w-100 mt-2 mb-1">
+                                                    <span v-text="note?.project_status?.title" class="has-text-centered tag w-100" :style="{backgroundColor: note?.project_status?.bgColor, color: note?.project_status?.textColor}"/>
+                                                </div>
+                                                <div class="w-100 mb-2">
+                                                    <span v-text="note?.project_result?.title" class="has-text-centered tag w-100" :style="{backgroundColor: note?.project_result?.bgColor, color: note?.project_result?.textColor}"/>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="note-comment">
-                                        {{ note.note }}
+                                        <div class="note-comment">
+                                            {{ note.note }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2033,7 +2035,7 @@ export default {
     overflow: scroll;
     padding-bottom: 25px;
 }
-.inner-content .content-gradient {
+.content-gradient {
     position: absolute;
     width: 100%;
     height: 30px;
