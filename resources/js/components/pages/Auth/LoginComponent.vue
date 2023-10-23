@@ -177,8 +177,13 @@ export default {
                     Requests.login(this.username, this.password).then(res => {
                         if (res?.status) {
                             this.$store.commit('setUserData', res.userData)
-                            this.$helpers.notify('خوش آمدید', res?.data?.message);
-                            this.$router.push(res?.redirect || this.defaultRedirect)
+                            if (res.userData?.avatar.includes('placeholder') || !res.userData?.fName || !res.userData?.lName) {
+                                this.$helpers.notify('خوش آمدید', 'لطفا قبل از هر چیز پروفایل خود را کامل کنید!');
+                                this.$router.push({name: 'admin.profile'})
+                            } else {
+                                this.$helpers.notify('خوش آمدید', res?.data?.message);
+                                this.$router.push(res?.redirect || this.defaultRedirect)
+                            }
                         } else {
                             this.$helpers.notify('خطا', res?.response?.data?.message ?? "بروز خطا در برقراری ارتباط با سرور");
                         }
