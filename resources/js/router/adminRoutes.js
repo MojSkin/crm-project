@@ -1,5 +1,7 @@
 // ==================================================
 // Admin`s Section Components
+import Preview                  from "../components/pages/WebHome/FormPreview.vue";
+import Login                    from "../components/pages/Auth/LoginComponent.vue";
 import AdminDashboard           from "../components/pages/AdminDashboard/AdminDashboardComponent.vue";
 import AdminFormBuilder         from "../components/pages/AdminFormBuilder/AdminFormBuilderComponent.vue";
 import AdminFormInbox           from "../components/pages/AdminFormInbox/AdminFormInboxComponent.vue";
@@ -22,6 +24,27 @@ import UserProfileEdit          from "../components/pages/Profile/UserProfileEdi
 const adminRoutePrefix = (import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX && import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX.length) ? '/'+import.meta.env.VITE_ADMIN_ROUTE_PREFIX : ''
 
 const adminRoutes = [
+    {
+        path: '/login',
+        component: Login,
+        name: 'login',
+        meta: {
+            pageTitle: 'Login',
+            breadcrumbs: [],
+            middleware: 'WEB'
+        }
+    },
+    {
+        path: '/preview/:form_id',
+        component: Preview,
+        name: 'preview',
+        props: true,
+        meta: {
+            pageTitle: 'پیش‌نمایش فرم',
+            breadcrumbs: [],
+            middleware: 'WEB'
+        }
+    },
     {
         path: adminRoutePrefix+'/under-construction',
         name: 'admin.under-construction',
