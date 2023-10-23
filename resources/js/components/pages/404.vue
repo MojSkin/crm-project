@@ -2,7 +2,7 @@
     <section class="hero">
         <div class="hero-body is-flex is-justify-content-center is-align-items-center">
             <div class="container-fluid is-flex is-flex-direction-column is-justify-content-center is-align-items-center">
-                <img src="/resources/assets/images/svg/error-500.svg" alt="404">
+                <img :src="base_url+'/assets/img/illustrations/placeholders/error-3.svg'" alt="404">
                 <div class="is-flex is-flex-direction-row is-justify-content-center is-align-items-center">
                     <h3>خطای 404</h3>
                     <h1>|</h1>
@@ -16,7 +16,7 @@
 <script>
 export default {
     name: "404",
-    props: {},
+    inject: ['base_url'],
     data() {
         return {}
     },

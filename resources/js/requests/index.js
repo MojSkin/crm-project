@@ -379,8 +379,13 @@ export default {
         return res?.data
     },
 
-    async getProjectsList() {
-        const res = await axios.post(route('api.projects.getProjectsList'), {}, this.tokenHeader())
+    async getProjectsList(filters = null, rows = 12) {
+        const res = await axios.post(route('api.projects.getProjectsList'), {filters: filters, rows: rows}, this.tokenHeader())
+        return res?.data
+    },
+
+    async getSingleProject(project_id) {
+        const res = await axios.post(route('api.projects.getSingleProject'), {project: project_id}, this.tokenHeader())
         return res?.data
     },
 

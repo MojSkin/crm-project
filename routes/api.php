@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->name('api.')->group(function() {
 
     Route::prefix('/projects')->name('projects.')->group(function () {
         Route::post('/getProjectsList',      [ProjectController::class, 'getProjectsList'])->name('getProjectsList');
+        Route::post('/getSingleProject',     [ProjectController::class, 'getSingleProject'])->name('getSingleProject');
         Route::post('/getProjectsExtData',   [ProjectController::class, 'getProjectsExtData'])->name('getProjectsExtData');
         Route::post('/saveProject',          [ProjectController::class, 'saveProject'])->name('saveProject');
         Route::post('/deleteProject',        [ProjectController::class, 'deleteProject'])->name('deleteProject');

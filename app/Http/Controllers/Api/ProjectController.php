@@ -33,12 +33,75 @@ class ProjectController extends Controller
         ];
 
         try {
-            $projects = Project::with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user']);
-            $projects = $projects->orderBy('created_at', 'DESC')->get();
+            $projects = Project::with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->orderBy('created_at', 'DESC');
 
-            $response['result'] = ProjectResource::collection($projects);
+            if (isset($request->filters) && $request->filters !== null) {
+                $project_ids = [];
+                if (isset($request->filters['user'])) {
+                    $userCanSeeAllProjects = false;
+                    if ($userCanSeeAllProjects) {
+                        $project_ids = Project::puck('id')->toArray();
+                    } else {
+                        $project_ids[] = Project::whereUserId($request->filters['user'])->puck('id')->toArray();
+                        $project_ids[] = ProjectUser::whereUserId($request->filters['user'])->puck('project_id')->toArray();
+                    }
+                }
+                $projects = $projects->whereIn('id', $project_ids);
+            }
+
+            if (isset($request->rows) && $request->rows !== null) {
+                $projects = $projects->limit($request->rows);
+            }
+
+            $response['result'] = ProjectResource::collection($projects->get());
+            $response['ext_data'] = [
+                'types'     => (new ProjectTypeController())->getProjectTypeList()->original['result'] ?? [],
+                'statuses'  => (new ProjectStatusController())->getProjectStatusList()->original['result'] ?? [],
+                'results'   => (new ProjectResultController())->getProjectResultList()->original['result'] ?? [],
+                'contacts'  => (new ContactController())->getContactsList(new Request([]))->original['result'] ?? [],
+                'positions' => (new ContactPositionController())->getPositionsList()->original['result'] ?? [],
+                'cities'    => (new CityController())->getCitiesList()->original['result'] ?? [],
+                'users'     => (new UserController())->list()->original['result']['users'] ?? [],
+            ];
+
             $response['status'] = true;
             $response['message'] = 'فهرست پروژه‌ها با موفقیت دریافت شد';
+        } catch (\Exception $e) {
+            $response['message'] = $e->getMessage().' at line '.$e->getLine().' in '.$e->getFile();
+            $response['trace'] = $e->getTrace();
+
+            return response()->json($response, 500);
+        }
+
+        return response()->json($response, 200);
+    }
+
+    public function getSingleProject(Request $request)
+    {
+        $response = [
+            'status' => false,
+            'message' => 'بروز خطا هنگام دریافت اطلاعات پروژه',
+            'result' => null
+        ];
+
+        try {
+            $project = Project::whereId($request->project)->with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+            if ($project) {
+                $response['result'] = new ProjectResource($project);
+                $response['ext_data'] = [
+                    'types'     => (new ProjectTypeController())->getProjectTypeList()->original['result'] ?? [],
+                    'statuses'  => (new ProjectStatusController())->getProjectStatusList()->original['result'] ?? [],
+                    'results'   => (new ProjectResultController())->getProjectResultList()->original['result'] ?? [],
+                    'contacts'  => (new ContactController())->getContactsList(new Request([]))->original['result'] ?? [],
+                    'positions' => (new ContactPositionController())->getPositionsList()->original['result'] ?? [],
+                    'cities'    => (new CityController())->getCitiesList()->original['result'] ?? [],
+                    'users'     => (new UserController())->list()->original['result']['users'] ?? [],
+                ];
+                $response['status'] = true;
+                $response['message'] = 'اطلاعات پروژه مورد نظر با موفقیت دریافت شد';
+            } else {
+                $response['message'] = 'پروژه مورد نظر یافت نشد';
+            }
         } catch (\Exception $e) {
             $response['message'] = $e->getMessage().' at line '.$e->getLine().' in '.$e->getFile();
             $response['trace'] = $e->getTrace();

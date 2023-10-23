@@ -7,7 +7,7 @@
                     <button @click="newItem" v-if="permission.add" class="button is-primary font-weight-bolder mr-2 is-flex align-items-center" :disabled="loading || saving">
                         <i class="fal fa-plus mr-2"></i> <span>پروژه جدید</span>
                     </button>
-                    <button @click="refreshTable(false)" class="button is-solid hint--light hint--rounded hint--top is-flex align-items-center" v-if="!loading && !saving && !newRec && !editing" data-hint="دریافت مجدد فهرست نتایج پروژه">
+                    <button @click="refreshTable(false, 12)" class="button is-solid hint--light hint--rounded hint--top is-flex align-items-center" v-if="!loading && !saving && !newRec && !editing" data-hint="دریافت مجدد فهرست نتایج پروژه">
                         <i class="fal fa-undo"></i>
                     </button>
                     <span v-if="loading">
@@ -17,169 +17,116 @@
             </div>
         </b-card>
         <b-card no-header :no-footer="!newRec && !editing" :body-class="{'px-0': newRec || editing}" class="overflow-visible position-relative">
-            <div class="columns is-multiline is-flex" v-if="!newRec && !editing">
-                <div class="column is-12">
-                    <b-accordion
-                        :headers="[
-                    {
-                        id: 'searchPanel',
-                        title: 'جستجوی پیشرفته',
-                    }
-                ]"
-                        is-exclusive
-                        class="mb-5"
-                    >
-                        <template #content-searchPanel>
-                            <div class="columns is-multiline">
-                                <!--                        <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">-->
-                                <!--                            <b-input-->
-                                <!--                                label='عنوان مخاطب:'-->
-                                <!--                            >-->
-                                <!--                                <template #input>-->
-                                <!--                                    <b-select-->
-                                <!--                                        autoclose-->
-                                <!--                                        clearable-->
-                                <!--                                        label='عنوان مخاطب:'-->
-                                <!--                                        :options="prefixes"-->
-                                <!--                                        v-model="filters.prefix"-->
-                                <!--                                    >-->
-                                <!--                                        <template #label="item">-->
-                                <!--                                            {{ item.title }}-->
-                                <!--                                        </template>-->
-                                <!--                                    </b-select>-->
-                                <!--                                </template>-->
-                                <!--                            </b-input>-->
-                                <!--                        </div>-->
-                            </div>
-                            <div class="columns is-multiline">
-                                <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                    <b-input
-                                        label='نام مخاطب:'
-                                        v-model="filters.fName"
-                                        placeholder="نام مخاطب"
-                                    ></b-input>
+            <b-overlay :show="saving || loading" loader-custom-class="has-text-info" :loader-text="loading ? 'در حال دریافت اطلاعات...' : 'در حال ذخیره پروژه... '">
+                <div class="columns is-multiline is-flex" v-if="!newRec && !editing">
+                    <div class="column is-12" v-if="projects.length > 0">
+                        <b-accordion
+                            :headers="[
+                        {
+                            id: 'searchPanel',
+                            title: 'جستجوی پیشرفته',
+                        }
+                    ]"
+                            is-exclusive
+                            class="mb-5"
+                        >
+                            <template #content-searchPanel>
+                                <div class="columns is-multiline">
                                 </div>
-                                <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                    <b-input
-                                        label='نام خانوادگی مخاطب:'
-                                        v-model="filters.lName"
-                                        placeholder="نام خانوادگی مخاطب"
-                                    ></b-input>
+                                <div class="columns is-multiline">
+                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
+                                        <b-input
+                                            label='نام مخاطب:'
+                                            v-model="filters.fName"
+                                            placeholder="نام مخاطب"
+                                        ></b-input>
+                                    </div>
+                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
+                                        <b-input
+                                            label='نام خانوادگی مخاطب:'
+                                            v-model="filters.lName"
+                                            placeholder="نام خانوادگی مخاطب"
+                                        ></b-input>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="columns is-multiline">
-                                <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                    <b-input
-                                        label='نام مستعار:'
-                                        v-model="filters.nickname"
-                                        placeholder="نام مستعار"
-                                    ></b-input>
+                                <div class="columns is-multiline">
+                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
+                                        <b-input
+                                            label='نام مستعار:'
+                                            v-model="filters.nickname"
+                                            placeholder="نام مستعار"
+                                        ></b-input>
+                                    </div>
+                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
+                                        <b-input
+                                            label='عنوان:'
+                                            v-model="filters.title"
+                                            placeholder="عنوان"
+                                        ></b-input>
+                                    </div>
+                                    <div class="column is-12-mobile is-12-tablet is-4-widescreen is-4-desktop">
+                                        <b-input
+                                            label='نام تجاری:'
+                                            v-model="filters.org"
+                                            placeholder="نام تجاری"
+                                        ></b-input>
+                                    </div>
                                 </div>
-                                <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                    <b-input
-                                        label='عنوان:'
-                                        v-model="filters.title"
-                                        placeholder="عنوان"
-                                    ></b-input>
+                                <div class="columns is-multiline">
+                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
+                                        <b-input
+                                            label='تلفن:'
+                                            v-model="filters.phone"
+                                            placeholder="تلفن"
+                                        ></b-input>
+                                    </div>
+                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
+                                        <b-input
+                                            label='ایمیل:'
+                                            v-model="filters.email"
+                                            placeholder="ایمیل"
+                                        ></b-input>
+                                    </div>
+                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
+                                        <b-input
+                                            label='آدرس:'
+                                            v-model="filters.address"
+                                            placeholder="آدرس"
+                                        ></b-input>
+                                    </div>
+                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
+                                        <b-input
+                                            label='سایر مشخصات:'
+                                            v-model="filters.other"
+                                            placeholder="سایر مشخصات"
+                                        ></b-input>
+                                    </div>
                                 </div>
-                                <div class="column is-12-mobile is-12-tablet is-4-widescreen is-4-desktop">
-                                    <b-input
-                                        label='نام تجاری:'
-                                        v-model="filters.org"
-                                        placeholder="نام تجاری"
-                                    ></b-input>
+                                <div class="columns is-multiline">
+                                    <div class="column is-12 is-flex">
+                                        <button class="button is-success mr-2 ml-auto" @click="refreshTable(filters, 12)" :disabled="loading">
+                                            <i class="fal fa-filter" v-if="!loading"></i>
+                                            <i class="fal fa-spinner-third fa-spin" v-else></i>
+                                            <span class="ml-2">اعمال شرایط</span>
+                                        </button>
+                                        <button class="button" @click="cancelFilter">پاک کردن شرایط</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="columns is-multiline">
-                                <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                    <b-input
-                                        label='تلفن:'
-                                        v-model="filters.phone"
-                                        placeholder="تلفن"
-                                    ></b-input>
-                                </div>
-                                <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                    <b-input
-                                        label='ایمیل:'
-                                        v-model="filters.email"
-                                        placeholder="ایمیل"
-                                    ></b-input>
-                                </div>
-                                <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                    <b-input
-                                        label='آدرس:'
-                                        v-model="filters.address"
-                                        placeholder="آدرس"
-                                    ></b-input>
-                                </div>
-                                <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                    <b-input
-                                        label='سایر مشخصات:'
-                                        v-model="filters.other"
-                                        placeholder="سایر مشخصات"
-                                    ></b-input>
-                                </div>
-                            </div>
-                            <div class="columns is-multiline">
-                                <div class="column is-12 is-flex">
-                                    <button class="button is-success mr-2 ml-auto" @click="refreshTable(filters)" :disabled="loading">
-                                        <i class="fal fa-filter" v-if="!loading"></i>
-                                        <i class="fal fa-spinner-third fa-spin" v-else></i>
-                                        <span class="ml-2">اعمال شرایط</span>
-                                    </button>
-                                    <button class="button" @click="cancelFilter">پاک کردن شرایط</button>
-                                </div>
-                            </div>
-                        </template>
-                    </b-accordion>
-                </div>
-                <div class="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" v-for="project in projects" :key="'project-'+project?.id">
-                    <div class="card h-card">
-                        <div class="card-image is-relative">
-                            <div class="is-4by3">
-                                <Carousel items-to-show="1" snap-align="center" :wrap-around="true" dir="rtl" :loop="false" transition="300" :autoplay="(project?.covers && project?.covers.length > 1) ? 3000 : false">
-                                    <Slide v-for="image in project?.covers" :key="image?.id">
-                                        <div class="carousel__item">
-                                            <div class="gallery-item">
-                                                <img :src="image?.filename" :alt="image?.alt">
-                                            </div>
-                                        </div>
-                                    </Slide>
-                                </Carousel>
-                            </div>
-                            <span v-text="project?.title" class="is-font-alt has-text-grey is-rounded rounded-2 is-weight-900" :style="{position: 'absolute', top: '5px', right: '5px', width: 'calc(100% - 10px)', padding: '3px 5px', backgroundColor: 'rgba(250, 250, 250, 0.85)', boxShadow: '0 0 4px rgba(0, 0, 0, 0.95)'}"/>
-                            <span v-text="project?.project_type?.title" class="tag" :style="{position: 'absolute', bottom: '5px', right: '5px', backgroundColor: project?.project_type?.bgColor, color: project?.project_type?.textColor}"/>
-                            <span v-text="$helpers.jDate(project.created_at)" class="tag" :style="{position: 'absolute', bottom: '5px', left: '5px'}"/>
+                            </template>
+                        </b-accordion>
+                    </div>
+                    <div class="no-projects py-6 w-100 is-flex is-align-items-center is-justify-content-center is-flex-direction-column" style="min-height: 60vh;" v-else>
+                        <img style="max-width: 25vw" class="light-image" :src="base_url+'/assets/img/illustrations/placeholders/thinking-canvas.svg'" alt="" />
+                        <img style="max-width: 25vw" class="dark-image" :src="base_url+'/assets/img/illustrations/placeholders/thinking-canvas-dark.svg'" alt="" />
+                        <div class="text">
+                            <h3>هنوز پروژه‌ای ثبت نشده است</h3>
                         </div>
-                        <div class="card-content p-3">
-                            <div class="media-flex-center no-margin">
-                                <div class="w-100 is-flex">
-                                    <span v-text="project?.last_note?.project_status?.title" class="tag" :style="{backgroundColor: project?.last_note?.project_status?.bgColor, color: project?.last_note?.project_status?.textColor}"/>
-                                    <span v-text="project?.last_note?.project_result?.title" class="tag ml-auto" :style="{backgroundColor: project?.last_note?.project_result?.bgColor, color: project?.last_note?.project_result?.textColor}"/>
-                                </div>
-                            </div>
-                            <div class="inner-content mt-2 mb-1 is-relative">
-                                <p class="has-text-justified" v-text="project?.description"/>
-                                <div class="content-gradient"/>
-                            </div>
-                            <hr class="my-2 divider">
-                            <div class="w-100 is-flex is-align-items-center">
-                                <i class="fal fa-location mr-1 has-text-info-dark"></i>
-                                <div class="small">
-                                    <span>{{ project?.city?.province?.title }}</span> - <span>{{ project?.city?.county?.title }}</span><span v-if="project?.city?.title != project?.city?.county?.title"> - {{ project?.city?.title }}</span> - <span>منطقه {{ project?.region }}</span>
-                                </div>
-                            </div>
-                            <div class="w-100 is-flex is-align-items-center">
-                                <i class="fal fa-user-circle mr-1 has-text-info-dark"></i><span class="small" v-text="project?.user?.display_name ?? ''"/>
-                                <a class="ml-auto action-link small" @click="editItem(project)">جزییات</a>
-                            </div>
-                        </div>
-
+                    </div>
+                    <div class="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" :key="'project-'+project?.id" v-for="project in projects">
+                        <ProjectSingleCardComponent :project="project" @edit="editItem(project)"/>
                     </div>
                 </div>
-            </div>
-            <b-overlay :show="saving || loading" loader-custom-class="has-text-info" :loader-text="'در حال ذخیره پروژه، لطفا کمی صبور باشید... '+uploadProgress+'%'" v-else>
-                <b-tabs v-model="active_tab" :headers="tabs">
+                <b-tabs v-model="active_tab" :headers="tabs" v-else>
                     <template #general>
                         <div class="px-5">
                             <div class="columns is-multiline is-flex">
@@ -813,7 +760,8 @@
                     <i class="fal fa-save" v-else></i>
                     <span class="ml-2">ذخیره پروژه</span>
                 </button>
-                <button class="button" @click="form={}; newRec=false; editing=false">انصراف</button>
+                <button class="button" @click="form={}; newRec=false; editing=false;this.$router.push({ name : 'admin.projects' })">انصراف</button>
+<!--                <RouterLink class="button" :to="{ name: 'admin.projects' }">بازگشت</RouterLink>-->
             </template>
         </b-card>
     </AdminLayoutComponent>
@@ -839,9 +787,11 @@
 <script>
 import { useVuelidate } from '@vuelidate/core'
 import 'vue3-openlayers/styles.css';
+import ProjectSingleCardComponent from "@/components/pages/AdminProject/ProjectSingleCardComponent.vue";
 
 export default {
     name: "AdminProjectComponent",
+    components: {ProjectSingleCardComponent},
     inject: ['base_url', 'ol-format', 'ol-selectconditions'],
     setup () {
         return { validator: useVuelidate() }
@@ -1233,11 +1183,36 @@ export default {
         }
     },
     created() {
-        this.refreshTable(false)
         let crmState = JSON.parse(localStorage?.getItem('crmState'))
         this.currentUser = crmState.userData
     },
     mounted() {
+        const project_id = this.$route.params.project_id ?? null
+        if (project_id != null) {
+            const project = this.projects.find(item => {
+                if (item.id == project_id) {
+                    return item
+                }
+            })
+            if (project) {
+                this.editItem(project)
+            } else {
+                this.loading = true
+                Requests.getSingleProject(project_id).then(res => {
+                    if (res.status) {
+                        this.manageExtData(res?.ext_data)
+                        setTimeout(() => {
+                            this.editItem(res.result)
+                            this.loading = false
+                        }, 1000);
+                    } else {
+                        this.$router.push({ name : 'pageNotFound' })
+                    }
+                })
+            }
+        } else {
+            this.refreshTable(false, 12)
+        }
         this.getCurrentPosition(false)
     },
     watch: {
@@ -1249,122 +1224,141 @@ export default {
                 const commentInput = this.$refs.commentInput
             }
         },
+        $route() {
+            this.form={}
+            this.newRec=false
+            this.editing=false
+            const project_id = this.$route.params.project_id ?? null
+            if (project_id != null) {
+                const project = this.projects.find(item => {
+                    if (item.id == project_id) {
+                        return item
+                    }
+                })
+                if (project) {
+                    this.editItem(project)
+                } else {
+                    this.loading = true
+                    Requests.getSingleProject(project_id).then(res => {
+                        if (res.status) {
+                            this.manageExtData(res?.ext_data)
+                            setTimeout(() => {
+                                this.editItem(res.result)
+                                this.loading = false
+                            }, 1000);
+                        } else {
+                            this.$router.push({ name : 'pageNotFound' })
+                        }
+                    })
+                }
+            } else {
+                this.refreshTable(false, 12)
+            }
+        }
     },
     methods: {
-        refreshTable(filters = false) {
+        refreshTable(filters = false, rows = 12) {
             if (!this.loading) {
+                let projectFilters = null
                 if (filters !== false) {
 
                 }
                 this.loading = true
-                Requests.getProjectsList().then(res => {
+                Requests.getProjectsList(projectFilters, rows).then(res => {
                     if (res?.status) {
                         this.projects = res?.result ?? [];
+                        this.manageExtData(res?.ext_data)
                     } else {
                         this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام دریافت فهرست پروژه‌ها', { type: 'error' })
                     }
-                    if (filters === false) {
-                        Requests.getProjectsExtData().then(response => {
-                            this.types     = []
-                            this.statuses  = []
-                            this.results   = []
-                            this.contacts  = []
-                            this.positions = []
-                            this.cities    = []
-                            this.users     = []
-                            this.original_contacts = response?.result?.contacts || []
-                            this.original_cities   = response?.result?.cities || []
-                            this.original_users    = response?.result?.users || []
-                            this.default_status    = null
-                            this.default_result    = null
-                            for (let i = 0; i < response?.result?.statuses?.length; i++) {
-                                if (response?.result?.statuses[i].is_default) {
-                                    this.default_status = response?.result?.statuses[i]?.id || null
-                                }
-                            }
-                            for (let i = 0; i < response?.result?.results?.length; i++) {
-                                if (response?.result?.results[i].is_default) {
-                                    this.default_result = response?.result?.results[i]?.id || null
-                                }
-                            }
-                            if (response?.status) {
-                                this.types = (response?.result?.types || []).map(item => {
-                                    return {
-                                        value: item.id,
-                                        text: item.title,
-                                        description: item.description
-                                    }
-                                })
-                                this.statuses = (response?.result?.statuses || []).map(item => {
-                                    return {
-                                        value: item.id,
-                                        text: item.title,
-                                        description: item.description
-                                    }
-                                })
-                                this.results = (response?.result?.results || []).map(item => {
-                                    return {
-                                        value: item.id,
-                                        text: item.title,
-                                        description: item.description
-                                    }
-                                })
-                                this.contacts = (response?.result?.contacts || []).map(item => {
-                                    let name = item.name
-                                    if (item.nickName && item.nickName.length) {
-                                        name += '('+item.nickName+')'
-                                    }
-                                    if (item.title && item.title.length) {
-                                        name += ' - '+item.title
-                                        name += ' - '+item.title
-                                        name += ' - '+item.title
-                                    }
-                                    if (item.organization && item.organization.length) {
-                                        name += '('+item.organization+')'
-                                    }
-                                    return {
-                                        value: item.id,
-                                        text: name,
-                                    }
-                                })
-                                this.positions = (response?.result?.positions || []).map(item => {
-                                    return {
-                                        value: item.id,
-                                        text: item.title,
-                                        description: item.description
-                                    }
-                                })
-                                this.cities = (response?.result?.cities || []).map(item => {
-                                    return {
-                                        value: item.id,
-                                        text: item.province.title + ' - ' + item.title,
-                                    }
-                                })
-                                this.users = (response?.result?.users || []).map(item => {
-                                    return {
-                                        value: item.id,
-                                        text: item.display_name+' '+(item?.mobile || ''),
-                                    }
-                                })
-                            } else {
-                                this.$helpers.notify('خطا', response?.message || 'بروز خطا هنگام دریافت اطلاعات تکمیلی پروژه‌ها', { type: 'error' })
-                            }
-                        }).catch(err => {
-                            console.error(err)
-                            this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام دریافت اطلاعات تکمیلی پروژه‌ها', { type: 'error' })
-                        }).finally(res => {
-                            this.loading = false
-                        })
-                    }
                 }).catch(err => {
-                    console.error(err)
                     this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای ناشناخته هنگام دریافت فهرست پروژه‌ها', { type: 'error' })
                 }).finally(() => {
-                    if (!filters) {
-                        this.loading = false
-                    }
+                    this.loading = false
                 })
             }
+        },
+        manageExtData(ext) {
+            this.types     = []
+            this.statuses  = []
+            this.results   = []
+            this.contacts  = []
+            this.positions = []
+            this.cities    = []
+            this.users     = []
+            this.original_contacts = ext?.contacts || []
+            this.original_cities   = ext?.cities || []
+            this.original_users    = ext?.users || []
+            this.default_status    = null
+            this.default_result    = null
+            for (let i = 0; i < ext?.statuses?.length; i++) {
+                if (ext?.statuses[i].is_default) {
+                    this.default_status = ext?.statuses[i]?.id || null
+                }
+            }
+            for (let i = 0; i < ext?.results?.length; i++) {
+                if (ext?.results[i].is_default) {
+                    this.default_result = ext?.results[i]?.id || null
+                }
+            }
+            this.types = (ext?.types || []).map(item => {
+                return {
+                    value: item.id,
+                    text: item.title,
+                    description: item.description
+                }
+            })
+            this.statuses = (ext?.statuses || []).map(item => {
+                return {
+                    value: item.id,
+                    text: item.title,
+                    description: item.description
+                }
+            })
+            this.results = (ext?.results || []).map(item => {
+                return {
+                    value: item.id,
+                    text: item.title,
+                    description: item.description
+                }
+            })
+            this.contacts = (ext?.contacts || []).map(item => {
+                let name = item.name
+                if (item.nickName && item.nickName.length) {
+                    name += '('+item.nickName+')'
+                }
+                if (item.title && item.title.length) {
+                    name += ' - '+item.title
+                    name += ' - '+item.title
+                    name += ' - '+item.title
+                }
+                if (item.organization && item.organization.length) {
+                    name += '('+item.organization+')'
+                }
+                return {
+                    value: item.id,
+                    text: name,
+                }
+            })
+            this.positions = (ext?.positions || []).map(item => {
+                return {
+                    value: item.id,
+                    text: item.title,
+                    description: item.description
+                }
+            })
+            this.cities = (ext?.cities || []).map(item => {
+                return {
+                    value: item.id,
+                    text: item.province.title + ' - ' + item.title,
+                }
+            })
+            this.users = (ext?.users || []).map(item => {
+                return {
+                    value: item.id,
+                    text: item.display_name+' '+(item?.mobile || ''),
+                }
+            })
         },
         newItem() {
             let perm = false
@@ -1383,9 +1377,9 @@ export default {
                 }
             }
             if (perm) {
-                if (!this.default_status) {
+                if (this.default_status === null) {
                     message  = 'جدول وضعیت‌های پروژه خالی است یا وضعیتی به عنوان پیش‌فرض ثبت نشده است'
-                } else if (!this.default_result) {
+                } else if (!this.default_result === null) {
                     message  = 'جدول نتایج پروژه خالی است یا نتیجه‌ای به عنوان پیش‌فرض ثبت نشده است'
                 }
             }
@@ -1393,6 +1387,9 @@ export default {
                 this.$helpers.notify('خطای دسترسی', message, {type: 'error'})
                 return
             }
+            this.newData()
+        },
+        newData() {
             this.form = {
                 title: '',
                 description: '',
@@ -2022,36 +2019,7 @@ export default {
 </script>
 
 <style scoped>
-.card-content .inner-content {
-    height: 115px;
-    max-height: 115px;
-    overflow: hidden;
-    margin-bottom: 15px;
-    padding-top: 5px;
-}
-.card-content .inner-content p {
-    height: 110px;
-    max-height: 110px;
-    overflow: scroll;
-    padding-bottom: 25px;
-}
-.content-gradient {
-    position: absolute;
-    width: 100%;
-    height: 30px;
-    bottom: 0;
-    background-image: linear-gradient(to top, #FFF, rgba(255, 255, 255, 0.35));
-}
-.is-4by3 {
-    aspect-ratio: 4/3 !important;
-    width:100%;
-}
-.is-4by3 .gallery-item img {
-    aspect-ratio: 4/3 !important;
-    width: 100% !important;
-    height: auto !important;
-    object-fit: cover !important;
-}
+
 .no-resize {
     resize: none;
 }

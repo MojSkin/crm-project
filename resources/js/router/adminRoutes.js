@@ -12,6 +12,7 @@ import AdminContactPositions    from "../components/pages/AdminContactPositions/
 import AdminProjectStatus       from "../components/pages/AdminProjectStatus/AdminProjectStatusComponent.vue";
 import AdminProjectType         from "../components/pages/AdminProjectType/AdminProjectTypeComponent.vue";
 import AdminProjectResult       from "../components/pages/AdminProjectResult/AdminProjectResultComponent.vue";
+import AdminProjects            from "../components/pages/AdminProject/AdminProjectComponent.vue";
 import AdminProject             from "../components/pages/AdminProject/AdminProjectComponent.vue";
 import AdminUsers               from "../components/pages/AdminUsers/AdminUsersComponent.vue";
 import AdminRoles               from "../components/pages/AdminUsers/AdminRolesComponent.vue";
@@ -130,8 +131,20 @@ const adminRoutes = [
     },
     {
         path: adminRoutePrefix+'/projects',
-        component: AdminProject,
+        component: AdminProjects,
         name: 'admin.projects',
+        props: false,
+        params: {project_id: null},
+        meta: {
+            pageTitle: 'پروژه‌ها',
+            breadcrumbs: [],
+            middleware: 'AUTH'
+        }
+    },
+    {
+        path: adminRoutePrefix+'/project/:project_id',
+        component: AdminProject,
+        name: 'admin.project.single',
         meta: {
             pageTitle: 'پروژه‌ها',
             breadcrumbs: [],
