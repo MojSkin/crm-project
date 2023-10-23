@@ -1,28 +1,28 @@
 <template>
-    <ul v-bind="$attrs">
-        <li>
-            <RouterLink class="active" :to="{ name: 'admin.dashboard' }" data-content="پیشخوان" active-class="active">
-                <i class="fal fa-desktop"></i>
+    <ul v-bind="$attrs" class="mt-4">
+        <li :class="{'active': $route.name=='admin.dashboard'}">
+            <RouterLink :to="{ name: 'admin.dashboard' }" data-content="پیشخوان" active-class="active">
+                <i class="mb-2 fal fa-desktop"></i>
             </RouterLink>
         </li>
-        <li>
+        <li :class="{'active': $route.name=='admin.projects'}">
             <RouterLink :to="{ name: 'admin.projects' }" data-content="پروژه‌ها" active-class="active">
-                <i class="fal fa-building"></i>
+                <i class="mb-2 fal fa-building"></i>
             </RouterLink>
         </li>
-        <li>
+        <li :class="{'active': $route.name=='admin.contacts'}">
             <RouterLink :to="{ name: 'admin.contacts' }" data-content="اشخاص" active-class="active">
-                <i class="fal fa-address-book"></i>
+                <i class="mb-2 fal fa-address-book"></i>
             </RouterLink>
         </li>
-        <li>
+        <li :class="{'active': $route.name=='admin.formBuilder'}">
             <RouterLink :to="{ name: 'admin.formBuilder' }" data-content="فرم‌ساز" active-class="active">
-                <i class="fal fa-window-alt"></i>
+                <i class="mb-2 fal fa-window-alt"></i>
             </RouterLink>
         </li>
-        <li>
+        <li :class="{'active': $route.name=='admin.formInbox'}">
             <RouterLink :to="{ name: 'admin.formInbox' }" data-content="صندوق ورودی" active-class="active">
-                <i class="fal fa-inbox-in"></i>
+                <i class="mb-2 fal fa-inbox-in"></i>
             </RouterLink>
         </li>
     </ul>
@@ -30,7 +30,7 @@
     <ul :class="hideContent ? 'bottom-icon-side-menu' : 'bottom-menu'">
         <li>
             <RouterLink :to="{name: 'admin.settings'}" data-content="تنظیمات سیستم">
-                <i class="fal fa-cog"></i>
+                <i class="mb-2 fal fa-cog"></i>
             </RouterLink>
         </li> <!-- Profile -->
         <li v-if="!hideProfile">
@@ -87,9 +87,16 @@ li a i {
     width:2rem;
     display: block
 }
-li:has(a.active) {
+li.active {
     display: block;
-    background-color: var(--bs-info, blue);
-    border-right: 2px solid red;
+    background-color: #aa7be5;
+    border-right: 5px solid #671cc9;
+}
+li.active a::after {
+    color: #000 !important;
+    font-weight: 700;
+}
+li.active i {
+    color: rgb(250, 250, 250);
 }
 </style>

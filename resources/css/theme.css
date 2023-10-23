@@ -22929,8 +22929,8 @@ body.is-dark .webapp-navbar-clean .webapp-navbar-lower.is-centered .center .butt
 .main-sidebar.has-labels .sidebar-inner .bottom-menu li a::after {
     content: attr(data-content);
     position: absolute;
-    bottom: -20px;
-    right: -29px;
+    bottom: -14px;
+    right: -28px;
     left: 0;
     margin: 0 auto;
     font-family: var(--font), "iransans", sans-serif;
@@ -23049,7 +23049,7 @@ body.is-dark .webapp-navbar-clean .webapp-navbar-lower.is-centered .center .butt
 .main-sidebar .sidebar-inner .bottom-menu li {
     position: relative;
     width: 80px;
-    height: 64px;
+    height: 68px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
