@@ -68,6 +68,11 @@
                                     </div>
 
                                     <div class="columns user-grid user-grid-v4">
+                                        <div class="column is-12 is-flex" v-if="!projects?.length">
+                                            <div class="inner-list-item media-flex-center mx-auto">
+                                                <img :src="base_url+'/assets/img/illustrations/placeholders/no-tasks-3.svg'" alt="" style="height: 280px">
+                                            </div>
+                                        </div>
                                         <div class="column is-4" v-for="project in projects">
                                             <ProjectSingleCardComponent :project="project" header-position="BOTTOM" no-date no-status no-result no-details no-description/>
                                         </div>

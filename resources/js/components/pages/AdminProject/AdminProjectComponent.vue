@@ -183,6 +183,7 @@
                                         :is-error="validator?.form?.user_percentage?.$errors?.length"
                                         :error-message="validator?.form?.user_percentage?.$errors[0]?.$message || ''"
                                         v-model="form.user_percentage"
+                                        step="0.5"
                                         type="number"
                                     >
 
@@ -819,7 +820,7 @@ export default {
                 project_type: {id: 0, title: ''},
                 project_status: {id: 0, title: ''},
                 project_result: {id: 0, title: ''},
-                user_percentage: 0,
+                user_percentage: 0.0,
                 images: [],
                 files: [],
                 comments: [],
@@ -1329,8 +1330,6 @@ export default {
                 }
                 if (item.title && item.title.length) {
                     name += ' - '+item.title
-                    name += ' - '+item.title
-                    name += ' - '+item.title
                 }
                 if (item.organization && item.organization.length) {
                     name += '('+item.organization+')'
@@ -1396,7 +1395,7 @@ export default {
                 project_type: { id: 0, title: '' },
                 project_status: { id: this.default_status, title: '' },
                 project_result: { id: this.default_result, title: '' },
-                user_percentage: 0,
+                user_percentage: 0.0,
                 images: [],
                 files: [],
                 comments: [],
@@ -1479,7 +1478,7 @@ export default {
                     record.append('project_type_id', this.form.project_type.id)
                     record.append('project_status_id', this.form.project_status.id)
                     record.append('project_result_id', this.form.project_result.id)
-                    record.append('user_percentage', this.form.user_percentage || 0)
+                    record.append('user_percentage', this.form.user_percentage || 0.0)
                     record.append('members', members)
                     record.append('contacts', contacts)
                     record.append('city_id', this.form.city.id)
@@ -1584,7 +1583,7 @@ export default {
                 project_type: item.project_type,
                 project_status: item?.last_note?.project_status,
                 project_result: item?.last_note?.project_result,
-                user_percentage: item.user_percentage || 0,
+                user_percentage: item.user_percentage || 0.0,
                 images: images,
                 files: item.files || [],
                 comments: item.comments || [],

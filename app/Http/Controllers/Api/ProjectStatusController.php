@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectStatusResource;
+use App\Models\ProjectNote;
 use App\Models\ProjectStatus;
 use Illuminate\Http\Request;
 
@@ -65,10 +66,13 @@ class ProjectStatusController extends Controller
         ];
 
         try {
-//            ProjectProjectStatus::whereContactPositionId($request->status_id)->delete();
-            ProjectStatus::whereId($request->status_id)->delete();
-            $response['status'] = true;
-            $response['message'] = 'اطلاعات وضعیت پروژه با موفقیت حذف شد';
+            if (ProjectNote::whereProjectStatusId($request->status_id)->count() > 0) {
+                $response['message'] = 'به دلیل استفاده از این وضعیت در پیگیری پروژه‌ها، امکان حذف آن وجود ندارد';
+            } else {
+                ProjectStatus::whereId($request->status_id)->delete();
+                $response['status'] = true;
+                $response['message'] = 'اطلاعات وضعیت پروژه با موفقیت حذف شد';
+            }
         } catch (\Exception $e) {
             $response['message'] = $e->getMessage();
 

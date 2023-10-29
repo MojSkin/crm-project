@@ -28,42 +28,33 @@ class ContactController extends Controller
         try {
             $contacts = Contact::orderBy(DB::raw("TRIM(CONCAT(COALESCE(`lName`, ''), ' ',COALESCE(`fName`,'')))"));
             if ($request->filters != null) {
-                $filtered = 0;
                 $records = [];
+                $details = [];
                 $filters = $request->filters;
                 unset($filters['phone'], $filters['email'], $filters['email'], $filters['others']);
-                $contacts = null;
+                $filtered = false;
                 foreach ($filters as $key => $value) {
                     if ($key == 'prefix') {
                         if ($value>0) {
-                            if ($filtered==0) {
-                                $contacts = Contact::where('prefix', $value);
-                            } else {
-                                $contacts->orWhere('prefix', $value);
-                            }
-                            $filtered++;
+                            $records = array_merge($records, Contact::wherePrefix($value)->pluck('id')->toArray());
+                            $filtered = true;
                         }
                     } else {
                         if ($value and strlen($value)>0) {
-                            if ($filtered==0) {
-                                $contacts = Contact::where($key, 'like', '%'.$value.'%');
-                            } else {
-                                $contacts->orWhere($key, 'like', '%'.$value.'%');
-                            }
-                            $filtered++;
+                            $records = array_merge($records, Contact::where($key, 'like', '%'.$value.'%')->pluck('id')->toArray());
+                            $filtered = true;
                         }
                     }
                 }
-                if ($contacts) {
-                    $records = $contacts->pluck('id')->toArray();
+                if (!$filtered) {
+                    $records = Contact::all()->pluck('id')->toArray();
                 }
                 $filters = (object) $request->filters;
-                if ($filters->phone) $records = array_merge($records, ContactDetail::where('section', 'phone')->where('value', 'like', '%'.$filters->phone.'%')->pluck('contact_id')->toArray());
-                if ($filters->email) $records = array_merge($records, ContactDetail::where('section', 'email')->where('value', 'like', '%'.$filters->email.'%')->pluck('contact_id')->toArray());
-                if ($filters->address) $records = array_merge($records, ContactDetail::where('section', 'address')->where('value', 'like', '%'.$filters->address.'%')->pluck('contact_id')->toArray());
-                if ($filters->other) $records = array_merge($records, ContactDetail::where('section', 'other')->where('value', 'like', '%'.$filters->other.'%')->pluck('contact_id')->toArray());
-                $records = array_unique($records);
-                $contacts = $contacts->whereIn('id', $records)->with('tags')->get();
+                if ($filters->phone) $details = array_merge($details, ContactDetail::whereIn('contact_id', $records)->where('section', 'phone')->where('value', 'like', '%'.$filters->phone.'%')->pluck('contact_id')->toArray());
+                if ($filters->email) $details = array_merge($details, ContactDetail::whereIn('contact_id', $records)->where('section', 'email')->where('value', 'like', '%'.$filters->email.'%')->pluck('contact_id')->toArray());
+                if ($filters->address) $details = array_merge($details, ContactDetail::whereIn('contact_id', $records)->where('section', 'address')->where('value', 'like', '%'.$filters->address.'%')->pluck('contact_id')->toArray());
+                if ($filters->other) $details = array_merge($details, ContactDetail::whereIn('contact_id', $records)->where('section', 'other')->where('value', 'like', '%'.$filters->other.'%')->pluck('contact_id')->toArray());
+                $contacts = $contacts->whereIn('id', $details)->with('tags')->get();
             } else {
                 $contacts = $contacts->with('tags')->get();
             }
@@ -120,52 +111,75 @@ class ContactController extends Controller
             }
         }
         try {
-            $contact = Contact::updateOrCreate(
-                ['id' => $request->id],
-                [
-                    'fName' => $request->fName,
-                    'prefix' => $request->prefix,
-                    'lName' => $request->lName,
-                    'nickName' => $request->nickname,
-                    'title' => $request->title,
-                    'organization' => $request->organization,
-                ]);
+            $found = false;
 
-            if ($logo) {
-                if ($contact->fileName && file_exists(public_path('/storage/contact_avatars/' . $contact->fileName))) {
-                    MojSkin::unlinkFile(public_path('/storage/contact_avatars/' . $contact->fileName));
-                }
-                $fileName = MojSkin::randomFileName(10, public_path('/storage/contact_avatars/'), '', '', 'png', true);
-                MojSkin::makeDir(public_path('/storage/contact_avatars/'), 0755, true);
-                $saveFullPath = public_path('/storage/contact_avatars/' . $fileName);
-                $avatarData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $logo));
-                $avatar = Image::make($avatarData)->resize(300, 300);
-                $avatar->save($saveFullPath);
-                $contact->fileName = $fileName;
-                $contact->save();
-            } elseif ($contact->fileName && file_exists(public_path('/storage/contact_avatars/' . $contact->fileName))) {
-                MojSkin::unlinkFile(public_path('/storage/contact_avatars/' . $contact->fileName));
-                $contact->fileName = null;
-                $contact->save();
-            }
-            ContactDetail::whereContactId($contact->id)->delete();
-            if(count($request->additional_infos)){
+            if (count($request->additional_infos)) {
                 foreach ($request->additional_infos as $additional_info) {
-                    if (strlen($additional_info['section']) && strlen($additional_info['label']) && strlen($additional_info['value'])) {
-                        ContactDetail::create([
-                            'contact_id' => $contact->id,
-                            'section' => $additional_info['section'],
-                            'title' => $additional_info['label'],
-                            'value' => $additional_info['value'],
-                        ]);
+                    if (strlen($additional_info['section']) && strlen($additional_info['label']) && strlen($additional_info['value']) && in_array($additional_info['section'], ['phone', 'email'])) {
+                        $det = ContactDetail::where('section', $additional_info['section'])->where('value', $additional_info['value'])->first();
+                        if ($det) {
+                            if (isset($request->id) && $request->id != null) {
+                                if ($det->contact_id != $request->id) {
+                                    $found = true;
+                                }
+                            } else {
+                                $found = true;
+                            }
+                        }
                     }
                 }
             }
-            $response = [
-                'status' => true,
-                'message' => 'مخاطب مورد نظر با موفقیت ثبت شد!',
-                'result' => new ContactResource($contact)
-            ];
+
+            if (!$found) {
+                $contact = Contact::updateOrCreate(
+                    ['id' => $request->id],
+                    [
+                        'fName' => $request->fName,
+                        'prefix' => $request->prefix,
+                        'lName' => $request->lName,
+                        'nickName' => $request->nickname,
+                        'title' => $request->title,
+                        'organization' => $request->organization,
+                    ]);
+
+                if ($logo) {
+                    if ($contact->fileName && file_exists(public_path('/storage/contact_avatars/' . $contact->fileName))) {
+                        MojSkin::unlinkFile(public_path('/storage/contact_avatars/' . $contact->fileName));
+                    }
+                    $fileName = MojSkin::randomFileName(10, public_path('/storage/contact_avatars/'), '', '', 'png', true);
+                    MojSkin::makeDir(public_path('/storage/contact_avatars/'), 0755, true);
+                    $saveFullPath = public_path('/storage/contact_avatars/' . $fileName);
+                    $avatarData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $logo));
+                    $avatar = Image::make($avatarData)->resize(300, 300);
+                    $avatar->save($saveFullPath);
+                    $contact->fileName = $fileName;
+                    $contact->save();
+                } elseif ($contact->fileName && file_exists(public_path('/storage/contact_avatars/' . $contact->fileName))) {
+                    MojSkin::unlinkFile(public_path('/storage/contact_avatars/' . $contact->fileName));
+                    $contact->fileName = null;
+                    $contact->save();
+                }
+                ContactDetail::whereContactId($contact->id)->delete();
+                if(count($request->additional_infos)){
+                    foreach ($request->additional_infos as $additional_info) {
+                        if (strlen($additional_info['section']) && strlen($additional_info['label']) && strlen($additional_info['value'])) {
+                            ContactDetail::create([
+                                'contact_id' => $contact->id,
+                                'section' => $additional_info['section'],
+                                'title' => $additional_info['label'],
+                                'value' => $additional_info['value'],
+                            ]);
+                        }
+                    }
+                }
+                $response = [
+                    'status' => true,
+                    'message' => 'مخاطب مورد نظر با موفقیت ثبت شد!',
+                    'result' => new ContactResource($contact)
+                ];
+            } else {
+                $response['message'] = 'تلفن یا ایمیل وارد شده برای این مخاطب تکراری است';
+            }
         } catch (\Exception $e) {
             $response['errorMessage'] = $e->getMessage();
         }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResultResource;
+use App\Models\ProjectNote;
 use App\Models\ProjectResult;
 use Illuminate\Http\Request;
 
@@ -60,15 +61,18 @@ class ProjectResultController extends Controller
     {
         $response = [
             'status' => false,
-            'message' => 'بروز خطا هنگام حذف نوع پروژه',
+            'message' => 'بروز خطا هنگام حذف نتیجه پروژه',
             'result' => null
         ];
 
         try {
-//            ProjectProjectResult::whereContactPositionId($request->result_id)->delete();
-            ProjectResult::whereId($request->result_id)->delete();
-            $response['status'] = true;
-            $response['message'] = 'اطلاعات نوع پروژه با موفقیت حذف شد';
+            if (ProjectNote::whereProjectStatusId($request->status_id)->count() > 0) {
+                $response['message'] = 'به دلیل استفاده از این نتیجه در پیگیری پروژه‌ها، امکان حذف آن وجود ندارد';
+            } else {
+                ProjectResult::whereId($request->result_id)->delete();
+                $response['status'] = true;
+                $response['message'] = 'اطلاعات نتیجه پروژه با موفقیت حذف شد';
+            }
         } catch (\Exception $e) {
             $response['message'] = $e->getMessage();
 

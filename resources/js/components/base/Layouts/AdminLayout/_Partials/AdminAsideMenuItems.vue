@@ -36,13 +36,13 @@
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink class="is-submenu" :to="{ name: 'admin.project-statuses' }">
-                        <span>وضعیت پروژه (ملک)</span>
+                    <RouterLink class="is-submenu" :to="{ name: 'admin.project-types' }">
+                        <span>نوع پروژه (ملک)</span>
                     </RouterLink>
                 </li>
                 <li>
-                    <RouterLink class="is-submenu" :to="{ name: 'admin.project-types' }">
-                        <span>نوع پروژه (ملک)</span>
+                    <RouterLink class="is-submenu" :to="{ name: 'admin.project-statuses' }">
+                        <span>وضعیت پروژه (ملک)</span>
                     </RouterLink>
                 </li>
                 <li>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectTypeResource;
+use App\Models\Project;
 use App\Models\ProjectType;
 use Illuminate\Http\Request;
 
@@ -65,10 +66,13 @@ class ProjectTypeController extends Controller
         ];
 
         try {
-//            ProjectProjectType::whereContactPositionId($request->type_id)->delete();
-            ProjectType::whereId($request->type_id)->delete();
-            $response['status'] = true;
-            $response['message'] = 'اطلاعات نوع پروژه با موفقیت حذف شد';
+            if (Project::whereProjectTypeId($request->type_id)->count() > 0) {
+                $response['message'] = 'به دلیل استفاده از این نوع پروژه در فهرست پروژه‌ها، امکان حذف آن وجود ندارد';
+            } else {
+                ProjectType::whereId($request->type_id)->delete();
+                $response['status'] = true;
+                $response['message'] = 'اطلاعات نوع پروژه با موفقیت حذف شد';
+            }
         } catch (\Exception $e) {
             $response['message'] = $e->getMessage();
 

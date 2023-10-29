@@ -59,17 +59,16 @@ class UserController extends Controller
                 'fName' => 'required|min:2|max:30',
                 'lName' => 'required|min:3|max:50',
                 'username' => 'required|min:5|max:25',
-                'email' => 'required_without:mobile|email',
+                'email' => 'required_without:mobile'.(isset($request->email) ? '|email' : ''),
                 'mobile' => 'required_without:email',
             ]);
 
             if ($validator->fails()) {
-                dd($validator->errors());
-                $response['messages'] = $this->normalizeError($validator->errors());
-                $response['message'] = 'بروز خطا هنگام اعتبارسنجی اطلاعات ارسالی';
+                $messages = $this->normalizeError($validator->errors()->toArray());
+                $response['message'] = $this->normalizeError($validator->errors())[0] ?? 'بروز خطا هنگام اعتبارسنجی اطلاعات ارسالی';
                 $response['status']  = false;
 
-                return response()->json($response, 400);
+                return response()->json($response, 200);
             }
 
             if (!isset($request->id)) {
