@@ -504,12 +504,6 @@ export default {
             form: {
                 prefix: 0,
                 fName: {
-                    required: {
-                        $validator: (val) => {
-                            return (val?.length != 0)
-                        },
-                        $message: 'ورود نام الزامی است'
-                    },
                     min: {
                         $validator: (val) => {
                             return (val==null || val=='' || val?.length >= 3)
@@ -518,6 +512,12 @@ export default {
                     },
                 },
                 lName: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length != 0)
+                        },
+                        $message: 'ورود نام خانوادگی الزامی است'
+                    },
                     min: {
                         $validator: (val) => {
                             return (val==null || val=='' || val?.length >= 3)
