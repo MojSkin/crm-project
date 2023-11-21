@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helpers\MojSkin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 
 class Image extends _BaseModel
@@ -20,7 +21,7 @@ class Image extends _BaseModel
         'alt',
     ];
 
-    public function imageable() {
+    public function imageable(): MorphTo {
         return $this->morphTo();
     }
 

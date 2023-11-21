@@ -3,7 +3,7 @@
         <Transition name="fade">
             <div class="modal is-active" v-if="showModal">
                 <div class="modal-background" :class="'modal-background-'+modalBackdrop" @click="modalClose" v-if="showModal"></div>
-                <div class="modal-content" v-if="showModal">
+                <div class="modal-content overflow-visible" v-if="showModal">
                     <div class="modal-card" v-if="isCard">
                         <header class="modal-card-head" v-if="!noCardHeader">
                             <slot name="header">
@@ -71,13 +71,25 @@ export default {
             type: String,
             default: ''
         },
+        size: {
+            type: String,
+            default: 'medium'
+        },
         noCardHeader: Boolean,
         noCardFooter: Boolean,
     },
     data() {
         return {
             showModal: this.show,
-            modalBackdrop: ['shade', 'blur', 'none'].includes(this.backdrop.toLowerCase()) ? this.backdrop.toLowerCase() :  'shade',
+            modalBackdrop: [
+                'shade',
+                'blur',
+                'none'].includes(this.backdrop.toLowerCase()) ? this.backdrop.toLowerCase() :  'shade',
+            modalClass: 'is-'+([
+                'small',
+                'medium',
+                'large',
+                'big'].includes(this.size.toLowerCase()) ? this.size.toLowerCase() :  'medium')
         }
     },
     mounted() {

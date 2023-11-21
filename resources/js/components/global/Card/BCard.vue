@@ -1,5 +1,5 @@
 <template>
-    <div v-bind="$attrs" :class="['mb-5', 'overflow-hidden', cSize]">
+    <div v-bind="$attrs" :class="['mb-5', {'overflow-hidden': noOverflow}, cSize]">
         <div class="card-head" :class="headerClass" v-if="!noHeader">
             <slot name="header">
                 <div class="right">
@@ -43,6 +43,7 @@ export default {
         footerClass: [String, Object],
         bodyClass: [String, Object],
         key: [String],
+        noOverflow: [Boolean]
     },
     data() {
         return {

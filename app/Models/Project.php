@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Project extends Model
 {
@@ -36,6 +37,11 @@ class Project extends Model
         'floors',
         'user_id'
     ];
+
+    public function todo(): MorphOne
+    {
+        return $this->morphOne(Todo::class, 'todoable');
+    }
 
     public function files(): MorphMany
     {

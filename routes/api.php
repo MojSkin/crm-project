@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\FormController;
 use App\Http\Controllers\Api\UsedFormController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\Api\TodoController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ProductCategoryController;
@@ -93,6 +94,12 @@ Route::middleware('auth:sanctum')->name('api.')->group(function() {
         Route::post('/renameAlt',    [ImageController::class, 'renameAlt'])->name('renameAlt');
         Route::post('/deleteImage',  [ImageController::class, 'deleteImage'])->name('deleteImage');
         Route::get('/downloadFile',  [ImageController::class, 'downloadFile'])->name('downloadFile');
+    });
+
+    Route::prefix('/todos')->name('todos.')->group(function () {
+        Route::post('/getTodoList', [TodoController::class, 'getTodoList'])->name('getTodoList');
+        Route::post('/saveTodo',    [TodoController::class, 'saveTodo'])->name('saveTodo');
+        Route::post('/deleteTodo',  [TodoController::class, 'deleteTodo'])->name('deleteTodo');
     });
 
     Route::prefix('/forms')->name('forms.')->group(function () {

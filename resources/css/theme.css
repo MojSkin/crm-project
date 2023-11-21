@@ -23018,7 +23018,8 @@ body.is-dark .webapp-navbar-clean .webapp-navbar-lower.is-centered .center .butt
 }
 
 .main-sidebar .sidebar-inner {
-    height: calc(100% - 60px);
+    margin-top: 20px;
+    height: calc(100% - 80px);
     width: 100%;
     position: relative
 }

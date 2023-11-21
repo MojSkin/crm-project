@@ -33,7 +33,7 @@ class ProjectController extends Controller
         ];
 
         try {
-            $projects = Project::with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->orderBy('created_at', 'DESC');
+            $projects = Project::with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->orderBy('created_at', 'DESC');
 
             if (isset($request->filters) && $request->filters !== null) {
                 $project_ids = [];
@@ -85,7 +85,7 @@ class ProjectController extends Controller
         ];
 
         try {
-            $project = Project::whereId($request->project)->with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+            $project = Project::whereId($request->project)->with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
             if ($project) {
                 $response['result'] = new ProjectResource($project);
                 $response['ext_data'] = [
@@ -249,7 +249,7 @@ class ProjectController extends Controller
                 Image::insert($files);
             }
 
-            $project = Project::whereId($project->id)->with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+            $project = Project::whereId($project->id)->with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
             $response['result'] = new ProjectResource($project);
             $response['status'] = true;
             $response['message'] = 'پروژه با موفقیت ذخیره شد';
@@ -362,7 +362,7 @@ class ProjectController extends Controller
                         'type' => 'PROJECT_ATTACHMENT',
                     ]);
 
-                    $project = Project::whereId($project->id)->with(['covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+                    $project = Project::whereId($project->id)->with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
 
                     $response['result'] = new ProjectResource($project);
                     $response['status'] = true;

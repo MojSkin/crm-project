@@ -43,6 +43,7 @@ class ProjectResource extends JsonResource
             'blocks' => $this->blocks,
             'units' => $this->units,
             'floors' => $this->floors,
+            'todo' => $this->todo,
             'created_at' => $this->created_at,
         ];
     }

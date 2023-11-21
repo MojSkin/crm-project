@@ -15,3 +15,8 @@ SCSS Imports
 @import '../css/theme.css';
 @import '../css/app.css';
 @import './fonts';
+
+
+@for $i from 8 through 100 {
+    .text-#{$i} {font-size: 1px * $i !important; }
+}

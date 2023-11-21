@@ -13,10 +13,10 @@
                     </div>
                 </div>
 
-                <a class="navbar-item is-brand" href="#">
-                    <img class="light-image" :src="$store.state.logo" alt="">
-                    <img class="dark-image" :src="$store.state.logo" alt="">
-                </a>
+                <RouterLink :to="{ name: 'admin.dashboard' }" class="navbar-item is-brand">
+                    <img class="light-image" :src="base_url+$store.state.logo" alt="">
+                    <img class="dark-image" :src="base_url+$store.state.logo" alt="">
+                </RouterLink>
 
                 <div class="brand-end">
                     <div class="navbar-item is-notification is-hidden-tablet is-hidden-desktop" :class="{ 'is-active': showNotifications }" @click="showNotifications = !showNotifications">
@@ -96,8 +96,8 @@
     <div class="main-sidebar has-labels">
         <div class="sidebar-brand">
             <RouterLink :to="{ name: 'admin.dashboard' }">
-                <img class="light-image" :src="$store.state.logo" alt="">
-                <img class="dark-image" :src="$store.state.logo" alt="">
+                <img class="light-image" :src="base_url+$store.state.logo" alt="">
+                <img class="dark-image" :src="base_url+$store.state.logo" alt="">
             </RouterLink>
         </div>
         <div class="sidebar-inner">
@@ -222,6 +222,7 @@ const url = import.meta.env.VITE_APP_URL_FULL
 export default {
     name: "AdminLayoutComponent",
     components: {CheckUserStatusComponent, AdminAsideIconMenu, AdminSearchPanel, AdminActivityPanel, AdminProfileDropdown, AdminAsideMenuItems },
+    inject: ['base_url'],
     data() {
         return {
             darkMode: true,

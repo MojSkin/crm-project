@@ -12,12 +12,12 @@
                     </Slide>
                 </Carousel>
             </div>
-            <span v-text="project?.title" class="is-font-alt is-dark-inverted is-rounded rounded-2 is-weight-900" :style="{position: 'absolute', top: '5px', right: '5px', width: 'calc(100% - 10px)', padding: '3px 5px', backgroundColor: 'rgba(250, 250, 250, 0.85)', boxShadow: '0 0 4px rgba(0, 0, 0, 0.95)'}" v-if="headerPosition=='TOP'"/>
-            <span v-text="project?.project_type?.title" class="is-dark-inverted tag" :style="{position: 'absolute', bottom: '5px', right: '5px', backgroundColor: project?.project_type?.bgColor, color: project?.project_type?.textColor}" v-if="!noType"/>
-            <span v-text="$helpers.jDate(project.created_at)" class="is-dark-inverted tag" :style="{position: 'absolute', bottom: '5px', left: '5px'}" v-if="!noDate"/>
+            <span v-text="project?.title" class="is-font-alt dark-inverted is-rounded rounded-2 is-weight-900" :style="{position: 'absolute', top: '5px', right: '5px', width: 'calc(100% - 10px)', padding: '3px 5px', backgroundColor: 'rgba(250, 250, 250, 0.85)', boxShadow: '0 0 4px rgba(0, 0, 0, 0.95)'}" v-if="headerPosition=='TOP'"/>
+            <span v-text="project?.project_type?.title" class="dark-inverted tag" :style="{position: 'absolute', bottom: '5px', right: '5px', backgroundColor: project?.project_type?.bgColor, color: project?.project_type?.textColor}" v-if="!noType"/>
+            <span v-text="$helpers.jDate(project.created_at)" class="dark-inverted tag" :style="{position: 'absolute', bottom: '5px', left: '5px'}" v-if="!noDate"/>
         </div>
         <div class="card-content p-3">
-            <h3 class="mb-2 is-dark-inverted" v-text="project?.title" v-if="headerPosition != 'TOP'"/>
+            <h3 class="mb-2 dark-inverted" v-text="project?.title" v-if="headerPosition != 'TOP'"/>
             <div class="media-flex-center no-margin">
                 <div class="w-100 is-flex">
                     <span v-text="project?.last_note?.project_status?.title" class="tag" :style="{backgroundColor: project?.last_note?.project_status?.bgColor, color: project?.last_note?.project_status?.textColor}" v-if="!noStatus"/>
@@ -31,13 +31,13 @@
             <hr class="my-2 divider">
             <div class="w-100 is-flex is-align-items-center">
                 <i class="fal fa-location mr-1 has-text-info-dark"></i>
-                <div class="small is-dark-inverted">
-                    <span class="is-dark-inverted">{{ project?.city?.province?.title }}</span> - <span>{{ project?.city?.county?.title }}</span><span v-if="project?.city?.title != project?.city?.county?.title"> - {{ project?.city?.title }}</span> - <span>منطقه {{ project?.region }}</span>
+                <div class="small dark-inverted">
+                    <span class="dark-inverted">{{ project?.city?.province?.title }}</span> - <span>{{ project?.city?.county?.title }}</span><span v-if="project?.city?.title != project?.city?.county?.title"> - {{ project?.city?.title }}</span> - <span>منطقه {{ project?.region }}</span>
                 </div>
             </div>
             <div class="w-100 is-flex is-align-items-center">
-                <i class="fal fa-user-circle mr-1 has-text-info-dark is-dark-inverted"></i><span class="small is-dark-inverted" v-text="project?.user?.display_name ?? ''"/>
-                <RouterLink class="ml-auto action-link small is-dark-inverted" :to="{name: 'admin.project.single', params: {project_id: project.id}}" v-if="!noDetails">جزییات</RouterLink>
+                <i class="fal fa-user-circle mr-1 has-text-info-dark dark-inverted"></i><span class="small dark-inverted" v-text="project?.user?.display_name ?? ''"/>
+                <RouterLink class="ml-auto action-link small dark-inverted" :to="{name: 'admin.project.single', params: {project_id: project.id}}" v-if="!noDetails">جزییات</RouterLink>
             </div>
         </div>
 

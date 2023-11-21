@@ -88,8 +88,8 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	backdrop-filter: blur(5px);
-	-webkit-backdrop-filter: blur(5px);
+	backdrop-filter: blur(3.5px);
+	-webkit-backdrop-filter: blur(3.5px);
 	box-shadow: inset rgba(255, 255, 255, 0.25) 0 0 45px;
 }
 
@@ -125,6 +125,6 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(3.5px);
 }
 </style>

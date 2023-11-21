@@ -1,5 +1,5 @@
 <template>
-    <ul v-bind="$attrs" class="mt-4">
+    <ul v-bind="$attrs">
         <li :class="{'active': $route.name=='admin.dashboard'}">
             <RouterLink :to="{ name: 'admin.dashboard' }" data-content="پیشخوان" active-class="active">
                 <i class="mb-2 fal fa-desktop"></i>

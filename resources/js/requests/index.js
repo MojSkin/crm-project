@@ -380,7 +380,7 @@ export default {
     },
 
     async reverseGeocode(coords) {
-        const res = await axios.get("http://nominatim.openstreetmap.org/reverse?zoom=18&format=json&accept-language=fa&lon=" + coords[0] + "&lat=" + coords[1])
+        const res = await axios.get("https://nominatim.openstreetmap.org/reverse?zoom=18&format=json&accept-language=fa&lon=" + coords[0] + "&lat=" + coords[1])
         return res?.data
     },
 
@@ -450,6 +450,21 @@ export default {
             }
         }
         const res = await axios.get(route('api.images.downloadFile'), headers)
+        return res?.data
+    },
+
+    async getTodoList() {
+        const res = await axios.post(route('api.todos.getTodoList'), {}, this.tokenHeader())
+        return res?.data
+    },
+
+    async saveTodo(form) {
+        const res = await axios.post(route('api.todos.saveTodo'), this.makeFormData(form), this.tokenHeader())
+        return res?.data
+    },
+
+    async deleteTodo(todo_id) {
+        const res = await axios.post(route('api.todos.deleteTodo'), {todo: todo_id}, this.tokenHeader())
         return res?.data
     },
 }
