@@ -1,7 +1,7 @@
 <template>
 
     <MainLayoutComponent is-fluid>
-        <img class="image-cover" :src="url+'/assets/img/bg/tebyan.jpg'" alt="تبیان">
+        <img class="image-cover" :src="url+'/assets/img/bg/photo/demo/5.png'" alt="">
         <div class="row-home">
             <div class="home-cover-widget esb shadow-lg has-text-centered">
                 <div class="title">ابتدایی</div>

@@ -10,9 +10,7 @@
                                 <div class="hero-body p-0">
                                     <div class="container-fluid p-0 overflow-hidden">
                                         <div class="columns">
-                                            <div class="column p-0 has-school-background">
-<!--                                                <img class="hero-image" src="/assets/img/illustrations/login/station.svg" alt="">-->
-<!--                                                <img class="centered-image" src="/assets/img/bg/tebyan.jpg" alt="">-->
+                                            <div class="column p-0 has-login-background">
                                             </div>
                                         </div>
                                     </div>
@@ -253,7 +251,7 @@ p.subtitle {
     object-fit: cover;
     object-position: center;
 }
-.has-school-background {
+.has-login-background {
     background-image: url(/assets/img/logo-dark-bg.png);
     height: 100vh;
     background-position: center center;
