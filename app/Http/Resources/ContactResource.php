@@ -23,7 +23,8 @@ class ContactResource extends JsonResource
             'title' => $this->title,
             'organization' => $this->organization,
             'tags' => $this->tags ?? [],
-            'avatar' => $this->fileName != null && file_exists(public_path('storage/contact_avatars/' . $this->fileName)) ? asset('storage/contact_avatars/' . $this->fileName) : null
+            'avatar' => $this->fileName != null && file_exists(public_path('storage/contact_avatars/' . $this->fileName)) ? asset('storage/contact_avatars/' . $this->fileName) : null,
+            'details' => ContactDetailResource::collection($this->details)
         ];
     }
 }

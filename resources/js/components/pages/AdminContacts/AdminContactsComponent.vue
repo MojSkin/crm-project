@@ -462,6 +462,7 @@ export default {
                 organization: '',
                 additional_infos: []
             },
+            errorArray: [],
             prefixes: [],
             headers: [
                 {id: 'index', title: '#', thStyle: 'width: 50px'},
@@ -664,6 +665,7 @@ export default {
             this.editing =  false
             this.newRec =  true
             this.errors = []
+            this.errorArray = []
             this.avatar = ''
             this.form = {
                 id: null,
@@ -690,32 +692,44 @@ export default {
             if (!this.saving && ! this.loading) {
                 this.validator.form.$touch();
                 if (!this.validator.form.$invalid) {
-                    this.saving = true
                     this.setAdditionalValue();
-                    Requests.saveContact(this.form).then(res => {
-                        if (res?.status) {
-                            if (this.editing) {
-                                for (let i = 0; i < this.contacts.length; i++) {
-                                    if (this.contacts[i].id == res.result.id) {
-                                        this.contacts[i] = res.result
-                                        break
+                    this.validateAll(this.form.additional_infos).then(res => {
+                        if (res) {
+                            this.saving = true
+                            Requests.saveContact(this.form).then(res => {
+                                if (res?.status) {
+                                    if (this.editing) {
+                                        for (let i = 0; i < this.contacts.length; i++) {
+                                            if (this.contacts[i].id == res.result.id) {
+                                                this.contacts[i] = res.result
+                                                break
+                                            }
+                                        }
+                                        this.$helpers.notify(res?.message || 'مخاطب مورد نظر با موفقیت ذخیره شد.')
+                                    } else {
+                                        this.contacts.push(res.result);
+                                        this.$helpers.notify('مخاطب جدید با موفقیت ثبت شد.');
                                     }
+                                    this.cancelForm()
+                                } else {
+                                    this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره مخاطب مورد نظر', { type: 'error' })
                                 }
-                                this.$helpers.notify(res?.message || 'مخاطب مورد نظر با موفقیت ذخیره شد.')
-                            } else {
-                                this.contacts.push(res.result);
-                                this.$helpers.notify('مخاطب جدید با موفقیت ثبت شد.');
-                            }
-                            this.cancelForm()
+                            }).catch(err => {
+                                console.log(err)
+                                this.$helpers.notify('خطای غیر منتظره', err?.response?.data?.message || 'بروز خطای غیرمنتظره هنگام ذخیره مخاطب مورد نظر', { type: 'error' })
+                            }).finally(res => {
+                                this.saving = false
+                                this.sortContacts()
+                            })
                         } else {
-                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره مخاطب مورد نظر', { type: 'error' })
+                            let count = 0
+                            for (let i = 0; i < this.errorArray.length; i++) {
+                                count += this.errorArray[i].length
+                            }
+                            const message = this.errorArray[0][0] + (count>1 ? ' <span class="is-weight-700 has-text-danger">به همراه '+(count-1)+' خطای دیگر...</span>' : '')
+                            this.$helpers.notify('خطا', message, { type: 'error' })
+                            return false
                         }
-                    }).catch(err => {
-                        console.log(err)
-                        this.$helpers.notify('خطای غیر منتظره', err?.response?.data?.message || 'بروز خطای غیرمنتظره هنگام ذخیره مخاطب مورد نظر', { type: 'error' })
-                    }).finally(res => {
-                        this.saving = false
-                        this.sortContacts()
                     })
                 }
             }
@@ -741,7 +755,6 @@ export default {
                             additional_infos:  res.result.details,
                             avatar:  res.result.avatar
                         }
-
                         this.editing = true
                     }
                 }).catch(err => {
@@ -822,6 +835,7 @@ export default {
             this.setAdditionalValue();
             this.form.additional_infos.push({
                 section: key,
+                key: this.additional_infos[key]?.options[e.type].key,
                 title: this.additional_infos[key]?.options[e.type].title,
                 label: (this.additional_infos[key]?.options[e.type]?.is_other) ? '' : this.additional_infos[key]?.options[e.type].label,
                 value: '',
@@ -836,12 +850,14 @@ export default {
                 for (let i = 0; i < this.form.additional_infos.length; i++) {
                     if(this.form.additional_infos[i].section === this.currentAdditional.section && this.form.additional_infos[i].id === this.currentAdditional.id){
                         this.form.additional_infos[i] = {
+                            key: this.currentAdditional.key,
                             section: this.currentAdditional.section,
                             title: this.currentAdditional.title,
                             label: this.currentAdditional.label,
                             value: this.currentAdditional.value,
                             id: this.currentAdditional.id,
-                            is_other: this.currentAdditional.is_other
+                            validations: this.currentAdditional.validations,
+                            is_other: this.currentAdditional.is_other,
                         }
                         for (let j = 0; j < this.additional_infos[this.currentAdditional.section].options.length; j++) {
                             if(this.additional_infos[this.currentAdditional.section].options[j].id && this.additional_infos[this.currentAdditional.section].options[j].id === this.currentAdditional.id){
@@ -856,7 +872,8 @@ export default {
                         key: this.currentAdditional.title,
                         title: this.currentAdditional.title,
                         is_other: true,
-                        id: this.currentAdditional.id
+                        id: this.currentAdditional.id,
+                        validations: this.currentAdditional.validations,
                     });
                 }
                 this.form.additional_infos.push(this.currentAdditional);
@@ -944,7 +961,6 @@ export default {
             }).then(result => {
                 if (result.value) {
                     this.saving = true
-                    console.log(tag_id);
                     Requests.deleteContactTags(tag_id).then(res => {
                         if (res?.status) {
                             this.$helpers.notify('برچسب مورد نظر با موفقیت حذف گردید.')
@@ -961,7 +977,100 @@ export default {
                     })
                 }
             });
-        }
+        },
+        validate(field, validation) {
+            let is_validated = true
+            const rule = validation[0].toUpperCase()
+            const params = validation[1]
+            switch (rule) {
+                case 'REQUIRED':
+                    if (typeof field.value === 'undefined' || (typeof field.value === 'object' && field.value === null) || field.value?.length < 1) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' الزامی است'
+                    }
+                    break;
+                case 'MIN':
+                    if (typeof field.value === 'string' && field.value?.length > 0 && field.value?.length < params[0]) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید حداقل '+params[0]+' کاراکتر باشد'
+                    }
+                    break;
+                case 'MAX':
+                    if (typeof field.value === 'string' && field.value?.length > 0 && field.value?.length > params[0]) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید حداکثر '+params[0]+' کاراکتر باشد'
+                    }
+                    break;
+                case 'BETWEEN':
+                    if (typeof field.value === 'undefined' || (typeof field.value === 'object' && field.value === null) || (field.value?.length < params[0] || field.value?.length > params[1])) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید بین از '+params[0]+' و '+params[1]+'باشد'
+                    }
+                    break;
+                case 'MIN_VALUE':
+                    if (field.value === null || field.value < params[0]) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید حداقل برابر با '+params[0]+' باشد'
+                    }
+                    break;
+                case 'MAX_VALUE':
+                    if (field.value > params[0]) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید حداکثر برابر با '+params[0]+' باشد'
+                    }
+                    break;
+                case 'DIGITS':
+                    if (field.value === null || isNaN(field.value) || field.value.replace('-', '').length != params[0]) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید دقیقا '+params[0]+' عدد باشد'
+                    }
+                    break;
+                case 'IN':
+                    if (field.value === null || !params.includes(field.validator)) {
+                        const values = params.join('، ')
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید یکی از گزینه‌های '+values+' باشد'
+                    }
+                    break;
+                case 'IS_NUMBER':
+                    const test = field.value+''
+                    if (field.value === null || parseInt(test) != field.value) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید یک مقدار عددی (صحیح یا اعشاری) داشته باشد'
+                    }
+                    break;
+                case 'IS_EMAIL':
+                    if (field.value && !this.$helpers.isEmail(field.value)) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید یک ایمیل معتبر باشد'
+                    }
+                    break;
+                case 'IS_MOBILE':
+                    if (!this.$helpers.isMobile(field?.value)) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید یک تلفن همراه معتبر باشد'
+                    }
+                    break;
+                case 'IS_MELLI':
+                    if (field.value && !this.$helpers.isValidNationalId(field.value)) {
+                        is_validated = 'فیلد '+(field.label || field.title)+' باید یک کد ملی معتبر باشد'
+                    }
+                    break;
+            }
+            return is_validated
+        },
+        async validateAll(fields) {
+            this.errorArray = []
+            for (const [key, field] of Object.entries(fields)) {
+                await this.checkValidation(field)
+            }
+            return !(this.errorArray != null && Object.keys(this.errorArray).length)
+        },
+        checkValidation(field) {
+            if (Object.keys(field?.validations).length > 0) {
+                delete field.validations['rules']
+                let errors = []
+
+                for (const [key, validation] of Object.entries(field.validations)) {
+                    const v = this.validate(field, [key, validation])
+                    if (v !== true) {
+                        errors.push(v)
+                    }
+                }
+                if (errors.length) {
+                    this.errorArray.push(errors)
+                }
+            }
+        },
     }
 }
 </script>

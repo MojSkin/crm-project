@@ -53,8 +53,11 @@ class Contact extends Model
                     'title' => 'همراه',
                     'label' => 'تلفن همراه',
                     'validations' => [
-                        'rules' => 'required|numeric|min:11|max:11',
-                        'max_length' => 11
+                        'rules' => 'required|numeric|min:11|max:11|mobile',
+                        'required' => true,
+                        'numeric' => true,
+                        'is_mobile' => true,
+                        'digits' => [11],
                     ]
                 ],
                 [
@@ -63,7 +66,10 @@ class Contact extends Model
                     'label' => 'تلفن منزل',
                     'validations' => [
                         'rules' => 'required|numeric|min:4|max:20',
-                        'max_length' => 20
+                        'required' => true,
+                        'numeric' => true,
+                        'min' => [4],
+                        'max' => [20]
                     ]
                 ],
                 [
@@ -72,7 +78,10 @@ class Contact extends Model
                     'label' => 'تلفن کاری',
                     'validations' => [
                         'rules' => 'required|numeric|min:4|max:20',
-                        'max_length' => 20
+                        'required' => true,
+                        'numeric' => true,
+                        'min' => [4],
+                        'max' => [20]
                     ]
                 ],
                 [
@@ -80,8 +89,11 @@ class Contact extends Model
                     'title' => 'داخلی',
                     'label' => 'شماره داخلی',
                     'validations' => [
-                        'rules' => 'required|numeric|min:1|max:20',
-                        'max_length' => 20
+                        'rules' => 'required|numeric|min:1|max:10',
+                        'required' => true,
+                        'numeric' => true,
+                        'min' => [1],
+                        'max' => [10]
                     ]
                 ],
                 [
@@ -90,7 +102,10 @@ class Contact extends Model
                     'label' => 'فکس منزل',
                     'validations' => [
                         'rules' => 'required|numeric|min:4|max:20',
-                        'max_length' => 20
+                        'required' => true,
+                        'numeric' => true,
+                        'min' => [4],
+                        'max' => [20]
                     ]
                 ],
                 [
@@ -99,7 +114,10 @@ class Contact extends Model
                     'label' => 'فکس کاری',
                     'validations' => [
                         'rules' => 'required|numeric|min:4|max:20',
-                        'max_length' => 20
+                        'required' => true,
+                        'numeric' => true,
+                        'min' => [4],
+                        'max' => [20]
                     ]
                 ],
                 [
@@ -107,7 +125,10 @@ class Contact extends Model
                     'title' => 'سایر',
                     'validations' => [
                         'rules' => 'required|numeric|min:4|max:20',
-                        'max_length' => 20
+                        'required' => true,
+                        'numeric' => true,
+                        'min' => [4],
+                        'max' => [20]
                     ],
                     'is_other' => true
                 ]
@@ -122,7 +143,10 @@ class Contact extends Model
                     'label' => 'ایمیل شخصی',
                     'validations' => [
                         'rules' => 'required|email|min:5|max:200',
-                        'max_length' => 200
+                        'required' => true,
+                        'is_email' => true,
+                        'min' => [5],
+                        'max' => [200]
                     ]
                 ],
                 [
@@ -131,7 +155,10 @@ class Contact extends Model
                     'label' => 'ایمیل کاری',
                     'validations' => [
                         'rules' => 'required|email|min:5|max:200',
-                        'max_length' => 200
+                        'required' => true,
+                        'is_email' => true,
+                        'min' => [5],
+                        'max' => [200]
                     ]
                 ],
                 [
@@ -139,7 +166,10 @@ class Contact extends Model
                     'title' => 'سایر',
                     'validations' => [
                         'rules' => 'required|email|min:5|max:200',
-                        'max_length' => 200
+                        'required' => true,
+                        'is_email' => true,
+                        'min' => [5],
+                        'max' => [200]
                     ],
                     'is_other' => true
                 ]
@@ -154,7 +184,9 @@ class Contact extends Model
                     'label' => 'آدرس منزل',
                     'validations' => [
                         'rules' => 'required|min:2|max:250',
-                        'max_length' => 250
+                        'required' => true,
+                        'min' => [2],
+                        'max' => [250]
                     ]
                 ],
                 [
@@ -163,7 +195,9 @@ class Contact extends Model
                     'label' => 'آدرس محل کار',
                     'validations' => [
                         'rules' => 'required|min:2|max:250',
-                        'max_length' => 250
+                        'required' => true,
+                        'min' => [2],
+                        'max' => [250]
                     ]
                 ],
                 [
@@ -171,7 +205,9 @@ class Contact extends Model
                     'title' => 'سایر',
                     'validations' => [
                         'rules' => 'required|min:2|max:250',
-                        'max_length' => 250
+                        'required' => true,
+                        'min' => [2],
+                        'max' => [250]
                     ],
                     'is_other' => true
                 ]
@@ -186,6 +222,7 @@ class Contact extends Model
                     'label' => 'تولد',
                     'validations' => [
                         'rules' => 'required',
+                        'required' => true,
                     ]
                 ],
                 [
@@ -194,6 +231,7 @@ class Contact extends Model
                     'label' => 'ازدواج',
                     'validations' => [
                         'rules' => 'required',
+                        'required' => true,
                     ]
                 ],
                 [
@@ -202,6 +240,7 @@ class Contact extends Model
                     'label' => 'آشنایی',
                     'validations' => [
                         'rules' => 'required',
+                        'required' => true,
                     ]
                 ],
                 [
@@ -209,6 +248,7 @@ class Contact extends Model
                     'title' => 'سایر',
                     'validations' => [
                         'rules' => 'required',
+                        'required' => true,
                     ],
                     'is_other' => true
                 ]
@@ -223,7 +263,9 @@ class Contact extends Model
                     'label' => 'وبسایت',
                     'validations' => [
                         'rules' => 'required|min:2|max:100|url',
-                        'max_length' => 250
+                        'required' => true,
+                        'min' => [2],
+                        'max' => [100]
                     ]
                 ],
                 [
@@ -232,7 +274,8 @@ class Contact extends Model
                     'label' => 'توضیحات',
                     'validations' => [
                         'rules' => 'required|min:5|max:250',
-                        'max_length' => 250
+                        'min' => [5],
+                        'max' => [250]
                     ]
                 ],
             ],

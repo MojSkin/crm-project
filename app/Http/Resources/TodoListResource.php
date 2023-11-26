@@ -22,6 +22,7 @@ class TodoListResource extends JsonResource
             'due_date' => Carbon::createFromDate($this->due_date)->format('Y/m/d H:i'),
             'flag' => $this->flags[$this->flag] ?? 'عادی',
             'is_done' => $this->is_done,
+            'order_index' => $this->order_index,
             'user' => $this->user,
             'created_at' => Carbon::createFromDate($this->created_at)->format('Y/m/d H:i'),
             'updated_at' => Carbon::createFromDate($this->updated_at)->format('Y/m/d H:i'),

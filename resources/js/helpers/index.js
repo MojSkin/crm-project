@@ -243,11 +243,12 @@ export default {
 
     isMobile(number) {
         number = String(number)
-        let regex = /(\+98|0098|98|0|)[9](0|1|2|3|4|5|9)\d{8}/;
-        const num = number.substring(number.length - 10)
-        const area_code = num.substring(0, 2)
-        const region = number.replace(num, '')
-        return (num.length === 10 && ['90', '91', '92', '93', '94', '95', '99'].includes(area_code) && ['+98', '98', '0098', ''].includes(region))
+        let regex = /(\+989|00989|989|09|9)(0|1|2|3|4|5|9)\d{8}/;
+        // const num = number.substring(number.length - 10)
+        // const area_code = num.substring(0, 2)
+        // const region = number.replace(num, '')
+        // return (num.length === 10 && ['90', '91', '92', '93', '94', '95', '99'].includes(area_code) && ['+98', '98', '0098', ''].includes(region))
+        return regex.test(number)
     },
 
     isSafePassword(password, length = 6) {

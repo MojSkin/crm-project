@@ -57,7 +57,12 @@
                             <div class="recent-rookies position-relative" style="min-height: 301px">
                                 <b-overlay :show="loadingProjects">
                                     <div class="recent-rookies-header">
-                                        <h3 class="dark-inverted">جدیدترین پروژه‌ها</h3>
+                                        <h3 class="dark-inverted">
+                                            <span>جدیدترین پروژه‌ها</span>
+                                            <span class="hint--light hint--rounded hint--top pt-1 mr-auto" data-hint="دریافت مجدد فهرست پروژه‌ها">
+                                                <i class="ml-2 is-clickable has-text-grey-light fal fa-undo" @click="getProjects"></i>
+                                            </span>
+                                        </h3>
                                         <RouterLink :to="{ name: 'admin.projects' }" class="action-link">مشاهده همه</RouterLink>
                                     </div>
 
@@ -87,8 +92,11 @@
                                     <span class="hint--light hint--rounded hint--top pt-1" data-hint="افزودن کار جدید">
                                         <i class="ml-2 is-clickable has-text-info fal fa-plus" @click="openTodoModal(null)"></i>
                                     </span>
+                                    <span class="hint--light hint--rounded hint--top pt-1" data-hint="دریافت مجدد فهرست کارها">
+                                        <i class="ml-2 is-clickable has-text-grey-light fal fa-undo" @click="getTodos"></i>
+                                    </span>
                                 </h3>
-                                <div class="tabbed-controls">
+                                <div class="tabbed-controls ml-auto">
                                     <a class="tabbed-control" :class="{'is-active': todoListTab=='waiting'}" @click="todoListTab='waiting'">
                                         <span>منتظر</span>
                                     </a>
@@ -98,7 +106,6 @@
                                     <div class="tabbed-naver"></div>
                                 </div>
                             </div>
-
                             <div class="inner-list-wrapper is-active overflow-scroll pr-3" style="max-height: 390px; margin-left: -13px; margin-right: -8px">
                                 <div class="inner-list is-relative">
                                     <!--List Item-->
@@ -181,6 +188,9 @@ export default {
                 const checkB = b.due_date != null ? b.due_date : b.created_at
                 return (Date.parse(checkB) > Date.parse(checkA))
             })
+        })
+        this.EventBus.on('projectInserted', project => {
+            this.projects.push(project)
         })
     },
     mounted() {

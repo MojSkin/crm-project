@@ -33,7 +33,6 @@ class Todo extends Model
         'اضطراری',
     ];
 
-
     public function todoable(): MorphTo
     {
         return $this->morphTo();

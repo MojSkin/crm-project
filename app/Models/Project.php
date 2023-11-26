@@ -38,6 +38,11 @@ class Project extends Model
         'user_id'
     ];
 
+    public function alarm(): MorphOne
+    {
+        return $this->morphOne(Alarm::class, 'alarmable');
+    }
+
     public function todo(): MorphOne
     {
         return $this->morphOne(Todo::class, 'todoable');

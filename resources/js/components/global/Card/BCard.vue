@@ -10,9 +10,11 @@
                 </div>
             </slot>
         </div>
-        <div class="card-body" :class="bodyClass">
-            <slot/>
-        </div>
+        <slot name="body">
+            <div class="card-body" :class="bodyClass">
+                <slot/>
+            </div>
+        </slot>
         <div class="card-foot" :class="footerClass" v-if="!noFooter">
             <slot name="footer">
                 <div class="right">

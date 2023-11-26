@@ -26,7 +26,7 @@ class ProjectResource extends JsonResource
             'files' => ProjectFileResource::collection($this->files),
             'comments' => ProjectCommentResource::collection($this->comments),
             'notes' => ProjectNoteResource::collection($this->notes),
-            'last_note' => new ProjectNoteResource($this->notes->last()),
+            'last_note' => new ProjectNoteResource($this->lastNote()),
             'members' => ProjectUserResource::collection($this->members),
             'user' => new ProjectUserResource($this->user),
             'city' => new CityResource($this->city),
@@ -44,6 +44,7 @@ class ProjectResource extends JsonResource
             'units' => $this->units,
             'floors' => $this->floors,
             'todo' => $this->todo,
+            'alarm' => $this->alarm,
             'created_at' => $this->created_at,
         ];
     }

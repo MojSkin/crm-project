@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectCommentResource;
 use App\Http\Resources\ProjectNoteResource;
 use App\Http\Resources\ProjectResource;
+use App\Models\Alarm;
 use App\Models\Comment;
 use App\Models\ContactProject;
 use App\Models\Image;
@@ -14,6 +15,7 @@ use App\Models\Project;
 use App\Models\ProjectNote;
 use App\Models\ProjectType;
 use App\Models\ProjectUser;
+use App\Models\Todo;
 use Carbon\Carbon;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
@@ -33,7 +35,7 @@ class ProjectController extends Controller
         ];
 
         try {
-            $projects = Project::with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->orderBy('created_at', 'DESC');
+            $projects = Project::with(['alarm', 'todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->orderBy('created_at', 'DESC');
 
             if (isset($request->filters) && $request->filters !== null) {
                 $project_ids = [];
@@ -85,7 +87,7 @@ class ProjectController extends Controller
         ];
 
         try {
-            $project = Project::whereId($request->project)->with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+            $project = Project::whereId($request->project)->with(['alarm', 'todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
             if ($project) {
                 $response['result'] = new ProjectResource($project);
                 $response['ext_data'] = [
@@ -172,6 +174,9 @@ class ProjectController extends Controller
                 'blocks' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->blocks ?? '1', 'en', 'fa'), 'en', 'ar'),
                 'units' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->units ?? '1', 'en', 'fa'), 'en', 'ar'),
                 'floors' => MojSkin::replaceDigits(MojSkin::replaceDigits($request->floors ?? '1', 'en', 'fa'), 'en', 'ar'),
+                'note' => isset($request->note) && $request->note !== null ? $request->note : false,
+                'project_status' => isset($request->project_status) && $request->project_status !== null ? $request->project_status : false,
+                'project_result' => isset($request->project_result) && $request->project_result !== null ? $request->project_result : false,
             ];
 
 
@@ -214,13 +219,13 @@ class ProjectController extends Controller
             ContactProject::whereProjectId($project->id)->delete();
             ContactProject::insert($project_contacts);
 
-            if ($project->id !== $projectData['id']) { // Project is a new project
+            if ($project->id !== $projectData['id'] && $projectData['note'] !== false) { // Project is a new project
                 ProjectNote::create([
                     'project_id' => $project->id,
                     'user_id' => Auth::id(),
-                    'note' => 'ثبت پروژه جدید',
-                    'project_status_id' => $request->project_status_id,
-                    'project_result_id' => $request->project_result_id,
+                    'note' => $projectData['note'],
+                    'project_status_id' => $projectData['project_status'],
+                    'project_result_id' => $projectData['project_result'],
                 ]);
             }
 
@@ -248,8 +253,41 @@ class ProjectController extends Controller
             if (count($files)>0) {
                 Image::insert($files);
             }
+            if (isset($request->addTodo) && $request->addTodo == true) {
+                $pTodo = Todo::whereId($request->todo_id);
+                $todo = Todo::updateOrCreate(
+                    ['id' => $request->todo_id],
+                    [
+                        'user_id' => $project->user_id,
+                        'title' => $request->todo_title,
+                        'due_date' => $request->todo_due_date ?? null,
+                        'flag' => $request->todo_flag,
+                        'description' => $request->todo_description ?? null,
+                        'is_done' => $pTodo->is_done ?? false,
+                        'todoable_type' => 'App\Models\Project',
+                        'todoable_id' => $project->id
+                    ]
+                );
+            }
+            if (isset($request->addAlarm) && $request->addAlarm == true) {
+                $pAlarm = Alarm::whereId($request->alarm_id);
+                $alarm = Alarm::updateOrCreate(
+                    ['id' => $request->alarm_id],
+                    [
+                        'user_id' => $project->user_id,
+                        'title' => $request->alarm_title,
+                        'description' => $request->alarm_description ?? null,
+                        'alarm_date' => $request->alarm_date,
+                        'alarm_time' => $request->alarm_time,
+                        'weekdays' => '|'.$request->alarm_weekdays.'|',
+                        'is_active' => $pTodo->is_active ?? false,
+                        'alarmable_type' => 'App\Models\Project',
+                        'alarmable_id' => $project->id
+                    ]
+                );
+            }
 
-            $project = Project::whereId($project->id)->with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+            $project = Project::whereId($project->id)->with(['alarm', 'todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
             $response['result'] = new ProjectResource($project);
             $response['status'] = true;
             $response['message'] = 'پروژه با موفقیت ذخیره شد';

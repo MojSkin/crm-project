@@ -30,7 +30,7 @@ export default {
         isExclusive: Boolean,
         headerClass: [Boolean, String],
         contentClass: [Boolean, String],
-        open: [Boolean, String]
+        open: [Boolean, String],
     },
     data() {
         return {}
@@ -57,7 +57,9 @@ export default {
                 $('.accordion-content:not([data-refrence="'+header_id+'"])').slideUp()
                 $('.accordion-header:not([data-refrence="'+header_id+'"])').removeClass('is-active')
             }
+
             $('.accordion-content[data-refrence="'+header_id+'"]').slideToggle()
+
             if (title.hasClass('is-active')) {
                 $(title).removeClass('is-active')
             } else {

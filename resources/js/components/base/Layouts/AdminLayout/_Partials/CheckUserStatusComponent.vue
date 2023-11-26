@@ -15,6 +15,12 @@ export default {
     },
     created() {
         this.checkUserStatus()
+        let crmState = localStorage?.crmState
+        crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
+        const currentUser = crmState?.userData
+        Echo.private('user-alarms-'+currentUser.username).listen("AlarmEvent", (alarm) => {
+            console.log(alarm)
+        })
     },
     mounted() {
     },
@@ -26,7 +32,6 @@ export default {
     },
     methods: {
         checkUserStatus() {
-            console.log('I`m checking')
             let crmState = localStorage?.crmState
             crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
             const currentUser = crmState?.userData

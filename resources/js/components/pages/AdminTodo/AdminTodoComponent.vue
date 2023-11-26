@@ -45,10 +45,10 @@ export default {
             form: [],
             errors: [],
             form_template: {
-                title:       {title: 'عنوان', class: 'small' , is_required: true, col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['required', 'min:3', 'max:100']},
-                description: {title: 'توضیحات', rows:2, description: 'حداکثر 500 کاراکتر', type: 2, col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['min:10', 'max:500']},
-                due_date:    {title: 'زمان سررسید', type: 5, col_mobile: 6, col_tablet: 6, col_desktop: 6, col_widescreen: 6},
-                flag:        {title: 'درجه اهمیت', type: 9, default: 'عادی', options: 'کم|متوسط|عادی|زیاد|اضطراری', col_mobile: 6, col_tablet: 6, col_desktop: 6, col_widescreen: 6},
+                title:       {title: 'عنوان',           is_required: true, col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['required', 'min:3', 'max:100']},
+                due_date:    {title: 'زمان سررسید',     type: 5, col_mobile: 6, col_tablet: 6, col_desktop: 6, col_widescreen: 6},
+                flag:        {title: 'درجه اهمیت',      type: 9, default: 'عادی', options: 'کم|متوسط|عادی|زیاد|اضطراری', col_mobile: 6, col_tablet: 6, col_desktop: 6, col_widescreen: 6},
+                description: {title: 'توضیحات',         rows:2, description: 'حداکثر 500 کاراکتر', type: 2, col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['min:10', 'max:500']},
             },
             isActive: this.active,
             flags: [

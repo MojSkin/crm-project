@@ -225,7 +225,7 @@ export default {
                     }
                     break;
                 case 'DIGITS':
-                    if (field.value === null || isNaN(field.value) || (String(parseInt((field.value + ''))).replace('-', '').length) != params[0]) {
+                    if (field.value === null || isNaN(field.value) || field.value.replace('-', '').length != params[0]) {
                         is_validated = 'فیلد '+field.title+' باید دقیقا '+params[0]+' عدد باشد'
                     }
                     break;

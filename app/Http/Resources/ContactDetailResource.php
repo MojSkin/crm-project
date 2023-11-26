@@ -24,8 +24,7 @@ class ContactDetailResource extends JsonResource
             'label' => $this->title,
             'value' => $this->value,
             'is_other' => $index === false,
-//            'validations' => Contact::getDefault('additional_infos')[$this->section]['validations']
-            'validations' => $index !== false ? Contact::getDefault('additional_infos')[$this->section]['options'][$index]['validations'] : null,
+            'validations' => Contact::getDefault('additional_infos')[$this->section]['options'][$index ?? 0]['validations'],
         ];
     }
 }

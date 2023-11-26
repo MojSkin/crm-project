@@ -26,7 +26,7 @@ class ContactController extends Controller
         ];
 
         try {
-            $contacts = Contact::orderBy(DB::raw("TRIM(CONCAT(COALESCE(`lName`, ''), ' ',COALESCE(`fName`,'')))"));
+            $contacts = Contact::orderBy(DB::raw("TRIM(CONCAT(COALESCE(`lName`, ''), ' ',COALESCE(`fName`,'')))"))->with('details');
             if ($request->filters != null) {
                 $records = [];
                 $details = [];

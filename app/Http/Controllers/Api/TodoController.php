@@ -8,6 +8,7 @@ use App\Models\Todo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TodoController extends Controller
 {
@@ -20,7 +21,13 @@ class TodoController extends Controller
         ];
 
         try {
-            $response['result'] = TodoListResource::collection(Todo::whereUserId(Auth::id())->orderBy('due_date', 'desc')->get());
+            $todos = Todo::whereUserId(Auth::id())
+                ->select(DB::raw('*, IFNULL(due_date, created_at) as date_order, IF(is_done = 1, 0, IF(DATE(IFNULL(due_date, created_at)) < NOW(), 1, 0)+flag) as order_index'))
+                ->orderBy('order_index', 'DESC')
+                ->orderBy('date_order', 'ASC')
+                ->get();
+
+            $response['result'] = TodoListResource::collection($todos);
             $response['status'] = true;
             $response['message'] = 'فهرست کارها با موفقیت دریافت شد';
         } catch (\Exception $e) {
@@ -75,6 +82,7 @@ class TodoController extends Controller
         try {
             $todo = Todo::whereId($request->todo)->first();
             if ($todo) {
+                $todo->delete();
                 $response['status'] = true;
                 $response['message'] = 'کار مورد نظر با موفقیت حذف شد';
             } else {

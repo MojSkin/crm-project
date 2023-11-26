@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ContactController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Api\UsedFormController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\TodoController;
+use App\Http\Controllers\Api\AlarmController;
 use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\ProductCategoryController;
@@ -32,7 +34,6 @@ use App\Http\Controllers\Api\UserController;
 
 Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
 
 Route::middleware('auth:sanctum')->name('api.')->group(function() {
 
@@ -100,6 +101,12 @@ Route::middleware('auth:sanctum')->name('api.')->group(function() {
         Route::post('/getTodoList', [TodoController::class, 'getTodoList'])->name('getTodoList');
         Route::post('/saveTodo',    [TodoController::class, 'saveTodo'])->name('saveTodo');
         Route::post('/deleteTodo',  [TodoController::class, 'deleteTodo'])->name('deleteTodo');
+    });
+
+    Route::prefix('/alarms')->name('alarms.')->group(function () {
+        Route::post('/getAlarmList', [AlarmController::class, 'getAlarmList'])->name('getAlarmList');
+        Route::post('/saveAlarm',    [AlarmController::class, 'saveAlarm'])->name('saveAlarm');
+        Route::post('/deleteAlarm',  [AlarmController::class, 'deleteAlarm'])->name('deleteAlarm');
     });
 
     Route::prefix('/forms')->name('forms.')->group(function () {

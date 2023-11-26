@@ -420,8 +420,8 @@
                     </template>
                     <template #contacts>
                         <div class="px-5">
-                            <div class="columns is-multiline is-flex">
-                                <div class="column is-12-mobile is-6-tablet is-4-desktop is-4-widescreen">
+                            <div class="columns is-multiline is-flex is-align-items-center">
+                                <div class="column is-12-mobile is-5-tablet is-4-desktop is-4-widescreen">
                                     <b-select
                                         autoclose
                                         searchable
@@ -441,10 +441,17 @@
                                         v-model="tempPosition"
                                     />
                                 </div>
-                                <div class="column is-2-mobile is-1-tablet is-1-desktop is-1-widescreen">
-                                    <button class="button border-0 p-3 has-background-info-dark" @click="addContact">
-                                        <i class="fal fa-plus has-text-info-light"></i>
-                                    </button>
+                                <div class="column is-2-mobile is-2-tablet is-4-desktop is-4-widescreen pb-4">
+                                    <span class="hint--light hint--rounded hint--top pt-1" data-hint="افزودن مخاطب به پروژه">
+                                        <button class="button border-0 p-3 is-info" @click="addContact">
+                                            <i class="fal fa-plus has-text-info-light"></i>
+                                        </button>
+                                    </span>
+                                    <span class="hint--light hint--rounded hint--top pt-1" data-hint="افزودن مخاطب جدید">
+                                        <button class="button border-0 p-3 is-primary ml-2" @click="addNewContact">
+                                            <i class="fal fa-user-plus"></i>
+                                        </button>
+                                    </span>
                                 </div>
                                 <div class="column is-12">
                                     <div class="snacks py-4 is-rounded" style="min-height: 140px; border-radius: 5px;">
@@ -716,7 +723,7 @@
                                         </template>
                                     </b-input>
                                 </div>
-                                <div class="column is-12-mobile is-12-tablet is-4-desktop is-4-widescreen is-flex pt-5">
+                                <div class="column is-12-mobile is-12-tablet is-4-desktop is-4-widescreen is-flex pt-5" v-if="editing && editingItem.id > 0">
                                     <button class="button is-info ml-auto mt-3" @click="saveNote" :disabled="savingComment">
                                         <i class="fal fa-save" v-if="!savingComment"></i>
                                         <i class="fas fa-spinner-third fa-spin" v-else></i>
@@ -753,6 +760,202 @@
                             </div>
                         </div>
                     </template>
+                    <template #other>
+                        <div class="p-3 mx-5">
+                            <div class="columns is-multiline is-flex pb-0">
+                                <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">
+                                    <b-card no-footer class="overflow-hidden" header-class="has-background-light">
+                                        <template #header>
+                                            <span class="mt-1">
+                                                <b-switch
+                                                    v-model="form.addTodo"
+                                                >
+                                                    <span class="has-text-dark is-inverted is-weight-700">افزودن به کارهای من</span>
+                                                </b-switch>
+                                            </span>
+                                            <i class="fad fa-tasks fa-3x has-text-primary"></i>
+                                        </template>
+                                        <template #body>
+                                            <Transition>
+                                                <div class="card-body" v-if="form.addTodo">
+                                                    <div class="inner-content">
+                                                        <div class="columns is-flex is-multiline">
+                                                            <div class="column is-12-mobile is-12-tablet is-6-desktop is-6-widescreen">
+                                                                <b-input
+                                                                    label='عنوان:'
+                                                                    placeholder="عنوان"
+                                                                    v-model="todo.title"
+                                                                    :is-error="validator?.todo?.title?.$errors?.length"
+                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"
+                                                                ></b-input>
+                                                            </div>
+                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
+                                                                <b-input
+                                                                    label='سررسید:'
+                                                                    placeholder="نام مخاطب"
+                                                                    v-model="todo.due_date"
+                                                                >
+                                                                    <template #input>
+                                                                        <date-picker
+                                                                            :initial-value='Date(Date.now())'
+                                                                            format='x'
+                                                                            display-format='jYYYY/jMM/jDD'
+                                                                            type="date"
+                                                                            v-model="todo.due_date"
+                                                                            input-class="is-ltr has-text-left input"
+                                                                            key="todo-due_date"
+                                                                        ></date-picker>
+                                                                    </template>
+                                                                </b-input>
+                                                            </div>
+                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
+                                                                <b-input
+                                                                    label='درجه اهمیت:'
+                                                                    placeholder="درجه اهمیت"
+                                                                    v-model="todo.due_date"
+                                                                    :is-error="validator?.todo?.flag?.$errors?.length"
+                                                                    :error-message="validator?.todo?.flag?.$errors[0]?.$message || ''"
+                                                                >
+                                                                    <template #input>
+                                                                        <b-select
+                                                                            autoclose
+                                                                            searchable
+                                                                            clearable
+                                                                            v-model="todo.flag"
+                                                                            :options="this.todoFlags"
+                                                                            :is-error="validator?.todo?.flag?.$errors?.length"
+                                                                            :error-message="validator?.todo?.flag?.$errors[0]?.$message || ''"
+                                                                        />
+                                                                    </template>
+                                                                </b-input>
+                                                            </div>
+                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">
+                                                                <b-input
+                                                                    label='توضیحات:'
+                                                                    placeholder="توضیحات"
+                                                                    v-model="todo.description"
+                                                                    :error-message="validator?.todo?.description?.$errors[0]?.$message || ''"
+                                                                >
+                                                                    <template #input>
+                                                            <textarea
+                                                                v-model="todo.description"
+                                                                rows="3"
+                                                                class="textarea no-resize"
+                                                                :class="{ 'is-error': validator?.todo?.description?.$errors?.length }"
+                                                            />
+                                                                    </template>
+                                                                </b-input>
+                                                            </div>
+                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-flex" v-if="todo?.id">
+                                                                <button class="button is-warning is-hoverable ml-auto" @click="deleteTodo(todo.id)" :disabled="saving">
+                                                                    <i class="fal fa-times"></i>
+                                                                    <span class="ml-2">حذف از فهرست کارها</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Transition>
+                                        </template>
+                                    </b-card>
+<!--                                    <b-card no-footer class="overflow-hidden" header-class="has-background-light">-->
+<!--                                        <template #header>-->
+<!--                                            <span class="mt-2">-->
+<!--                                                <b-switch-->
+<!--                                                    v-model="form.addAlarm"-->
+<!--                                                >-->
+<!--                                                    <span class="has-text-dark is-inverted is-weight-700">تنظیم یادآور</span>-->
+<!--                                                </b-switch>-->
+<!--                                            </span>-->
+<!--                                            <i class="fad fa-alarm-clock fa-3x has-text-primary"></i>-->
+<!--                                        </template>-->
+<!--                                        <template #body>-->
+<!--                                            <Transition>-->
+<!--                                                <div class="card-body" v-if="form.addAlarm">-->
+<!--                                                    <div class="inner-content">-->
+<!--                                                        <div class="columns is-flex is-multiline">-->
+<!--                                                            <div class="column is-12-mobile is-12-tablet is-6-desktop is-6-widescreen">-->
+<!--                                                                <b-input-->
+<!--                                                                    label='عنوان:'-->
+<!--                                                                    placeholder="عنوان"-->
+<!--                                                                    v-model="todo.title"-->
+<!--                                                                    :is-error="validator?.todo?.title?.$errors?.length"-->
+<!--                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"-->
+<!--                                                                ></b-input>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">-->
+<!--                                                                <b-input-->
+<!--                                                                    label='سررسید:'-->
+<!--                                                                    placeholder="نام مخاطب"-->
+<!--                                                                    v-model="todo.due_date"-->
+<!--                                                                    :is-error="validator?.todo?.title?.$errors?.length"-->
+<!--                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"-->
+<!--                                                                >-->
+<!--                                                                    <template #input>-->
+<!--                                                                        <date-picker-->
+<!--                                                                            :initial-value='Date(Date.now())'-->
+<!--                                                                            format='x'-->
+<!--                                                                            display-format='jYYYY/jMM/jDD'-->
+<!--                                                                            type="date"-->
+<!--                                                                            v-model="todo.due_date"-->
+<!--                                                                            input-class="is-ltr has-text-left input"-->
+<!--                                                                            key="todo-due_date"-->
+<!--                                                                        ></date-picker>-->
+<!--                                                                    </template>-->
+<!--                                                                </b-input>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">-->
+<!--                                                                <b-input-->
+<!--                                                                    label='درجه اهمیت:'-->
+<!--                                                                    placeholder="درجه اهمیت"-->
+<!--                                                                    v-model="todo.due_date"-->
+<!--                                                                    :is-error="validator?.todo?.title?.$errors?.length"-->
+<!--                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"-->
+<!--                                                                >-->
+<!--                                                                    <template #input>-->
+<!--                                                                        <b-select-->
+<!--                                                                            autoclose-->
+<!--                                                                            searchable-->
+<!--                                                                            clearable-->
+<!--                                                                            v-model="todo.flag"-->
+<!--                                                                            :options="this.todoFlags"-->
+<!--                                                                            :is-error="validator?.todo?.flag?.$errors?.length"-->
+<!--                                                                        />-->
+<!--                                                                    </template>-->
+<!--                                                                </b-input>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">-->
+<!--                                                                <b-input-->
+<!--                                                                    label='توضیحات:'-->
+<!--                                                                    placeholder="توضیحات"-->
+<!--                                                                    v-model="todo.description"-->
+<!--                                                                >-->
+<!--                                                                    <template #input>-->
+<!--                                                            <textarea-->
+<!--                                                                v-model="todo.description"-->
+<!--                                                                rows="3"-->
+<!--                                                                class="textarea no-resize"-->
+<!--                                                                :class="{ 'is-error': validator?.todo?.description?.$errors?.length }"-->
+<!--                                                            />-->
+<!--                                                                    </template>-->
+<!--                                                                </b-input>-->
+<!--                                                            </div>-->
+<!--                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-flex" v-if="todo?.id">-->
+<!--                                                                <button class="button is-warning is-hoverable ml-auto" @click="deleteTodo(todo.id)" :disabled="saving">-->
+<!--                                                                    <i class="fal fa-times"></i>-->
+<!--                                                                    <span class="ml-2">حذف از فهرست کارها</span>-->
+<!--                                                                </button>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </Transition>-->
+<!--                                        </template>-->
+<!--                                    </b-card>-->
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </b-tabs>
             </b-overlay>
             <template #footer-left>
@@ -782,13 +985,31 @@
             </template>
         </b-card>
     </b-modal>
-
+    <b-modal
+        ref="contactForm"
+        :is-card="false"
+    >
+        <b-card card-size='s' class="no-margin no-padding" body-class="p-5" no-header>
+            <div class="inner-content" style="max-height: 350px">
+                <FormContentComponent
+                    v-model="contactForm"
+                    :errors="[]"
+                    ref="newContactform"
+                />
+            </div>
+            <template #footer-left>
+                <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="ذخیره"><i @click="saveNewContact" class="fas fa-check has-text-success"></i></span>
+                <span class="hint--light hint--rounded hint--top mr-2 " data-hint="انصراف"><i @click="$refs.contactForm.modalClose()" class="fas fa-times has-text-grey-light"></i></span>
+            </template>
+        </b-card>
+    </b-modal>
 </template>
 
 <script>
 import { useVuelidate } from '@vuelidate/core'
 import 'vue3-openlayers/styles.css';
 import ProjectSingleCardComponent from "@/components/pages/AdminProject/ProjectSingleCardComponent.vue";
+import Form from '/resources/js/form'
 
 export default {
     name: "AdminProjectComponent",
@@ -841,7 +1062,34 @@ export default {
                 blocks: 1,
                 units: 1,
                 floors: 1,
+                addTodo: false,
+                addAlarm: false,
             },
+            todo: {
+                title: '',
+                due_date: '',
+                flag: 'عادی',
+                description: '',
+            },
+            alarm: {
+                title: '',
+                due_date: '',
+                flag: 'عادی',
+                description: '',
+            },
+            todoFlags: [
+                'کم',
+                'متوسط',
+                'عادی',
+                'زیاد',
+                'اضطراری',
+            ],
+            contact_template: {
+                fName: {title: 'نام',                                   col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['min:2', 'max:100']},
+                lName: {title: 'نام خانوادگی', is_required: true,       col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['required', 'min:2', 'max:100']},
+                phone: {title: 'شماره تلفن (همراه)', is_required: true, col_mobile: 12, col_tablet: 12, col_desktop: 12, col_widescreen: 12, validator: ['required', 'digits:11', 'is_mobile']},
+            },
+            contactForm: {},
             comment: null,
             default_status: null,
             default_result: null,
@@ -882,15 +1130,15 @@ export default {
             original_users: [],
             tempContact: null,
             tempPosition: null,
-            active_tab: 'general',
+            active_tab: 'contacts',
             tabs: [
-                {
-                    id: 'general',
-                    text: 'اطلاعات کلی پروژه',
-                },
                 {
                     id: 'contacts',
                     text: 'مخاطبین پروژه',
+                },
+                {
+                    id: 'general',
+                    text: 'اطلاعات کلی پروژه',
                 },
                 {
                     id: 'images',
@@ -907,6 +1155,10 @@ export default {
                 {
                     id: 'notes',
                     text: 'پیگیری‌ها',
+                },
+                {
+                    id: 'other',
+                    text: 'سایر',
                 },
             ],
             totalRows: 1,
@@ -1180,6 +1432,50 @@ export default {
                         $message: 'انتخاب نتیجه پروژه الزامی است'
                     }
                 },
+            },
+            todo: {
+                title: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length != 0)
+                        },
+                        $message: 'عنوان کار الزامی است'
+                    },
+                    min: {
+                        $validator: (val) => {
+                            return (val?.length >= 5)
+                        },
+                        $message: 'عنوان کار باید حداقل 5 کاراکتر باشد'
+                    },
+                    max: {
+                        $validator: (val) => {
+                            return (val?.length <= 100)
+                        },
+                        $message: 'عنوان کار باید حداکثر 100 کاراکتر باشد'
+                    },
+                },
+                description: {
+                    min: {
+                        $validator: (val) => {
+                            return (!val?.length || (val?.length && val?.length >= 10))
+                        },
+                        $message: 'توضیحات کار باید حداقل 10 کاراکتر باشد'
+                    },
+                    max: {
+                        $validator: (val) => {
+                            return (val?.length <= 500)
+                        },
+                        $message: 'توضیحات کار باید حداکثر 500 کاراکتر باشد'
+                    }
+                },
+                flag: {
+                    required: {
+                        $validator: (val) => {
+                            return (val && val.length > 0)
+                        },
+                        $message: 'انتخاب اولویت کار الزامی است'
+                    }
+                },
             }
         }
     },
@@ -1324,15 +1620,21 @@ export default {
                 }
             })
             this.contacts = (ext?.contacts || []).map(item => {
+                let phone = ''
+                if (item.details) {
+                    for (let i = 0; i < item.details.length; i++) {
+                        if (item.details[0]?.section === 'phone') {
+                            phone = item.details[0]?.value
+                            break
+                        }
+                    }
+                }
                 let name = item.name
-                if (item.nickName && item.nickName.length) {
-                    name += '('+item.nickName+')'
-                }
-                if (item.title && item.title.length) {
-                    name += ' - '+item.title
-                }
                 if (item.organization && item.organization.length) {
                     name += '('+item.organization+')'
+                }
+                if (phone.length > 0) {
+                    name += ' - '+phone
                 }
                 return {
                     value: item.id,
@@ -1382,6 +1684,8 @@ export default {
                     message  = 'جدول نتایج پروژه خالی است یا نتیجه‌ای به عنوان پیش‌فرض ثبت نشده است'
                 }
             }
+            this.note.project_status = this.default_status
+            this.note.project_result = this.default_result
             if (message.length) {
                 this.$helpers.notify('خطای دسترسی', message, {type: 'error'})
                 return
@@ -1416,7 +1720,14 @@ export default {
                 blocks: 1,
                 units: 1,
                 floors: 1,
+                addTodo: false,
             }
+            this.todo = {
+                title: '',
+                due_date: '',
+                flag: 'عادی',
+                description: '',
+            },
             this.note = {
                 note: '',
                 project_status: null,
@@ -1424,19 +1735,27 @@ export default {
             }
             this.tabs = [
                 {
-                    id: 'general',
-                    text: 'اطلاعات کلی پروژه',
-                },
-                {
                     id: 'contacts',
                     text: 'مخاطبین پروژه',
+                },
+                {
+                    id: 'general',
+                    text: 'اطلاعات کلی پروژه',
                 },
                 {
                     id: 'images',
                     text: 'تصاویر پروژه',
                 },
+                {
+                    id: 'notes',
+                    text: 'پیگیری‌ها',
+                },
+                {
+                    id: 'other',
+                    text: 'سایر',
+                },
             ]
-            this.active_tab  = 'general'
+            this.active_tab  = 'contacts'
             this.newRec      = true
             this.editing     = false
             this.editingItem = []
@@ -1467,8 +1786,23 @@ export default {
                 return false
             }
             if (!this.loading) {
-                this.validator.form.$touch();
-                if (!this.validator.form.$invalid) {
+                this.validator.form.$reset();
+                this.validator.note.$reset();
+                this.validator.todo.$reset();
+                let formInvalid = this.validator.form.$invalid
+                this.validator.form.$touch()
+                if (this.newRec) {
+                    this.validator.note.$touch();
+                    formInvalid = this.validator.note.$invalid
+                }
+                if (this.form.addTodo) {
+                    this.validator.todo.$touch()
+                    formInvalid = this.validator.todo.$invalid || formInvalid
+                }
+                if (formInvalid) {
+                    this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
+                    return
+                } else {
                     this.saving = true
                     let record = new FormData()
                     const contacts = JSON.stringify(this.form.contacts)
@@ -1497,10 +1831,22 @@ export default {
                     record.append('floors', this.form.floors || '')
                     if (this.editing) {
                         record.append('id', this.editingItem.id)
+                    } else {
+                        record.append('note', this.note.note)
+                        record.append('project_status', this.note.project_status)
+                        record.append('project_result', this.note.project_result)
                     }
                     this.files.forEach((file, index) => {
                         record.append("file-"+index+1, file);
                     });
+                    if (this.form.addTodo) {
+                        record.append('addTodo', true)
+                        record.append('todo_id', this.todo?.id || null)
+                        record.append('todo_title', this.todo.title)
+                        record.append('todo_due_date', this.todo.due_date)
+                        record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
+                        record.append('todo_description', this.todo.description)
+                    }
                     Requests.saveProject(record, (progressEvent) => {
                         this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                     }).then(res => {
@@ -1513,23 +1859,25 @@ export default {
                                     }
                                 }
                             } else {
-                                this.projects.push(res.result)
+                                this.projects.unshift(res.result)
+                                this.EventBus.emit('projectInserted', res.result)
                             }
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
+                            this.$router.push({ name : 'admin.projects' })
                         } else {
-                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه')
+                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
                         }
+                        return { status: res.status }
                     }).catch(err => {
-                        this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه')
+                        this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
+                        console.log(res)
                         this.uploadProgress = 0
                         this.files = []
                         this.saving = false
                         this.newRec = false
                         this.editing = false
                     })
-                } else {
-                    this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید')
                 }
             }
         },
@@ -1565,6 +1913,10 @@ export default {
                 {
                     id: 'notes',
                     text: 'پیگیری‌ها',
+                },
+                {
+                    id: 'other',
+                    text: 'سایر',
                 },
             ]
 
@@ -1604,6 +1956,17 @@ export default {
                 blocks: item.blocks || 1,
                 units: item.units || 1,
                 floors: item.floors || 1,
+                addTodo: item.addTodo || false,
+            }
+            if (item?.todo?.id) {
+                this.form.addTodo = true
+                this.todo = {
+                    id: item?.todo?.id,
+                    title: item?.todo?.title,
+                    due_date: item?.todo?.due_date,
+                    flag: this.todoFlags[item?.todo?.flag],
+                    description: item?.todo?.description,
+                }
             }
             this.$nextTick(res => {
                 this.mapOptions.center = [item.long, item.lat]
@@ -1632,9 +1995,7 @@ export default {
                             }
                             this.$helpers.notify('پروژه مورد نظر با موفقیت حذف گردید.')
                         } else {
-                            this.$helpers.notify('خطا', 'خطای غیرمنتظره! حذف پروژه مورد نظر با مشکل مواجه شد...', {
-                                type: "error",
-                            })
+                            this.$helpers.notify('خطا', 'خطای غیرمنتظره! حذف پروژه مورد نظر با مشکل مواجه شد...', { type: 'error' })
                         }
                     }).catch(err => {
                         console.log(err);
@@ -1762,6 +2123,49 @@ export default {
                 }
                 this.tempContact  = null
                 this.tempPosition = null
+            }
+        },
+        addNewContact() {
+            this.contactForm = new Form(this.contact_template)
+            this.$refs.contactForm.modalOpen()
+        },
+        saveNewContact() {
+            if (!this.saving) {
+                this.$refs.newContactform.validateAll().then(res => {
+                    if (res) {
+                        const newContact = {
+                            prefix: 1,
+                            fName: this.contactForm.fName.value,
+                            lName: this.contactForm.lName.value,
+                            additional_infos: [
+                                {
+                                    section: 'phone',
+                                    title: 'تلفن همراه',
+                                    label: 'تلفن همراه',
+                                    value: this.contactForm.phone.value,
+                                }
+                            ],
+                        }
+                        Requests.saveContact(newContact).then(res => {
+                            if (res?.status) {
+                                this.contacts.push({
+                                    value: res.result.id,
+                                    text: (this.contactForm.lName.value + ' ' + this.contactForm.fName.value).trim() + ' - '+this.contactForm.phone.value,
+                                })
+                                this.original_contacts.push(res.result)
+                                this.$helpers.notify('مخاطب جدید با موفقیت ثبت شد.');
+                                this.tempContact = res.result.id
+                                this.$refs.contactForm.modalClose()
+                            } else {
+                                this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره مخاطب مورد نظر', { type: 'error' })
+                            }
+                        }).catch(err => {
+                            this.$helpers.notify('خطای غیر منتظره', err?.response?.data?.message || 'بروز خطای غیرمنتظره هنگام ذخیره مخاطب مورد نظر', { type: 'error' })
+                        }).finally(res => {
+                            this.saving = false
+                        })
+                    }
+                })
             }
         },
         removeContact(contact_id, position_id) {
@@ -1932,11 +2336,11 @@ export default {
                         }
                         this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                     } else {
-                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه')
+                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
                     }
                 }).catch(err => {
                     console.error(err)
-                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه')
+                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                 }).finally(res => {
                     this.uploadProgress = 0
                     this.updatingAlts = null
@@ -1964,11 +2368,11 @@ export default {
                         }, 300);
                         this.$helpers.notify(res?.message || 'دیدگاه شما ارسال شد')
                     } else {
-                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره دیدگاه')
+                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره دیدگاه', { type: 'error' })
                     }
                 }).catch(err => {
                     console.error(err)
-                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره دیدگاه')
+                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره دیدگاه', { type: 'error' })
                 }).finally(res => {
                     this.savingComment = null
                     this.comment = null
@@ -1998,10 +2402,10 @@ export default {
                         }
                         this.$helpers.notify(res?.message || 'پیگیری شما ثبت شد')
                     } else {
-                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پیگیری')
+                        this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پیگیری', { type: 'error' })
                     }
                 }).catch(err => {
-                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پیگیری')
+                    this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پیگیری', { type: 'error' })
                 }).finally(res => {
                     this.savingComment = null
                     this.note = {
@@ -2012,6 +2416,37 @@ export default {
                     this.validator.note.$reset()
                 })
             }
+        },
+        deleteTodo(todo) {
+            this.$swal.fire({
+                title: "حذف کار",
+                html: "کار مورد نظر حذف گردد؟",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "بلی",
+                cancelButtonText: "خیر",
+                showCloseButton: true,
+            }).then(result => {
+                if (result.value) {
+                    this.savingComment = true
+                    Requests.deleteTodo(todo).then(res => {
+                        if (res?.status) {
+                            this.$helpers.notify(res?.message || 'کار مورد نظر حذف شد')
+                            this.todo = {
+                                title: '',
+                                due_date: '',
+                                flag: 'عادی',
+                                description: '',
+                            }
+                            this.form.addTodo = false
+                        } else {
+                            this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطا هنگام حذف کار مورد نظر', { type: 'error' })
+                        }
+                    }).finally(res => {
+                        this.savingComment = false
+                    })
+                }
+            });
         },
     }
 };
@@ -2182,5 +2617,4 @@ export default {
     color: #0A0A0A !important;
     font-size: 1rem !important;
 }
-
 </style>
