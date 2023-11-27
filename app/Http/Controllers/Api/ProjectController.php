@@ -254,7 +254,7 @@ class ProjectController extends Controller
                 Image::insert($files);
             }
             if (isset($request->addTodo) && $request->addTodo == true) {
-                $pTodo = Todo::whereId($request->todo_id);
+                $pTodo = Todo::whereId($request->todo_id)->first();
                 $todo = Todo::updateOrCreate(
                     ['id' => $request->todo_id],
                     [
@@ -270,7 +270,7 @@ class ProjectController extends Controller
                 );
             }
             if (isset($request->addAlarm) && $request->addAlarm == true) {
-                $pAlarm = Alarm::whereId($request->alarm_id);
+                $pAlarm = Alarm::whereId($request->alarm_id)->first();
                 $alarm = Alarm::updateOrCreate(
                     ['id' => $request->alarm_id],
                     [
@@ -293,6 +293,7 @@ class ProjectController extends Controller
             $response['message'] = 'پروژه با موفقیت ذخیره شد';
         } catch (\Exception $e) {
             $response['message'] = $e->getMessage().' at line '.$e->getLine().' in '.$e->getFile();
+            $response['trace'] = $e->getTrace();
 
             return response()->json($response, 500);
         }
