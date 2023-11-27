@@ -10,6 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CheckAlarm extends Command
 {
@@ -37,19 +38,20 @@ class CheckAlarm extends Command
         $alarms = [];
         $count = 0;
         foreach($users as $user) {
-            $userAlarm = Alarm::whereIsActive(true)->where(function ($q) use ($now){
-                $q->whereAlarmDate($now->format('Y-m-d'))
-                    ->orWhere('weekdays', 'like', $now->dayOfWeek);
+            $userAlarm = Alarm::whereIsActive(true)->where(function () use ($now){
+                DB::raw('alaram_date="'.$now->format('Y-m-d'.'" OR weekdays LIKE "%'.$now->dayOfWeek.'%"'));
             });
             $userAlarm = $userAlarm->whereUserId($user);
-//        $userAlarm = $userAlarm->whereAlarmTime($now->format('H:i:00'));
+            $userAlarm = $userAlarm->whereAlarmTime($now->format('H:i:00'));
             $userAlarm = $userAlarm->orderBy('alarm_date', 'ASC')->orderBy('alarm_time', 'ASC')->get();
-            $count += $userAlarm->count();
-            $alarms[$user] = AlarmResource::collection($userAlarm);
+            if ($userAlarm->count() > 0) {
+                $count += $userAlarm->count();
+                $alarms = AlarmResource::collection($userAlarm);
+                event(new AlarmEvent($alarms[0]->user->username, $alarms));
+            }
         }
         if ($count > 0) {
             $this->info($count . ' alarm(s) were found.');
-            event(new AlarmEvent($alarms));
         } else {
             $this->info('No alarms were found.');
         }

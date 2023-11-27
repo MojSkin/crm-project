@@ -13,13 +13,15 @@ class AlarmEvent implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $alarms;
+    private $username;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($alarms)
+    public function __construct($username, $alarms)
     {
         $this->alarms = $alarms;
+        $this->username = $username;
     }
 
     /**
@@ -29,12 +31,6 @@ class AlarmEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        $events = [];
-        foreach ($this->alarms as $alarm) {
-            $key = $alarm[0]->user->username;
-            $events[] = new PrivateChannel('user-alarms-'.$key, $alarm);
-        }
-//        return $events;
-        return [new PrivateChannel('user-alarms')];
+        return [new PrivateChannel('user-alarms-'.$this->username, $this->alarms)];
     }
 }

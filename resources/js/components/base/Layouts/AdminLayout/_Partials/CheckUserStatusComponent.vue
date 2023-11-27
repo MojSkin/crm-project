@@ -18,8 +18,8 @@ export default {
         let crmState = localStorage?.crmState
         crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
         const currentUser = crmState?.userData
-        Echo.private('user-alarms-'+currentUser.username).listen("AlarmEvent", (alarm) => {
-            console.log(alarm)
+        Echo.private('user-alarms-'+currentUser.username).listen("AlarmEvent", (event) => {
+            console.log(1)
         })
     },
     mounted() {

@@ -36,6 +36,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth.regist
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware('auth:sanctum')->name('api.')->group(function() {
+    Broadcast::routes();
 
     Route::post('/checkUserStatus', [UserController::class, 'checkUserStatus'])->name('checkUserStatus');
 

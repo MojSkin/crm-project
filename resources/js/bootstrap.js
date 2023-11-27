@@ -37,6 +37,8 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
+import Requests from './requests'
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -46,4 +48,10 @@ window.Echo = new Echo({
     wsHost: window.location.hostname,
     wsPort: 6001,
     enabledTransports: ['ws'],
+    authEndpoint: '/api/broadcasting/auth',
+    auth: {
+        headers: {
+            Authorization: 'Bearer ' + Requests.token()
+        },
+    },
 });
