@@ -20,7 +20,6 @@ Route::get('/', function () {
 });
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
-Route::post('/login', [AuthController::class, 'login'])->name('auth.login')->name('login');
 Route::get('/test', function (){
 
 //    $apiKey = 'cPexbXJ9yeHZw0NJ8GPWfTux78Yh1fappNa+1SBEUpQ';

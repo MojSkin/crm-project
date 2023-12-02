@@ -186,6 +186,7 @@ export default {
                             this.$helpers.notify('خطا', res?.response?.data?.message ?? "بروز خطا در برقراری ارتباط با سرور");
                         }
                     }).catch(err => {
+                        console.log(err)
                         this.$helpers.notify('خطا', err?.response?.data?.message || "بروز خطای ناشناخته در برقراری ارتباط با سرور", {type: 'error'});
                     }).finally(res => {
                         this.loading = false
