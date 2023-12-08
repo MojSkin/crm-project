@@ -65,7 +65,11 @@ export default {
 
     // Acquire user`s token from localStorage and returns it directly
     token() {
-        return JSON.parse(localStorage?.crmState)?.userData?.token || ''
+        const crmState = localStorage?.crmState
+        if (crmState) {
+            const crmStateJSON = JSON.parse(crmState)
+            return crmStateJSON?.userData?.token || ''
+        }
     },
 
     // Create an object to set Axios Headers
