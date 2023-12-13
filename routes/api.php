@@ -106,9 +106,10 @@ Route::middleware('auth:sanctum')->name('api.')->group(function() {
     });
 
     Route::prefix('/alarms')->name('alarms.')->group(function () {
-        Route::post('/getAlarmList', [AlarmController::class, 'getAlarmList'])->name('getAlarmList');
-        Route::post('/saveAlarm',    [AlarmController::class, 'saveAlarm'])->name('saveAlarm');
-        Route::post('/deleteAlarm',  [AlarmController::class, 'deleteAlarm'])->name('deleteAlarm');
+        Route::post('/getAlarmList',      [AlarmController::class, 'getAlarmList'])->name('getAlarmList');
+        Route::post('/saveAlarm',         [AlarmController::class, 'saveAlarm'])->name('saveAlarm');
+        Route::post('/deleteAlarm',       [AlarmController::class, 'deleteAlarm'])->name('deleteAlarm');
+        Route::post('/changeAlarmStatus', [AlarmController::class, 'changeAlarmStatus'])->name('changeAlarmStatus');
     });
 
     Route::prefix('/forms')->name('forms.')->group(function () {

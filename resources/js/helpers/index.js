@@ -192,13 +192,13 @@ export default {
     notify(title, message, user_options = {}) {
         const options = {
             multiple                : user_options.multiple ?? true,
-            limit                   : user_options.limit ?? 10,
+            limit                   : user_options.limit ?? 5,
             newestOnTop             : user_options.newestOnTop ?? false,
             dangerouslyHTMLString   : user_options.html ?? true,
             icon                    : user_options.icon ?? undefined,
             rtl                     : user_options.rtl ?? true,
-            position                : user_options.position ?? toast.POSITION.BOTTOM_LEFT,
-            autoClose               : user_options.autoClose ?? 12000,
+            position                : user_options.position ?? toast.POSITION.BOTTOM_CENTER,
+            autoClose               : user_options.autoClose ?? 5000,
             closeButton             : user_options.closeButton ?? true,
             transition              : user_options.transition ?? toast.TRANSITIONS.FLIP,
             hideProgressBar         : user_options.hideProgressBar ?? false,
@@ -215,7 +215,7 @@ export default {
         } else {
             htmlMessage = '<div class="is-weight-700 is-size-6 is-font-alt">'+title+'</div><hr class="mt-0 mb-2"><p class="is-weight-400 is-size-6 has-text-justified mb-0">'+message+'</p>'
         }
-        toast(htmlMessage, options)
+        return toast(htmlMessage, options)
     },
 
     hideMeta(meta = '', starChr = '*', starsLength = 4) {

@@ -52,4 +52,9 @@ class AlarmController extends Controller
             ->get();
         return AlarmResource::collection($alarms);
     }
+
+    public function changeAlarmStatus(Request $request)
+    {
+
+    }
 }

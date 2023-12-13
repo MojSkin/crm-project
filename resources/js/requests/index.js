@@ -471,4 +471,9 @@ export default {
         const res = await axios.post(route('api.todos.deleteTodo'), {todo: todo_id}, this.tokenHeader())
         return res?.data
     },
+
+    async changeAlarmStatus(alarm_id) {
+        const res = await axios.post(route('api.alarm.changeAlarmStatus'), {alarm: alarm_id}, this.tokenHeader())
+        return res?.data
+    },
 }
