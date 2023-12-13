@@ -57,6 +57,70 @@
 <!--                </li>-->
             </ul>
         </li>
+        <li class="has-children" :class="{ 'active': active_item === 'tasks' }" @click="active('tasks')">
+            <div class="collapse-wrap">
+                <a class="parent-link">
+                    <i class="fal fa-tasks-alt mr-2"></i>
+                    <span>وظایف و کارها</span>
+                    <i class="fa fa-chevron-left"></i>
+                </a>
+            </div>
+            <ul ref="tasks">
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>وظایف من</span>
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>کارهای من</span>
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>یادآورهای من</span>
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>اعلان‌های من</span>
+                    </RouterLink>
+                </li>
+            </ul>
+        </li>
+        <li class="divider"></li>
+        <li class="has-children" :class="{ 'active': active_item === 'messaging' }" @click="active('messaging')">
+            <div class="collapse-wrap">
+                <a class="parent-link">
+                    <i class="fal fa-envelope-open-text mr-2"></i>
+                    <span>سرویس پیام کوتاه</span>
+                    <i class="fa fa-chevron-left"></i>
+                </a>
+            </div>
+            <ul ref="messaging">
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>ارسال پیام</span>
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>تنظیمات پیام‌رسان</span>
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink class="is-submenu" to="#">
+                        <span>ایجاد الگوهای پیام</span>
+                    </RouterLink>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <RouterLink class="is-submenu" to="#">
+                <i class="fal fa-comments-alt mr-2"></i>
+                <span>پیام‌رسان</span>
+            </RouterLink>
+        </li>
         <li class="has-children" :class="{ 'active': active_item === 'forms' }" @click="active('forms')">
             <div class="collapse-wrap">
                 <a class="parent-link">
@@ -83,32 +147,6 @@
                 </li>
             </ul>
         </li>
-<!--        <li class="has-children" :class="{ 'active': active_item === 'shop' }" @click="active('shop')">-->
-<!--            <div class="collapse-wrap">-->
-<!--                <a class="parent-link">-->
-<!--                    <i class="fal fa-shopping-basket mr-2"></i>-->
-<!--                    <span>فروشگاه</span>-->
-<!--                    <i class="fa fa-chevron-left"></i>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--            <ul ref="shop">-->
-<!--                <li>-->
-<!--                    <RouterLink class="is-submenu" :to="{name: 'admin.shop.categories'}">-->
-<!--                        <span>محصولات</span>-->
-<!--                    </RouterLink>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <RouterLink class="is-submenu" :to="{name: 'admin.shop.categories'}">-->
-<!--                        <span>دسته‌بندی محصولات</span>-->
-<!--                    </RouterLink>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <RouterLink class="is-submenu" :to="{name: 'admin.shop.categories'}">-->
-<!--                        <span>واحدهای کالا</span>-->
-<!--                    </RouterLink>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </li>-->
         <li class="divider"></li>
         <li class="has-children" :class="{ 'active': active_item === 'users' }" @click="active('users')">
             <div class="collapse-wrap">

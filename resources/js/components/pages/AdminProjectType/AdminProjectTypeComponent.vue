@@ -227,7 +227,7 @@ export default {
                             }
                             this.$helpers.notify('نوع پروژه مورد نظر با موفقیت حذف گردید.')
                         } else {
-                            this.$helpers.notify('خطا', 'خطای غیرمنتظره! حذف نوع پروژه مورد نظر با مشکل مواجه شد...', {
+                            this.$helpers.notify('خطا', res?.message || 'خطای غیرمنتظره! حذف نوع پروژه مورد نظر با مشکل مواجه شد...', {
                                 type: "error",
                             })
                         }

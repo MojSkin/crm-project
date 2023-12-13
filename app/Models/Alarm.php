@@ -12,10 +12,6 @@ class Alarm extends Model
 {
     use HasFactory;
 
-    protected $dispatchesEvents = [
-        'created' => AlarmEvent::class,
-    ];
-
     protected $fillable = [
         'user_id',
         'alarmable_id',
@@ -29,7 +25,9 @@ class Alarm extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'alarm_time' => 'datetime:H:i',
+        'alarm_date' => 'datetime:Y/m/d'
     ];
 
     public function alarmable(): MorphTo

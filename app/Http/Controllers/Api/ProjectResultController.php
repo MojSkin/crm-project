@@ -66,7 +66,7 @@ class ProjectResultController extends Controller
         ];
 
         try {
-            if (ProjectNote::whereProjectStatusId($request->status_id)->count() > 0) {
+            if (ProjectNote::whereProjectStatusId($request->result_id)->count() > 0) {
                 $response['message'] = 'به دلیل استفاده از این نتیجه در پیگیری پروژه‌ها، امکان حذف آن وجود ندارد';
             } else {
                 ProjectResult::whereId($request->result_id)->delete();

@@ -792,13 +792,13 @@
                                                             <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
                                                                 <b-input
                                                                     label='سررسید:'
-                                                                    placeholder="نام مخاطب"
+                                                                    placeholder="سررسید"
                                                                     v-model="todo.due_date"
                                                                 >
                                                                     <template #input>
                                                                         <date-picker
                                                                             :initial-value='Date(Date.now())'
-                                                                            format='x'
+                                                                            format='YYYY/MM/DD'
                                                                             display-format='jYYYY/jMM/jDD'
                                                                             type="date"
                                                                             v-model="todo.due_date"
@@ -858,100 +858,100 @@
                                             </Transition>
                                         </template>
                                     </b-card>
-<!--                                    <b-card no-footer class="overflow-hidden" header-class="has-background-light">-->
-<!--                                        <template #header>-->
-<!--                                            <span class="mt-2">-->
-<!--                                                <b-switch-->
-<!--                                                    v-model="form.addAlarm"-->
-<!--                                                >-->
-<!--                                                    <span class="has-text-dark is-inverted is-weight-700">تنظیم یادآور</span>-->
-<!--                                                </b-switch>-->
-<!--                                            </span>-->
-<!--                                            <i class="fad fa-alarm-clock fa-3x has-text-primary"></i>-->
-<!--                                        </template>-->
-<!--                                        <template #body>-->
-<!--                                            <Transition>-->
-<!--                                                <div class="card-body" v-if="form.addAlarm">-->
-<!--                                                    <div class="inner-content">-->
-<!--                                                        <div class="columns is-flex is-multiline">-->
-<!--                                                            <div class="column is-12-mobile is-12-tablet is-6-desktop is-6-widescreen">-->
-<!--                                                                <b-input-->
-<!--                                                                    label='عنوان:'-->
-<!--                                                                    placeholder="عنوان"-->
-<!--                                                                    v-model="todo.title"-->
-<!--                                                                    :is-error="validator?.todo?.title?.$errors?.length"-->
-<!--                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"-->
-<!--                                                                ></b-input>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">-->
-<!--                                                                <b-input-->
-<!--                                                                    label='سررسید:'-->
-<!--                                                                    placeholder="نام مخاطب"-->
-<!--                                                                    v-model="todo.due_date"-->
-<!--                                                                    :is-error="validator?.todo?.title?.$errors?.length"-->
-<!--                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"-->
-<!--                                                                >-->
-<!--                                                                    <template #input>-->
-<!--                                                                        <date-picker-->
-<!--                                                                            :initial-value='Date(Date.now())'-->
-<!--                                                                            format='x'-->
-<!--                                                                            display-format='jYYYY/jMM/jDD'-->
-<!--                                                                            type="date"-->
-<!--                                                                            v-model="todo.due_date"-->
-<!--                                                                            input-class="is-ltr has-text-left input"-->
-<!--                                                                            key="todo-due_date"-->
-<!--                                                                        ></date-picker>-->
-<!--                                                                    </template>-->
-<!--                                                                </b-input>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">-->
-<!--                                                                <b-input-->
-<!--                                                                    label='درجه اهمیت:'-->
-<!--                                                                    placeholder="درجه اهمیت"-->
-<!--                                                                    v-model="todo.due_date"-->
-<!--                                                                    :is-error="validator?.todo?.title?.$errors?.length"-->
-<!--                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"-->
-<!--                                                                >-->
-<!--                                                                    <template #input>-->
-<!--                                                                        <b-select-->
-<!--                                                                            autoclose-->
-<!--                                                                            searchable-->
-<!--                                                                            clearable-->
-<!--                                                                            v-model="todo.flag"-->
-<!--                                                                            :options="this.todoFlags"-->
-<!--                                                                            :is-error="validator?.todo?.flag?.$errors?.length"-->
-<!--                                                                        />-->
-<!--                                                                    </template>-->
-<!--                                                                </b-input>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">-->
-<!--                                                                <b-input-->
-<!--                                                                    label='توضیحات:'-->
-<!--                                                                    placeholder="توضیحات"-->
-<!--                                                                    v-model="todo.description"-->
-<!--                                                                >-->
-<!--                                                                    <template #input>-->
-<!--                                                            <textarea-->
-<!--                                                                v-model="todo.description"-->
-<!--                                                                rows="3"-->
-<!--                                                                class="textarea no-resize"-->
-<!--                                                                :class="{ 'is-error': validator?.todo?.description?.$errors?.length }"-->
-<!--                                                            />-->
-<!--                                                                    </template>-->
-<!--                                                                </b-input>-->
-<!--                                                            </div>-->
-<!--                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-flex" v-if="todo?.id">-->
-<!--                                                                <button class="button is-warning is-hoverable ml-auto" @click="deleteTodo(todo.id)" :disabled="saving">-->
-<!--                                                                    <i class="fal fa-times"></i>-->
-<!--                                                                    <span class="ml-2">حذف از فهرست کارها</span>-->
-<!--                                                                </button>-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </Transition>-->
-<!--                                        </template>-->
-<!--                                    </b-card>-->
+                                    <b-card no-footer class="overflow-hidden" header-class="has-background-light">
+                                        <template #header>
+                                            <span class="mt-2">
+                                                <b-switch
+                                                    v-model="form.addAlarm"
+                                                >
+                                                    <span class="has-text-dark is-inverted is-weight-700">تنظیم یادآور</span>
+                                                </b-switch>
+                                            </span>
+                                            <i class="fad fa-alarm-clock fa-3x has-text-primary"></i>
+                                        </template>
+                                        <template #body>
+                                            <Transition>
+                                                <div class="card-body" v-if="form.addAlarm">
+                                                    <div class="inner-content">
+                                                        <div class="columns is-flex is-multiline">
+                                                            <div class="column is-12-mobile is-12-tablet is-6-desktop is-6-widescreen">
+                                                                <b-input
+                                                                    label='عنوان:'
+                                                                    placeholder="عنوان"
+                                                                    v-model="alarm.title"
+                                                                    :is-error="validator?.alarm?.title?.$errors?.length"
+                                                                    :error-message="validator?.alarm?.title?.$errors[0]?.$message || ''"
+                                                                ></b-input>
+                                                            </div>
+                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
+                                                                <b-input
+                                                                    label='تاریخ یادآور:'
+                                                                    placeholder="تاریخ یادآور"
+                                                                    v-model="alarm.alarm_date"
+                                                                    :is-error="validator?.alarm?.alarm_date?.$errors?.length"
+                                                                    :error-message="validator?.alarm?.alarm_date?.$errors[0]?.$message || ''"
+                                                                >
+                                                                    <template #input>
+                                                                        <date-picker
+                                                                            :initial-value='Date(Date.now())'
+                                                                            format='YYYY/MM/DD'
+                                                                            display-format='jYYYY/jMM/jDD'
+                                                                            type="date"
+                                                                            v-model="alarm.alarm_date"
+                                                                            input-class="is-ltr has-text-left input"
+                                                                            key="todo-due_date"
+                                                                        ></date-picker>
+                                                                    </template>
+                                                                </b-input>
+                                                            </div>
+                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
+                                                                <b-input
+                                                                    label='ساعت یادآور:'
+                                                                    placeholder="ساعت یادآور"
+                                                                    v-model="alarm.alarm_time"
+                                                                    :is-error="validator?.alarm?.alarm_time?.$errors?.length"
+                                                                    :error-message="validator?.alarm?.alarm_time?.$errors[0]?.$message || ''"
+                                                                >
+                                                                    <template #input>
+                                                                        <date-picker
+                                                                            :initial-value='Date(Date.now())'
+                                                                            type="time"
+                                                                            format='H:mm'
+                                                                            v-model="alarm.alarm_time"
+                                                                            input-class="is-ltr has-text-left input"
+                                                                            key="todo-due_date"
+                                                                        ></date-picker>
+                                                                    </template>
+                                                                </b-input>
+                                                            </div>
+                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">
+                                                                <b-input
+                                                                    label='توضیحات:'
+                                                                    placeholder="توضیحات"
+                                                                    v-model="alarm.description"
+                                                                >
+                                                                    <template #input>
+                                                            <textarea
+                                                                v-model="alarm.description"
+                                                                rows="3"
+                                                                class="textarea no-resize"
+                                                                :class="{ 'is-error': validator?.alarm?.description?.$errors?.length }"
+                                                            />
+                                                                    </template>
+                                                                </b-input>
+                                                            </div>
+                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-flex" v-if="todo?.id">
+                                                                <button class="button is-warning is-hoverable ml-auto" @click="deleteAlarm(alarm.id)" :disabled="saving">
+                                                                    <i class="fal fa-times"></i>
+                                                                    <span class="ml-2">حذف از فهرست یادآورها</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Transition>
+                                        </template>
+                                    </b-card>
                                 </div>
                             </div>
                         </div>
@@ -981,7 +981,7 @@
             </div>
             <template #footer-left>
                 <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="دانلود تصویر"><i @click="downloadImage(imageToPreview)" class="fas fa-download has-text-success"></i></span>
-                <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="بستن پنجره"><i @click="imageToPreview: null; $refs.previewImage.modalClose()" class="fas fa-times has-text-grey-light"></i></span>
+                <span class="hint--light hint--rounded hint--top my-2 mr-5" data-hint="بستن پنجره"><i @click="imageToPreview= null; $refs.previewImage.modalClose()" class="fas fa-times has-text-grey-light"></i></span>
             </template>
         </b-card>
     </b-modal>
@@ -1073,9 +1073,9 @@ export default {
             },
             alarm: {
                 title: '',
-                due_date: '',
-                flag: 'عادی',
                 description: '',
+                alarm_date: '',
+                alarm_time: '',
             },
             todoFlags: [
                 'کم',
@@ -1476,6 +1476,64 @@ export default {
                         $message: 'انتخاب اولویت کار الزامی است'
                     }
                 },
+            },
+            alarm: {
+                title: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length != 0)
+                        },
+                        $message: 'عنوان یادآور الزامی است'
+                    },
+                    min: {
+                        $validator: (val) => {
+                            return (val?.length >= 5)
+                        },
+                        $message: 'عنوان یادآور باید حداقل 5 کاراکتر باشد'
+                    },
+                    max: {
+                        $validator: (val) => {
+                            return (val?.length <= 100)
+                        },
+                        $message: 'عنوان یادآور باید حداکثر 100 کاراکتر باشد'
+                    },
+                },
+                description: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length != 0)
+                        },
+                        $message: 'توضیحات یادآور الزامی است'
+                    },
+                    min: {
+                        $validator: (val) => {
+                            return (val?.length >= 10)
+                        },
+                        $message: 'توضیحات یادآور باید حداقل 10 کاراکتر باشد'
+                    },
+                    max: {
+                        $validator: (val) => {
+                            return (val?.length <= 500)
+                        },
+                        $message: 'توضیحات یادآور باید حداکثر 500 کاراکتر باشد'
+                    }
+                },
+                alarm_date: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length && val?.length === 10)
+                        },
+                        $message: 'تاریخ یادآور الزامی است'
+                    },
+                },
+                alarm_time: {
+                    required: {
+                        $validator: (val) => {
+                            return (val?.length && val?.length === 5)
+                        },
+                        $message: 'زمان یادآور الزامی است'
+                    },
+                },
             }
         }
     },
@@ -1510,7 +1568,7 @@ export default {
         } else {
             this.refreshTable(false, 12)
         }
-        this.getCurrentPosition(false)
+        // this.getCurrentPosition(false)
     },
     watch: {
         active_tab(o, n) {
@@ -1727,7 +1785,13 @@ export default {
                 due_date: '',
                 flag: 'عادی',
                 description: '',
-            },
+            }
+            this.alarm = {
+                title: '',
+                description: '',
+                alarm_date: '',
+                alarm_time: '',
+            }
             this.note = {
                 note: '',
                 project_status: null,
@@ -1789,6 +1853,7 @@ export default {
                 this.validator.form.$reset();
                 this.validator.note.$reset();
                 this.validator.todo.$reset();
+                this.validator.alarm.$reset();
                 let formInvalid = this.validator.form.$invalid
                 this.validator.form.$touch()
                 if (this.newRec) {
@@ -1798,6 +1863,10 @@ export default {
                 if (this.form.addTodo) {
                     this.validator.todo.$touch()
                     formInvalid = this.validator.todo.$invalid || formInvalid
+                }
+                if (this.form.addAlarm) {
+                    this.validator.alarm.$touch()
+                    formInvalid = this.validator.alarm.$invalid || formInvalid
                 }
                 if (formInvalid) {
                     this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
@@ -1847,6 +1916,14 @@ export default {
                         record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
                         record.append('todo_description', this.todo.description)
                     }
+                    if (this.form.addAlarm) {
+                        record.append('addAlarm', true)
+                        record.append('alarm_id', this.alarm?.id || null)
+                        record.append('alarm_title', this.alarm.title)
+                        record.append('alarm_date', this.alarm.alarm_date)
+                        record.append('alarm_time', this.alarm.alarm_time)
+                        record.append('alarm_description', this.alarm.description)
+                    }
                     Requests.saveProject(record, (progressEvent) => {
                         this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                     }).then(res => {
@@ -1863,20 +1940,18 @@ export default {
                                 this.EventBus.emit('projectInserted', res.result)
                             }
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
-                            this.$router.push({ name : 'admin.projects' })
                         } else {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
                         }
-                        return { status: res.status }
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
-                        console.log(res)
                         this.uploadProgress = 0
                         this.files = []
                         this.saving = false
                         this.newRec = false
                         this.editing = false
+                        this.$router.push({ name : 'admin.projects' })
                     })
                 }
             }
@@ -1968,6 +2043,15 @@ export default {
                     description: item?.todo?.description,
                 }
             }
+            if (item?.alarm?.id) {
+                this.form.addAlarm = true
+                this.alarm = {
+                    title: item?.alarm?.title,
+                    description: item?.alarm?.description,
+                    alarm_date: item?.alarm?.alarm_date,
+                    alarm_time: item?.alarm?.alarm_time,
+                }
+            }
             this.$nextTick(res => {
                 this.mapOptions.center = [item.long, item.lat]
             })
@@ -2045,17 +2129,38 @@ export default {
         },
         getCurrentPosition(centerMap = false) {
             if (!navigator.geolocation) {
-                this.$helpers.notify('خطا', 'این مرورگر از موقعیت مکانی پشتیبانی نمی‌کند.', { type: 'error' })
+                axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=0d3a52966a2b443fbbef13ece6b436db&fields=geo').then(res => {
+                    this.currentPosition.lat = res?.data?.latitude
+                    this.currentPosition.long = res?.data?.longitude
+                }).catch(err => {
+                    this.$helpers.notify('خطا', 'خطا در دریافت موقعیت مکانی کاربر', { type: 'error' })
+                })
                 return
+            } else {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    this.currentPosition.lat = position.coords.latitude;
+                    this.currentPosition.long = position.coords.longitude;
+                }, (err) => {
+                    axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=0d3a52966a2b443fbbef13ece6b436db&fields=geo').then(res => {
+                        this.currentPosition.lat = res?.data?.latitude
+                        this.currentPosition.long = res?.data?.longitude
+                        if (centerMap) {
+                            this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
+                            this.mapOptions.zoom = 18
+                            this.$refs.map.updateSize()
+                            const view = this.$refs.view
+                        }
+
+                        const position = this.$refs?.view?.view?.values_?.center ?? this.mapOptions.center
+                        this.form.lat = position[1]
+                        this.form.long = position[0]
+                    }).catch(err => {
+                        this.$helpers.notify('خطا', 'خطا در دریافت موقعیت مکانی کاربر', { type: 'error' })
+                    })
+                }, {
+                    enableHighAccuracy: true,
+                })
             }
-            navigator.geolocation.getCurrentPosition((position) => {
-                this.currentPosition.lat = position.coords.latitude;
-                this.currentPosition.long = position.coords.longitude;
-            }, (err) => {
-                this.$helpers.notify('خطا', 'خطا در دریافت موقعیت مکانی کاربر', { type: 'error' })
-            }, {
-                enableHighAccuracy: true,
-            })
 
             if (centerMap) {
                 this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]

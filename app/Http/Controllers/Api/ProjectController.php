@@ -263,7 +263,7 @@ class ProjectController extends Controller
                         'due_date' => $request->todo_due_date ?? null,
                         'flag' => $request->todo_flag,
                         'description' => $request->todo_description ?? null,
-                        'is_done' => $pTodo->is_done ?? false,
+                        'is_done' => isset($pTodo->is_done) ? $pTodo->is_done : true,
                         'todoable_type' => 'App\Models\Project',
                         'todoable_id' => $project->id
                     ]
@@ -279,8 +279,8 @@ class ProjectController extends Controller
                         'description' => $request->alarm_description ?? null,
                         'alarm_date' => $request->alarm_date,
                         'alarm_time' => $request->alarm_time,
-                        'weekdays' => '|'.$request->alarm_weekdays.'|',
-                        'is_active' => $pTodo->is_active ?? false,
+                        'weekdays' => null,
+                        'is_active' => isset($pAlarm->is_active) ? $pAlarm->is_active : true,
                         'alarmable_type' => 'App\Models\Project',
                         'alarmable_id' => $project->id
                     ]
@@ -401,7 +401,7 @@ class ProjectController extends Controller
                         'type' => 'PROJECT_ATTACHMENT',
                     ]);
 
-                    $project = Project::whereId($project->id)->with(['todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
+                    $project = Project::whereId($project->id)->with(['alarm', 'todo', 'covers', 'images', 'files', 'contacts', 'comments', 'notes', 'members', 'project_type', 'city', 'user'])->first();
 
                     $response['result'] = new ProjectResource($project);
                     $response['status'] = true;

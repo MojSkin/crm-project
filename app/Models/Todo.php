@@ -13,6 +13,8 @@ class Todo extends Model
     use HasFactory;
 
     protected $fillable = [
+        'todoable_id',
+        'todoable_type',
         'title',
         'description',
         'due_date',
@@ -22,7 +24,8 @@ class Todo extends Model
     ];
 
     protected $casts = [
-        'is_done' => 'boolean'
+        'is_done' => 'boolean',
+        'due_date' => 'datetime:Y/m/d'
     ];
 
     public $flags = [
