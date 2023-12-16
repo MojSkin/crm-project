@@ -1745,7 +1745,6 @@ export default {
             this.newData()
         },
         newData() {
-            this.validator.$reset();
             this.form = {
                 title: '',
                 description: '',
@@ -1939,6 +1938,7 @@ export default {
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
+                        this.validator.$reset();
                         this.newItem()
                         this.$router.push({ name : 'admin.projects' })
                     })
