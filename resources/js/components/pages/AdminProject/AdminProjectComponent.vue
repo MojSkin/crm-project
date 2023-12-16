@@ -1925,17 +1925,25 @@ export default {
                         }
                     }).then(res => {
                         if (res?.status) {
+                            console.log(10)
                             if (this.editing) {
+                                console.log(11)
                                 for (let i = 0; i < this.projects.length; i++) {
                                     if (this.projects[i].id === this.editingItem.id) {
+                                        console.log(12)
                                         this.projects[i] = res.result
+                                        console.log(13)
                                         break;
                                     }
                                 }
                             } else {
+                                console.log(14)
                                 this.projects.unshift(res.result)
+                                console.log(15)
                                 this.EventBus.emit('projectInserted', res.result)
+                                console.log(16)
                             }
+                            console.log(17)
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                         } else {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
