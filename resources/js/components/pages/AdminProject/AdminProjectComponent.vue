@@ -1866,7 +1866,6 @@ export default {
                 }
                 if (formInvalid) {
                     this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
-                    return
                 } else {
                     this.saving = true
                     let record = new FormData()
@@ -1942,11 +1941,11 @@ export default {
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
-                        this.uploadProgress = 0
-                        this.files = []
-                        this.saving = false
-                        this.newRec = false
-                        this.editing = false
+                        // this.uploadProgress = 0
+                        // this.files = []
+                        // this.saving = false
+                        // this.newRec = false
+                        // this.editing = false
                         this.$router.push({ name : 'admin.projects' })
                     })
                 }
@@ -2145,8 +2144,8 @@ export default {
                         if (centerMap) {
                             this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
                             this.mapOptions.zoom = 18
-                            // this.$refs.map.updateSize()
-                            // const view = this.$refs.view
+                            this.$refs.map.updateSize()
+                            const view = this.$refs.view
                         }
 
                         const position = this.$refs?.view?.view?.values_?.center ?? this.mapOptions.center
