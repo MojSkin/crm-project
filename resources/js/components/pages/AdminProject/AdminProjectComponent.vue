@@ -1940,6 +1940,7 @@ export default {
                         } else {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
                         }
+                        console.log(100)
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
