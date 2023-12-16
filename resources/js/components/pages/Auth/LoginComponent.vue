@@ -46,7 +46,7 @@
                                             </div>
                                         </div>
                                         <div class="control has-validation" :class="{ 'has-error': validator.password?.$errors?.length }">
-                                            <input type="password" class="input" v-model="password" :autocomplete="false">
+                                            <input :type="showPass ? 'text' : 'password'" class="input" v-model="password" :autocomplete="false">
                                             <small class="error-text">{{ validator.password?.$errors[0]?.$message || '&nbsp;' }}</small>
                                             <div class="auth-label">رمزعبور</div>
                                             <div class="auth-icon">
@@ -55,6 +55,11 @@
                                             <div class="validation-icon is-error">
                                                 <div class="icon-wrapper">
                                                     <i class="fas fa-times text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="eye-icon">
+                                                <div class="icon-wrapper">
+                                                    <i class="fas is-clickable" :class="showPass ? 'fa-eye-slash' : 'fa-eye'" @click="showPass=!showPass"></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -137,6 +142,7 @@ export default {
             action: 'login',
             responseErrors: {},
             defaultRedirect: (import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX && import.meta?.env?.VITE_ADMIN_ROUTE_PREFIX.length) ? '/'+import.meta.env.VITE_ADMIN_ROUTE_PREFIX : '/',
+            showPass: false,
         }
     },
     validations () {
@@ -257,5 +263,31 @@ p.subtitle {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+.eye-icon {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    height: 60px;
+    width: 60px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.eye-icon i {
+    font-size: 24px;
+    color: #cecece;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+.control.has-validation.has-error > .eye-icon ,
+.control.has-validation.has-success > .eye-icon {
+    left:30px
 }
 </style>

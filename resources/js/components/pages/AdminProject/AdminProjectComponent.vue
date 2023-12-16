@@ -20,100 +20,95 @@
             <b-overlay :show="saving || loading" loader-custom-class="has-text-info" :loader-text="loading ? 'در حال دریافت اطلاعات...' : 'در حال ذخیره پروژه... '">
                 <div class="columns is-multiline is-flex" v-if="!newRec && !editing">
                     <div class="column is-12" v-if="projects.length > 0">
-                        <b-accordion
-                            :headers="[
-                        {
-                            id: 'searchPanel',
-                            title: 'جستجوی پیشرفته',
-                        }
-                    ]"
-                            is-exclusive
-                            class="mb-5"
-                        >
-                            <template #content-searchPanel>
-                                <div class="columns is-multiline">
-                                </div>
-                                <div class="columns is-multiline">
-                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                        <b-input
-                                            label='نام مخاطب:'
-                                            v-model="filters.fName"
-                                            placeholder="نام مخاطب"
-                                        ></b-input>
-                                    </div>
-                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                        <b-input
-                                            label='نام خانوادگی مخاطب:'
-                                            v-model="filters.lName"
-                                            placeholder="نام خانوادگی مخاطب"
-                                        ></b-input>
-                                    </div>
-                                </div>
-                                <div class="columns is-multiline">
-                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                        <b-input
-                                            label='نام مستعار:'
-                                            v-model="filters.nickname"
-                                            placeholder="نام مستعار"
-                                        ></b-input>
-                                    </div>
-                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">
-                                        <b-input
-                                            label='عنوان:'
-                                            v-model="filters.title"
-                                            placeholder="عنوان"
-                                        ></b-input>
-                                    </div>
-                                    <div class="column is-12-mobile is-12-tablet is-4-widescreen is-4-desktop">
-                                        <b-input
-                                            label='نام تجاری:'
-                                            v-model="filters.org"
-                                            placeholder="نام تجاری"
-                                        ></b-input>
-                                    </div>
-                                </div>
-                                <div class="columns is-multiline">
-                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                        <b-input
-                                            label='تلفن:'
-                                            v-model="filters.phone"
-                                            placeholder="تلفن"
-                                        ></b-input>
-                                    </div>
-                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                        <b-input
-                                            label='ایمیل:'
-                                            v-model="filters.email"
-                                            placeholder="ایمیل"
-                                        ></b-input>
-                                    </div>
-                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                        <b-input
-                                            label='آدرس:'
-                                            v-model="filters.address"
-                                            placeholder="آدرس"
-                                        ></b-input>
-                                    </div>
-                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">
-                                        <b-input
-                                            label='سایر مشخصات:'
-                                            v-model="filters.other"
-                                            placeholder="سایر مشخصات"
-                                        ></b-input>
-                                    </div>
-                                </div>
-                                <div class="columns is-multiline">
-                                    <div class="column is-12 is-flex">
-                                        <button class="button is-success mr-2 ml-auto" @click="refreshTable(filters, 12)" :disabled="loading">
-                                            <i class="fal fa-filter" v-if="!loading"></i>
-                                            <i class="fal fa-spinner-third fa-spin" v-else></i>
-                                            <span class="ml-2">اعمال شرایط</span>
-                                        </button>
-                                        <button class="button" @click="cancelFilter">پاک کردن شرایط</button>
-                                    </div>
-                                </div>
-                            </template>
-                        </b-accordion>
+<!--                        <b-accordion-->
+<!--                            :headers="[{id: 'searchPanel', title: 'جستجوی پیشرفته',}]"-->
+<!--                            is-exclusive-->
+<!--                            class="mb-5"-->
+<!--                        >-->
+<!--                            <template #content-searchPanel>-->
+<!--                                <div class="columns is-multiline">-->
+<!--                                </div>-->
+<!--                                <div class="columns is-multiline">-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='نام مخاطب:'-->
+<!--                                            v-model="filters.fName"-->
+<!--                                            placeholder="نام مخاطب"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='نام خانوادگی مخاطب:'-->
+<!--                                            v-model="filters.lName"-->
+<!--                                            placeholder="نام خانوادگی مخاطب"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="columns is-multiline">-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='نام مستعار:'-->
+<!--                                            v-model="filters.nickname"-->
+<!--                                            placeholder="نام مستعار"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-4-widescreen is-4-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='عنوان:'-->
+<!--                                            v-model="filters.title"-->
+<!--                                            placeholder="عنوان"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="column is-12-mobile is-12-tablet is-4-widescreen is-4-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='نام تجاری:'-->
+<!--                                            v-model="filters.org"-->
+<!--                                            placeholder="نام تجاری"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="columns is-multiline">-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='تلفن:'-->
+<!--                                            v-model="filters.phone"-->
+<!--                                            placeholder="تلفن"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='ایمیل:'-->
+<!--                                            v-model="filters.email"-->
+<!--                                            placeholder="ایمیل"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='آدرس:'-->
+<!--                                            v-model="filters.address"-->
+<!--                                            placeholder="آدرس"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                    <div class="column is-6-mobile is-6-tablet is-3-widescreen is-3-desktop">-->
+<!--                                        <b-input-->
+<!--                                            label='سایر مشخصات:'-->
+<!--                                            v-model="filters.other"-->
+<!--                                            placeholder="سایر مشخصات"-->
+<!--                                        ></b-input>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="columns is-multiline">-->
+<!--                                    <div class="column is-12 is-flex">-->
+<!--                                        <button class="button is-success mr-2 ml-auto" @click="refreshTable(filters, 12)" :disabled="loading">-->
+<!--                                            <i class="fal fa-filter" v-if="!loading"></i>-->
+<!--                                            <i class="fal fa-spinner-third fa-spin" v-else></i>-->
+<!--                                            <span class="ml-2">اعمال شرایط</span>-->
+<!--                                        </button>-->
+<!--                                        <button class="button" @click="cancelFilter">پاک کردن شرایط</button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </template>-->
+<!--                        </b-accordion>-->
                     </div>
                     <div class="no-projects py-6 w-100 is-flex is-align-items-center is-justify-content-center is-flex-direction-column" style="min-height: 60vh;" v-else>
                         <img style="max-width: 25vw" class="light-image" :src="base_url+'/assets/img/illustrations/placeholders/thinking-canvas.svg'" alt="" />
@@ -1751,6 +1746,7 @@ export default {
             this.newData()
         },
         newData() {
+            this.validator.$reset();
             this.form = {
                 title: '',
                 description: '',
@@ -1850,7 +1846,7 @@ export default {
                 return false
             }
             if (!this.loading) {
-                this.validator.form.$reset();
+                this.validator.$reset();
                 this.validator.note.$reset();
                 this.validator.todo.$reset();
                 this.validator.alarm.$reset();
@@ -1961,6 +1957,8 @@ export default {
                 this.$helpers.notify('خطای دسترسی', 'شما مجوز ویرایش در این قسمت را ندارید!', {type: 'error'})
                 return false
             }
+
+            this.validator.$reset();
 
             this.newItem()
 
@@ -2147,8 +2145,8 @@ export default {
                         if (centerMap) {
                             this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
                             this.mapOptions.zoom = 18
-                            this.$refs.map.updateSize()
-                            const view = this.$refs.view
+                            // this.$refs.map.updateSize()
+                            // const view = this.$refs.view
                         }
 
                         const position = this.$refs?.view?.view?.values_?.center ?? this.mapOptions.center
