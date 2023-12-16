@@ -1849,8 +1849,8 @@ export default {
                 this.validator.note.$reset();
                 this.validator.todo.$reset();
                 this.validator.alarm.$reset();
-                let formInvalid = this.validator.form.$invalid
                 this.validator.form.$touch()
+                let formInvalid = this.validator.form.$invalid
                 if (this.newRec) {
                     this.validator.note.$touch();
                     formInvalid = this.validator.note.$invalid
