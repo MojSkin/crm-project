@@ -1745,6 +1745,7 @@ export default {
             this.newData()
         },
         newData() {
+            console.log(1)
             this.form = {
                 title: '',
                 description: '',
@@ -1819,7 +1820,7 @@ export default {
             this.editing     = false
             this.editingItem = []
             this.$nextTick(res => {
-                this.getCurrentPosition(true)
+                this.getCurrentPosition(false)
             })
             this.comment = null
             this.savingComment = false
