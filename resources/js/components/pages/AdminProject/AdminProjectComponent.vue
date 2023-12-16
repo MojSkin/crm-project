@@ -1775,6 +1775,7 @@ export default {
                 units: 1,
                 floors: 1,
                 addTodo: false,
+                addAlarm: false,
             }
             this.todo = {
                 title: '',
@@ -1893,17 +1894,23 @@ export default {
                     record.append('blocks', this.form.blocks || '')
                     record.append('units', this.form.units || '')
                     record.append('floors', this.form.floors || '')
+                    console.log(1)
                     if (this.editing) {
+                        console.log(2)
                         record.append('id', this.editingItem.id)
                     } else {
+                        console.log(3)
                         record.append('note', this.note.note)
                         record.append('project_status', this.note.project_status)
                         record.append('project_result', this.note.project_result)
                     }
                     this.files.forEach((file, index) => {
+                        console.log(4, index)
                         record.append("file-"+index+1, file);
                     });
+                    console.log(5)
                     if (this.form.addTodo) {
+                        console.log(6)
                         record.append('addTodo', true)
                         record.append('todo_id', this.todo?.id || null)
                         record.append('todo_title', this.todo.title)
@@ -1911,7 +1918,9 @@ export default {
                         record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
                         record.append('todo_description', this.todo.description)
                     }
+                    console.log(7)
                     if (this.form.addAlarm) {
+                        console.log(8)
                         record.append('addAlarm', true)
                         record.append('alarm_id', this.alarm?.id || null)
                         record.append('alarm_title', this.alarm.title)
@@ -1922,11 +1931,8 @@ export default {
                     Requests.saveProject(record, (progressEvent) => {
                         this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                     }).then(res => {
-                        console.log(1)
                         if (res?.status) {
-                            console.log(2)
                             if (this.editing) {
-                                console.log(3)
                                 for (let i = 0; i < this.projects.length; i++) {
                                     if (this.projects[i].id === this.editingItem.id) {
                                         this.projects[i] = res.result
@@ -1934,11 +1940,9 @@ export default {
                                     }
                                 }
                             } else {
-                                console.log(4)
                                 this.projects.unshift(res.result)
                                 this.EventBus.emit('projectInserted', res.result)
                             }
-                            console.log(5)
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                         } else {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
@@ -1946,15 +1950,12 @@ export default {
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
-                        console.log(6)
                         this.uploadProgress = 0
                         this.files = []
                         this.saving = false
                         this.newRec = false
                         this.editing = false
-                        console.log(7)
                         this.$router.push({ name : 'admin.projects' })
-                        console.log(8)
                     })
                 }
             }
