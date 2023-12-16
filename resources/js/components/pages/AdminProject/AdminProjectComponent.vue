@@ -1920,14 +1920,14 @@ export default {
                         record.append('alarm_description', this.alarm.description)
                     }
                     console.log(9)
-                    Requests.saveProject(record, (progressEvent) => {
-                        console.log(990)
-                        if (progressEvent && progressEvent?.loaded && progressEvent?.total) {
-                            console.log(995)
-                            this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                        }
-                        console.log(999)
-                    }).then(res => {
+                    // Requests.saveProject(record, (progressEvent) => {
+                    //     console.log(990)
+                    //     if (progressEvent && progressEvent?.loaded && progressEvent?.total) {
+                    //         console.log(995)
+                    //         this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    //     }
+                    //     console.log(999)
+                    Requests.saveProject(record).then(res => {
                         if (res?.status) {
                             console.log(10)
                             if (this.editing) {
