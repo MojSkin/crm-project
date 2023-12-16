@@ -960,7 +960,6 @@
                     <span class="ml-2">ذخیره پروژه</span>
                 </button>
                 <button class="button" @click="form={}; newRec=false; editing=false;this.$router.push({ name : 'admin.projects' })">انصراف</button>
-<!--                <RouterLink class="button" :to="{ name: 'admin.projects' }">بازگشت</RouterLink>-->
             </template>
         </b-card>
     </AdminLayoutComponent>
@@ -1944,12 +1943,10 @@ export default {
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
-                        this.uploadProgress = 0
-                        this.files = []
-                        this.saving = false
-                        this.newRec = false
-                        this.editing = false
+                        this.newItem()
+                        console.log(110)
                         this.$router.push({ name : 'admin.projects' })
+                        console.log(111)
                     })
                 }
             }
