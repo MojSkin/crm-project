@@ -1924,15 +1924,13 @@ export default {
                             if (this.editing) {
                                 for (let i = 0; i < this.projects.length; i++) {
                                     if (this.projects[i].id === this.editingItem.id) {
-                                        console.log(12)
                                         this.projects[i] = res.result
-                                        console.log(13)
                                         break;
                                     }
                                 }
                             } else {
                                 this.projects.unshift(res.result)
-                                this.EventBus.emit('projectInserted', res.result)
+                                // this.EventBus.emit('projectInserted', res.result)
                             }
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                         } else {
