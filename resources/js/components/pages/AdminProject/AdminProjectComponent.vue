@@ -1919,19 +1919,9 @@ export default {
                         record.append('alarm_time', this.alarm.alarm_time)
                         record.append('alarm_description', this.alarm.description)
                     }
-                    console.log(9)
-                    // Requests.saveProject(record, (progressEvent) => {
-                    //     console.log(990)
-                    //     if (progressEvent && progressEvent?.loaded && progressEvent?.total) {
-                    //         console.log(995)
-                    //         this.uploadProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    //     }
-                    //     console.log(999)
                     Requests.saveProject(record).then(res => {
                         if (res?.status) {
-                            console.log(10)
                             if (this.editing) {
-                                console.log(11)
                                 for (let i = 0; i < this.projects.length; i++) {
                                     if (this.projects[i].id === this.editingItem.id) {
                                         console.log(12)
@@ -1941,25 +1931,18 @@ export default {
                                     }
                                 }
                             } else {
-                                console.log(14)
                                 this.projects.unshift(res.result)
-                                console.log(15)
                                 this.EventBus.emit('projectInserted', res.result)
-                                console.log(16)
                             }
-                            console.log(17)
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                         } else {
                             this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
                         }
-                        console.log(100)
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
                         this.newItem()
-                        console.log(110)
                         this.$router.push({ name : 'admin.projects' })
-                        console.log(111)
                     })
                 }
             }
