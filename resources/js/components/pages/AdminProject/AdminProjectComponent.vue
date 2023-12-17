@@ -1222,7 +1222,7 @@ export default {
                     id: {
                         required: {
                             $validator: (val) => {
-                                return (val > 0)
+                                return (val >= 1)
                             },
                             $message: 'انتخاب نوع پروژه الزامی است'
                         }
@@ -1853,7 +1853,7 @@ export default {
                 let formInvalid = this.validator.form.$invalid
                 if (this.newRec) {
                     this.validator.note.$touch();
-                    formInvalid = this.validator.note.$invalid
+                    formInvalid = this.validator.note.$invalid || formInvalid
                 }
                 if (this.form.addTodo) {
                     this.validator.todo.$touch()
@@ -1943,7 +1943,7 @@ export default {
                         this.loading = false
                         this.editing = false
                         this.newItem()
-                        this.$router.push({ name : 'admin.projects' })
+                        // this.$router.push({ name : 'admin.projects' })
                     })
                 }
             }
