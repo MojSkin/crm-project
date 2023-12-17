@@ -405,8 +405,17 @@ export default {
     },
 
     async saveProject(form) {
+        const headers = this.tokenHeader({'Content-Type': 'multipart/form-data'})
+        const axiosParams = {
+            url: route('api.projects.saveProject'),
+            method: 'post',
+            data: form,
+            ...headers,
+        }
+        console.log(axiosParams)
         debugger
-        const res = await axios.post(route('api.projects.saveProject'), form, this.tokenHeader({'Content-Type': 'multipart/form-data'}))
+        const res = await axios(axiosParams)
+        // const res = await axios.post(route('api.projects.saveProject'), form, this.tokenHeader({'Content-Type': 'multipart/form-data'}))
         return res?.data
     },
 
