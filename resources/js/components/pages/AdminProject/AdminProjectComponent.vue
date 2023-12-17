@@ -1844,64 +1844,64 @@ export default {
                 this.$helpers.notify('خطای دسترسی', message, {type: 'error'})
                 return false
             }
-            if (!this.loading) {
+            if (!this.loading && !this.saving) {
                 // this.validator.$reset();
                 // this.validator.note.$reset();
                 // this.validator.todo.$reset();
                 // this.validator.alarm.$reset();
                 // this.validator.form.$touch()
-                let formInvalid = this.validator.form.$invalid
-                if (this.newRec) {
-                    this.validator.note.$touch();
-                    formInvalid = this.validator.note.$invalid || formInvalid
-                }
-                if (this.form.addTodo) {
-                    this.validator.todo.$touch()
-                    formInvalid = this.validator.todo.$invalid || formInvalid
-                }
-                if (this.form.addAlarm) {
-                    this.validator.alarm.$touch()
-                    formInvalid = this.validator.alarm.$invalid || formInvalid
-                }
-                if (formInvalid) {
-                    this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
-                } else {
-                    this.saving = true
-                    let record = new FormData()
-                    const contacts = JSON.stringify(this.form.contacts)
-                    const members = JSON.stringify(this.form.members)
-                    record.append('title', this.form.title)
-                    record.append('description', this.form.description)
-                    record.append('project_type_id', this.form.project_type.id)
-                    record.append('project_status_id', this.form.project_status.id)
-                    record.append('project_result_id', this.form.project_result.id)
-                    record.append('user_percentage', this.form.user_percentage || 0.0)
-                    record.append('members', members)
-                    record.append('contacts', contacts)
-                    record.append('city_id', this.form.city.id)
-                    record.append('region', this.form.region || '')
-                    record.append('main_street', this.form.main_street || '')
-                    record.append('aux1', this.form.aux1 || '')
-                    record.append('aux2', this.form.aux2 || '')
-                    record.append('alley1', this.form.alley1 || '')
-                    record.append('alley2', this.form.alley2 || '')
-                    record.append('address', this.form.address || '')
-                    record.append('po_code', this.form.po_code || '')
-                    record.append('lat', this.form.lat || '')
-                    record.append('long', this.form.long || '')
-                    record.append('blocks', this.form.blocks || '')
-                    record.append('units', this.form.units || '')
-                    record.append('floors', this.form.floors || '')
-                    if (this.editing) {
-                        record.append('id', this.editingItem.id)
-                    } else {
-                        record.append('note', this.note.note)
-                        record.append('project_status', this.note.project_status)
-                        record.append('project_result', this.note.project_result)
-                    }
-                    this.files.forEach((file, index) => {
-                        record.append("file-"+index+1, file);
-                    });
+                // let formInvalid = this.validator.form.$invalid
+                // if (this.newRec) {
+                //     this.validator.note.$touch();
+                //     formInvalid = this.validator.note.$invalid || formInvalid
+                // }
+                // if (this.form.addTodo) {
+                //     this.validator.todo.$touch()
+                //     formInvalid = this.validator.todo.$invalid || formInvalid
+                // }
+                // if (this.form.addAlarm) {
+                //     this.validator.alarm.$touch()
+                //     formInvalid = this.validator.alarm.$invalid || formInvalid
+                // }
+                // if (formInvalid) {
+                //     this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
+                // } else {
+                //     this.saving = true
+                //     let record = new FormData()
+                //     const contacts = JSON.stringify(this.form.contacts)
+                //     const members = JSON.stringify(this.form.members)
+                //     record.append('title', this.form.title)
+                //     record.append('description', this.form.description)
+                //     record.append('project_type_id', this.form.project_type.id)
+                //     record.append('project_status_id', this.form.project_status.id)
+                //     record.append('project_result_id', this.form.project_result.id)
+                //     record.append('user_percentage', this.form.user_percentage || 0.0)
+                //     record.append('members', members)
+                //     record.append('contacts', contacts)
+                //     record.append('city_id', this.form.city.id)
+                //     record.append('region', this.form.region || '')
+                //     record.append('main_street', this.form.main_street || '')
+                //     record.append('aux1', this.form.aux1 || '')
+                //     record.append('aux2', this.form.aux2 || '')
+                //     record.append('alley1', this.form.alley1 || '')
+                //     record.append('alley2', this.form.alley2 || '')
+                //     record.append('address', this.form.address || '')
+                //     record.append('po_code', this.form.po_code || '')
+                //     record.append('lat', this.form.lat || '')
+                //     record.append('long', this.form.long || '')
+                //     record.append('blocks', this.form.blocks || '')
+                //     record.append('units', this.form.units || '')
+                //     record.append('floors', this.form.floors || '')
+                //     if (this.editing) {
+                //         record.append('id', this.editingItem.id)
+                //     } else {
+                //         record.append('note', this.note.note)
+                //         record.append('project_status', this.note.project_status)
+                //         record.append('project_result', this.note.project_result)
+                //     }
+                //     this.files.forEach((file, index) => {
+                //         record.append("file-"+index+1, file);
+                //     });
                     // if (this.form.addTodo) {
                     //     record.append('addTodo', true)
                     //     record.append('todo_id', this.todo?.id || null)
