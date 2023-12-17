@@ -1745,7 +1745,6 @@ export default {
             this.newData()
         },
         newData() {
-            console.log(1)
             this.form = {
                 title: '',
                 description: '',
@@ -1930,7 +1929,7 @@ export default {
                                 }
                             } else {
                                 this.projects.unshift(res.result)
-                                // this.EventBus.emit('projectInserted', res.result)
+                                this.EventBus.emit('projectInserted', res.result)
                             }
                             this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                         } else {

@@ -412,6 +412,7 @@ export default {
         // if (_callback) {
         //     headers['onUploadProgress'] = _callback
         // }
+        console.log(form)
         const res = await axios.post(route('api.projects.saveProject'), form, headers)
         console.log(4)
         return res?.data
