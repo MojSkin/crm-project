@@ -42,7 +42,7 @@ export default {
                 type                    : 'default',
                 title                   : null,
             },
-            audio: this.base_url+'/assets/sounds/notification'
+            // audio: this.base_url+'/assets/sounds/notification'
         }
     },
     created() {
