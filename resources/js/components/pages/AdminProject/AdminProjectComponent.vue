@@ -888,7 +888,7 @@
                                                                 >
                                                                     <template #input>
                                                                         <date-picker
-                                                                            :initial-value='Date(Date.now())'
+                                                                            initial-value=''
                                                                             format='YYYY/MM/DD'
                                                                             display-format='jYYYY/jMM/jDD'
                                                                             type="date"
@@ -909,9 +909,9 @@
                                                                 >
                                                                     <template #input>
                                                                         <date-picker
-                                                                            :initial-value='Date(Date.now())'
+                                                                            initial-value=''
                                                                             type="time"
-                                                                            format='H:mm'
+                                                                            format='HH:mm'
                                                                             v-model="alarm.alarm_time"
                                                                             input-class="is-ltr has-text-left input"
                                                                             key="todo-due_date"
@@ -1960,12 +1960,12 @@ export default {
 
             this.tabs = [
                 {
-                    id: 'general',
-                    text: 'اطلاعات کلی پروژه',
-                },
-                {
                     id: 'contacts',
                     text: 'مخاطبین پروژه',
+                },
+                {
+                    id: 'general',
+                    text: 'اطلاعات کلی پروژه',
                 },
                 {
                     id: 'images',
@@ -2044,6 +2044,13 @@ export default {
                     description: item?.alarm?.description,
                     alarm_date: item?.alarm?.alarm_date,
                     alarm_time: item?.alarm?.alarm_time,
+                }
+            } else {
+                this.alarm = {
+                    title: '',
+                    description: '',
+                    alarm_date: '',
+                    alarm_time: '',
                 }
             }
             this.$nextTick(res => {
