@@ -894,7 +894,7 @@
                 <FormContentComponent
                     v-model="contactForm"
                     :errors="[]"
-                    ref="newContactform"
+                    ref="newContactForm"
                 />
             </div>
             <template #footer-left>
@@ -2143,7 +2143,7 @@ export default {
         },
         saveNewContact() {
             if (!this.saving) {
-                this.$refs.newContactform.validateAll().then(res => {
+                this.$refs.newContactForm.validateAll().then(res => {
                     if (res) {
                         const newContact = {
                             prefix: 1,
