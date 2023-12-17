@@ -407,7 +407,10 @@ export default {
         console.log(1)
         let headers = this.tokenHeader()
         console.log(2)
-        headers['Content-Type'] = 'multipart/form-data'
+        headers = {
+            'Authorization': 'Bearer ' + this.token(),
+            'Content-Type':  'multipart/form-data'
+        }
         console.log(3)
         // if (_callback) {
         //     headers['onUploadProgress'] = _callback
