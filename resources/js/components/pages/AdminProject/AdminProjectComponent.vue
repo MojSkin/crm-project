@@ -1923,27 +1923,27 @@ export default {
                             if (this.editing) {
                                 for (let i = 0; i < this.projects.length; i++) {
                                     if (this.projects[i].id === this.editingItem.id) {
-                                        // this.projects[i] = res.result
+                                        this.projects[i] = res.result
                                         break;
                                     }
                                 }
                             } else {
-                                // this.projects.unshift(res.result)
-                                // this.EventBus.emit('projectInserted', res.result)
+                                this.projects.unshift(res.result)
+                                this.EventBus.emit('projectInserted', res.result)
                             }
-                            // this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
+                            this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
                         } else {
-                            // this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
+                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
                         }
                     }).catch(err => {
-                        // this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
+                        this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
-                        // this.validator.$reset();
-                        // this.saving = false
-                        // this.loading = false
-                        // this.editing = false
+                        this.validator.$reset();
+                        this.saving = false
+                        this.loading = false
+                        this.editing = false
                         // this.newItem()
-                        // this.$router.push({ name : 'admin.projects' })
+                        this.$router.push({ name : 'admin.projects' })
                     })
                 }
             }

@@ -2,10 +2,10 @@
     <div class="w-100">
         <progress class="progress is-success is-tiny" :value="uploadProgress" max="100" v-if="saving"/>
     </div>
-    <audio ref="notification">
-        <source :src="audio+'.ogg'" type="audio/ogg">
-        <source :src="audio+'.mp3'" type="audio/mpeg">
-    </audio>
+<!--    <audio ref="notification">-->
+<!--        <source :src="audio+'.ogg'" type="audio/ogg">-->
+<!--        <source :src="audio+'.mp3'" type="audio/mpeg">-->
+<!--    </audio>-->
 </template>
 
 <script>
@@ -65,16 +65,16 @@ export default {
                 this.toastOptions.closeButton = (props) => h(CloseAlarmNotification, {alarmId: alarm.id})
                 this.toastOptions.title = ''
                 this.toastOptions.toastId = 'alarm-'+alarm.id
-                this.$refs.notification.play()
+                // this.$refs.notification.play()
                 toast(htmlMessage, this.toastOptions)
             }
         })
     },
     mounted() {
-        this.$refs.notification.load()
+        // this.$refs.notification.load()
     },
     beforeUnmount() {
-        this.$refs.notification.pause()
+        // this.$refs.notification.pause()
     },
     computed: {},
     watch: {
