@@ -73,10 +73,11 @@ export default {
     },
 
     // Create an object to set Axios Headers
-    tokenHeader() {
+    tokenHeader(extraOptions = {}) {
         return {
             headers: {
-                Authorization: 'Bearer ' + this.token()
+                Authorization: 'Bearer ' + this.token(),
+                ...(extraOptions != {} && extraOptions)
             }
         }
     },
@@ -404,16 +405,9 @@ export default {
     },
 
     async saveProject(form) {
-        let headers = this.tokenHeader()
-        headers = {
-            'Authorization': 'Bearer ' + this.token(),
-            'Content-Type':  'multipart/form-data'
-        }
-        // if (_callback) {
-        //     headers['onUploadProgress'] = _callback
-        // }
-        // const res = await axios.post(route('api.projects.saveProject'), form, headers)
-        const res = await axios.post(route('api.projects.saveProject'), form, {headers: headers})
+        console.log(this.tokenHeader({'Content-Type': 'multipart/form-data'}))
+
+        const res = await axios.post(route('api.projects.saveProject'), form, this.tokenHeader({'Content-Type': 'multipart/form-data'}))
         return res?.data
     },
 
