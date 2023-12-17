@@ -39,8 +39,6 @@ window.Pusher = Pusher;
 
 import Requests from './requests'
 
-console.log(window.location.hostname)
-
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,

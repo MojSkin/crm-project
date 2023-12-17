@@ -150,7 +150,6 @@ class ProjectController extends Controller
             'message' => 'بروز خطا هنگام ذخیره پروژه',
             'result' => null
         ];
-        dd('salam');
         try {
             $path = public_path('storage/'.$this->project_path.'/images');
             MojSkin::makeDir($path);

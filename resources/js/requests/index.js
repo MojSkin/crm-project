@@ -404,21 +404,16 @@ export default {
     },
 
     async saveProject(form) {
-        console.log(1)
         let headers = this.tokenHeader()
-        console.log(2)
         headers = {
             'Authorization': 'Bearer ' + this.token(),
             'Content-Type':  'multipart/form-data'
         }
-        console.log(3)
         // if (_callback) {
         //     headers['onUploadProgress'] = _callback
         // }
-        console.log(form)
         // const res = await axios.post(route('api.projects.saveProject'), form, headers)
-        const res = await axios.post(route('api.projects.saveProject'), {}, headers)
-        console.log(4)
+        const res = await axios.post(route('api.projects.saveProject'), form, {headers: headers})
         return res?.data
     },
 
