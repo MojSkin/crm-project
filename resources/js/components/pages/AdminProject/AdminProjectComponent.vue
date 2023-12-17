@@ -1938,11 +1938,11 @@ export default {
                     }).catch(err => {
                         this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
                     }).finally(res => {
-                        this.validator.$reset();
+                        // this.validator.$reset();
                         this.saving = false
-                        this.loading = false
-                        this.editing = false
-                        this.newItem()
+                        // this.loading = false
+                        // this.editing = false
+                        // this.newItem()
                         // this.$router.push({ name : 'admin.projects' })
                     })
                 }
