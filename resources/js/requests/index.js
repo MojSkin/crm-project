@@ -416,7 +416,8 @@ export default {
         //     headers['onUploadProgress'] = _callback
         // }
         console.log(form)
-        const res = await axios.post(route('api.projects.saveProject'), form, headers)
+        // const res = await axios.post(route('api.projects.saveProject'), form, headers)
+        const res = await axios.post(route('api.projects.saveProject'), {}, headers)
         console.log(4)
         return res?.data
     },
