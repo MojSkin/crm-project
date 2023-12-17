@@ -1751,106 +1751,106 @@ export default {
                 return false
             }
             if (!this.loading && !this.saving) {
-                // this.validator.$reset();
-                // this.validator.note.$reset();
-                // this.validator.todo.$reset();
-                // this.validator.alarm.$reset();
-                // this.validator.form.$touch()
-                // let formInvalid = this.validator.form.$invalid
-                // if (this.newRec) {
-                //     this.validator.note.$touch();
-                //     formInvalid = this.validator.note.$invalid || formInvalid
-                // }
-                // if (this.form.addTodo) {
-                //     this.validator.todo.$touch()
-                //     formInvalid = this.validator.todo.$invalid || formInvalid
-                // }
-                // if (this.form.addAlarm) {
-                //     this.validator.alarm.$touch()
-                //     formInvalid = this.validator.alarm.$invalid || formInvalid
-                // }
-                // if (formInvalid) {
-                //     this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
-                // } else {
-                //     this.saving = true
-                //     let record = new FormData()
-                //     const contacts = JSON.stringify(this.form.contacts)
-                //     const members = JSON.stringify(this.form.members)
-                //     record.append('title', this.form.title)
-                //     record.append('description', this.form.description)
-                //     record.append('project_type_id', this.form.project_type.id)
-                //     record.append('project_status_id', this.form.project_status.id)
-                //     record.append('project_result_id', this.form.project_result.id)
-                //     record.append('user_percentage', this.form.user_percentage || 0.0)
-                //     record.append('members', members)
-                //     record.append('contacts', contacts)
-                //     record.append('city_id', this.form.city.id)
-                //     record.append('region', this.form.region || '')
-                //     record.append('main_street', this.form.main_street || '')
-                //     record.append('aux1', this.form.aux1 || '')
-                //     record.append('aux2', this.form.aux2 || '')
-                //     record.append('alley1', this.form.alley1 || '')
-                //     record.append('alley2', this.form.alley2 || '')
-                //     record.append('address', this.form.address || '')
-                //     record.append('po_code', this.form.po_code || '')
-                //     record.append('lat', this.form.lat || '')
-                //     record.append('long', this.form.long || '')
-                //     record.append('blocks', this.form.blocks || '')
-                //     record.append('units', this.form.units || '')
-                //     record.append('floors', this.form.floors || '')
-                //     if (this.editing) {
-                //         record.append('id', this.editingItem.id)
-                //     } else {
-                //         record.append('note', this.note.note)
-                //         record.append('project_status', this.note.project_status)
-                //         record.append('project_result', this.note.project_result)
-                //     }
-                //     this.files.forEach((file, index) => {
-                //         record.append("file-"+index+1, file);
-                //     });
-                    // if (this.form.addTodo) {
-                    //     record.append('addTodo', true)
-                    //     record.append('todo_id', this.todo?.id || null)
-                    //     record.append('todo_title', this.todo.title)
-                    //     record.append('todo_due_date', this.todo.due_date)
-                    //     record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
-                    //     record.append('todo_description', this.todo.description)
-                    // }
-                    // if (this.form.addAlarm) {
-                    //     record.append('addAlarm', true)
-                    //     record.append('alarm_id', this.alarm?.id || null)
-                    //     record.append('alarm_title', this.alarm.title)
-                    //     record.append('alarm_date', this.alarm.alarm_date)
-                    //     record.append('alarm_time', this.alarm.alarm_time)
-                    //     record.append('alarm_description', this.alarm.description)
-                    // }
-                    // Requests.saveProject(record).then(res => {
-                    //     // if (res?.status) {
-                    //     //     if (this.editing) {
-                    //     //         for (let i = 0; i < this.projects.length; i++) {
-                    //     //             if (this.projects[i].id === this.editingItem.id) {
-                    //     //                 this.projects[i] = res.result
-                    //     //                 break;
-                    //     //             }
-                    //     //         }
-                    //     //     } else {
-                    //     //         this.projects.unshift(res.result)
-                    //     //         this.EventBus.emit('projectInserted', res.result)
-                    //     //     }
-                    //     //     this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
-                    //     // } else {
-                    //     //     this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
-                    //     // }
-                    // }).catch(err => {
-                    //     // this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
-                    // }).finally(res => {
-                    //     // this.validator.$reset();
-                    //     // this.saving = false
-                    //     // this.loading = false
-                    //     // this.editing = false
-                    //     // this.newItem()
-                    //     // this.$router.push({ name : 'admin.projects' })
-                    // })
+                this.validator.$reset();
+                this.validator.note.$reset();
+                this.validator.todo.$reset();
+                this.validator.alarm.$reset();
+                this.validator.form.$touch()
+                let formInvalid = this.validator.form.$invalid
+                if (this.newRec) {
+                    this.validator.note.$touch();
+                    formInvalid = this.validator.note.$invalid || formInvalid
+                }
+                if (this.form.addTodo) {
+                    this.validator.todo.$touch()
+                    formInvalid = this.validator.todo.$invalid || formInvalid
+                }
+                if (this.form.addAlarm) {
+                    this.validator.alarm.$touch()
+                    formInvalid = this.validator.alarm.$invalid || formInvalid
+                }
+                if (formInvalid) {
+                    this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
+                } else {
+                    this.saving = true
+                    let record = new FormData()
+                    const contacts = JSON.stringify(this.form.contacts)
+                    const members = JSON.stringify(this.form.members)
+                    record.append('title', this.form.title)
+                    record.append('description', this.form.description)
+                    record.append('project_type_id', this.form.project_type.id)
+                    record.append('project_status_id', this.form.project_status.id)
+                    record.append('project_result_id', this.form.project_result.id)
+                    record.append('user_percentage', this.form.user_percentage || 0.0)
+                    record.append('members', members)
+                    record.append('contacts', contacts)
+                    record.append('city_id', this.form.city.id)
+                    record.append('region', this.form.region || '')
+                    record.append('main_street', this.form.main_street || '')
+                    record.append('aux1', this.form.aux1 || '')
+                    record.append('aux2', this.form.aux2 || '')
+                    record.append('alley1', this.form.alley1 || '')
+                    record.append('alley2', this.form.alley2 || '')
+                    record.append('address', this.form.address || '')
+                    record.append('po_code', this.form.po_code || '')
+                    record.append('lat', this.form.lat || '')
+                    record.append('long', this.form.long || '')
+                    record.append('blocks', this.form.blocks || '')
+                    record.append('units', this.form.units || '')
+                    record.append('floors', this.form.floors || '')
+                    if (this.editing) {
+                        record.append('id', this.editingItem.id)
+                    } else {
+                        record.append('note', this.note.note)
+                        record.append('project_status', this.note.project_status)
+                        record.append('project_result', this.note.project_result)
+                    }
+                    this.files.forEach((file, index) => {
+                        record.append("file-"+index+1, file);
+                    });
+                    if (this.form.addTodo) {
+                        record.append('addTodo', true)
+                        record.append('todo_id', this.todo?.id || null)
+                        record.append('todo_title', this.todo.title)
+                        record.append('todo_due_date', this.todo.due_date)
+                        record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
+                        record.append('todo_description', this.todo.description)
+                    }
+                    if (this.form.addAlarm) {
+                        record.append('addAlarm', true)
+                        record.append('alarm_id', this.alarm?.id || null)
+                        record.append('alarm_title', this.alarm.title)
+                        record.append('alarm_date', this.alarm.alarm_date)
+                        record.append('alarm_time', this.alarm.alarm_time)
+                        record.append('alarm_description', this.alarm.description)
+                    }
+                    Requests.saveProject(record).then(res => {
+                        if (res?.status) {
+                            if (this.editing) {
+                                for (let i = 0; i < this.projects.length; i++) {
+                                    if (this.projects[i].id === this.editingItem.id) {
+                                        this.projects[i] = res.result
+                                        break;
+                                    }
+                                }
+                            } else {
+                                this.projects.unshift(res.result)
+                                this.EventBus.emit('projectInserted', res.result)
+                            }
+                            this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
+                        } else {
+                            this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
+                        }
+                    }).catch(err => {
+                        this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
+                    }).finally(res => {
+                        this.validator.$reset();
+                        this.saving = false
+                        this.loading = false
+                        this.editing = false
+                        this.newItem()
+                        this.$router.push({ name : 'admin.projects' })
+                    })
                 }
             }
         },
