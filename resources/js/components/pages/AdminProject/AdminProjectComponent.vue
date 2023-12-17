@@ -1845,11 +1845,11 @@ export default {
                 return false
             }
             if (!this.loading) {
-                this.validator.$reset();
-                this.validator.note.$reset();
-                this.validator.todo.$reset();
-                this.validator.alarm.$reset();
-                this.validator.form.$touch()
+                // this.validator.$reset();
+                // this.validator.note.$reset();
+                // this.validator.todo.$reset();
+                // this.validator.alarm.$reset();
+                // this.validator.form.$touch()
                 let formInvalid = this.validator.form.$invalid
                 if (this.newRec) {
                     this.validator.note.$touch();
@@ -1902,49 +1902,49 @@ export default {
                     this.files.forEach((file, index) => {
                         record.append("file-"+index+1, file);
                     });
-                    if (this.form.addTodo) {
-                        record.append('addTodo', true)
-                        record.append('todo_id', this.todo?.id || null)
-                        record.append('todo_title', this.todo.title)
-                        record.append('todo_due_date', this.todo.due_date)
-                        record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
-                        record.append('todo_description', this.todo.description)
-                    }
-                    if (this.form.addAlarm) {
-                        record.append('addAlarm', true)
-                        record.append('alarm_id', this.alarm?.id || null)
-                        record.append('alarm_title', this.alarm.title)
-                        record.append('alarm_date', this.alarm.alarm_date)
-                        record.append('alarm_time', this.alarm.alarm_time)
-                        record.append('alarm_description', this.alarm.description)
-                    }
-                    Requests.saveProject(record).then(res => {
-                        // if (res?.status) {
-                        //     if (this.editing) {
-                        //         for (let i = 0; i < this.projects.length; i++) {
-                        //             if (this.projects[i].id === this.editingItem.id) {
-                        //                 this.projects[i] = res.result
-                        //                 break;
-                        //             }
-                        //         }
-                        //     } else {
-                        //         this.projects.unshift(res.result)
-                        //         this.EventBus.emit('projectInserted', res.result)
-                        //     }
-                        //     this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
-                        // } else {
-                        //     this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
-                        // }
-                    }).catch(err => {
-                        // this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
-                    }).finally(res => {
-                        // this.validator.$reset();
-                        // this.saving = false
-                        // this.loading = false
-                        // this.editing = false
-                        // this.newItem()
-                        // this.$router.push({ name : 'admin.projects' })
-                    })
+                    // if (this.form.addTodo) {
+                    //     record.append('addTodo', true)
+                    //     record.append('todo_id', this.todo?.id || null)
+                    //     record.append('todo_title', this.todo.title)
+                    //     record.append('todo_due_date', this.todo.due_date)
+                    //     record.append('todo_flag', this.todoFlags.indexOf(this.todo.flag))
+                    //     record.append('todo_description', this.todo.description)
+                    // }
+                    // if (this.form.addAlarm) {
+                    //     record.append('addAlarm', true)
+                    //     record.append('alarm_id', this.alarm?.id || null)
+                    //     record.append('alarm_title', this.alarm.title)
+                    //     record.append('alarm_date', this.alarm.alarm_date)
+                    //     record.append('alarm_time', this.alarm.alarm_time)
+                    //     record.append('alarm_description', this.alarm.description)
+                    // }
+                    // Requests.saveProject(record).then(res => {
+                    //     // if (res?.status) {
+                    //     //     if (this.editing) {
+                    //     //         for (let i = 0; i < this.projects.length; i++) {
+                    //     //             if (this.projects[i].id === this.editingItem.id) {
+                    //     //                 this.projects[i] = res.result
+                    //     //                 break;
+                    //     //             }
+                    //     //         }
+                    //     //     } else {
+                    //     //         this.projects.unshift(res.result)
+                    //     //         this.EventBus.emit('projectInserted', res.result)
+                    //     //     }
+                    //     //     this.$helpers.notify(res?.message || 'پروژه مورد نظر با موفقیت ذخیره شد')
+                    //     // } else {
+                    //     //     this.$helpers.notify('خطا', res?.message || 'بروز خطا هنگام ذخیره پروژه', { type: 'error' })
+                    //     // }
+                    // }).catch(err => {
+                    //     // this.$helpers.notify('خطای ناشناخته', err?.response?.data?.message || 'بروز خطای هنگام ذخیره پروژه', { type: 'error' })
+                    // }).finally(res => {
+                    //     // this.validator.$reset();
+                    //     // this.saving = false
+                    //     // this.loading = false
+                    //     // this.editing = false
+                    //     // this.newItem()
+                    //     // this.$router.push({ name : 'admin.projects' })
+                    // })
                 }
             }
         },
