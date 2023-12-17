@@ -875,8 +875,8 @@
                                                                     placeholder="عنوان"
                                                                     v-model="alarm.title"
                                                                     :is-error="validator?.alarm?.title?.$errors?.length"
-                                                                    :error-message="validator?.alarm?.title?.$errors[0]?.$message || ''"
                                                                 ></b-input>
+<!--                                                                :error-message="validator?.alarm?.title?.$errors[0]?.$message || ''"-->
                                                             </div>
                                                             <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
                                                                 <b-input
