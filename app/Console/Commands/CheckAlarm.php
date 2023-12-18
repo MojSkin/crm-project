@@ -42,9 +42,9 @@ class CheckAlarm extends Command
 //                DB::raw('alaram_date="'.$now->format('Y-m-d'.'" OR weekdays LIKE "%'.$now->dayOfWeek.'%"'));
 //            });
             $userAlarm = Alarm::all();
-            $userAlarm = $userAlarm->whereUserId($user);
-            $userAlarm = $userAlarm->whereAlarmTime($now->format('H:i:00'));
-            $userAlarm = $userAlarm->orderBy('alarm_date', 'ASC')->orderBy('alarm_time', 'ASC')->get();
+//            $userAlarm = $userAlarm->whereUserId($user);
+//            $userAlarm = $userAlarm->whereAlarmTime($now->format('H:i:00'));
+//            $userAlarm = $userAlarm->orderBy('alarm_date', 'ASC')->orderBy('alarm_time', 'ASC')->get();
             if ($userAlarm->count() > 0) {
                 $count += $userAlarm->count();
                 $alarms = AlarmResource::collection($userAlarm);
