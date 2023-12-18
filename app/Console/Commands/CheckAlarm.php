@@ -38,9 +38,10 @@ class CheckAlarm extends Command
         $alarms = [];
         $count = 0;
         foreach($users as $user) {
-            $userAlarm = Alarm::whereIsActive(true)->where(function () use ($now){
-                DB::raw('alaram_date="'.$now->format('Y-m-d'.'" OR weekdays LIKE "%'.$now->dayOfWeek.'%"'));
-            });
+//            $userAlarm = Alarm::whereIsActive(true)->where(function () use ($now){
+//                DB::raw('alaram_date="'.$now->format('Y-m-d'.'" OR weekdays LIKE "%'.$now->dayOfWeek.'%"'));
+//            });
+            $userAlarm = Alarm::all();
             $userAlarm = $userAlarm->whereUserId($user);
             $userAlarm = $userAlarm->whereAlarmTime($now->format('H:i:00'));
             $userAlarm = $userAlarm->orderBy('alarm_date', 'ASC')->orderBy('alarm_time', 'ASC')->get();
