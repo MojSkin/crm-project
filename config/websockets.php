@@ -30,7 +30,7 @@ return [
             'path' => env('PUSHER_APP_PATH'),
             'capacity' => null,
             'enable_client_messages' => false,
-            'enable_statistics' => false,
+            'enable_statistics' => true,
         ],
     ],
 
@@ -54,7 +54,7 @@ return [
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
      */
-    'max_request_size_in_kb' => 250,
+    'max_request_size_in_kb' => 1024,
 
     /*
      * This path will be used to register the necessary routes for the package.
@@ -96,13 +96,13 @@ return [
          * When the clean-command is executed, all recorded statistics older than
          * the number of days specified here will be deleted.
          */
-        'delete_statistics_older_than_days' => 60,
+        'delete_statistics_older_than_days' => 10,
 
         /*
          * Use an DNS resolver to make the requests to the statistics logger
          * default is to resolve everything to 127.0.0.1.
          */
-        'perform_dns_lookup' => false,
+        'perform_dns_lookup' => true,
     ],
 
     /*
@@ -130,7 +130,7 @@ return [
         'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
     ],
 
-    'protocol' => 'ws',
+    'protocol' => ['ws', 'wss'],
 
     /*
      * Channel Manager
