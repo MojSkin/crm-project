@@ -46,7 +46,6 @@ export default {
         let crmState = localStorage?.crmState
         crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
         const currentUser = crmState?.userData
-        console.log('user-alarms-'+currentUser.username)
         Echo.private('user-alarms-'+currentUser.username).listen('AlarmEvent', (event) => {
             const alarms = event?.alarms || {}
             for (const alarmKey in alarms) {
@@ -73,6 +72,10 @@ export default {
         })
     },
     mounted() {
+        Echo.connector.pusher.connection.bind('error', (e) => {
+            console.log(e, 'error')
+        });
+
         Echo.connector.pusher.connection.bind('connected', (socketId) => {
             console.log(socketId, 'connected')
         });

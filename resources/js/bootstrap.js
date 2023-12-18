@@ -44,6 +44,7 @@ const echoOptions = {
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: window.location.hostname,
+    wssHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
     forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
@@ -58,7 +59,5 @@ const echoOptions = {
         },
     },
 }
-
-console.log(echoOptions)
 
 window.Echo = new Echo(echoOptions);
