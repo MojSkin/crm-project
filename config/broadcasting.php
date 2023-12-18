@@ -40,7 +40,12 @@ return [
                 'encrypted' => true,
                 'host' => '127.0.0.1',
                 'port' => 6001,
-                'scheme' => 'http'
+                'useTLS' => env('PUSHER_USE_TLS', false),
+                'scheme' => env('PUSHER_SCHEME', 'http'),
+                'curl_options' => [
+                    'CURLOPT_SSL_VERIFYHOST' => 0,
+                    'CURLOPT_SSL_VERIFYPEER' => 0,
+                ]
             ],
         ],
 
