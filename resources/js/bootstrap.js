@@ -43,17 +43,17 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    encrypted: true,
-    forceTLS: true,
-    disableStats: false,
     wsHost: window.location.hostname,
     wsPort: 6001,
-    wssPort: 6001,
-    enabledTransports: ['ws', 'wss'],
+    forceTLS: false,
+    disableStats: false,
     authEndpoint: '/api/broadcasting/auth',
+    enabledTransports: ['ws'], // only use websockets
     auth: {
         headers: {
-            Authorization: 'Bearer ' + Requests.token()
+            Authorization: 'Bearer ' + Requests.token(),
+            'X-CSRF-TOKEN': window.csrfToken
         },
     },
+
 });
