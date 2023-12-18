@@ -47,7 +47,7 @@ window.Echo = new Echo({
     wsPort: 6001,
     wssPort: 6001,
     forceTLS: true,
-    disableStats: false,
+    disableStats: true,
     authEndpoint: '/api/broadcasting/auth',
     enabledTransports: ['ws', 'wss'],
     encrypted: true,
