@@ -52,7 +52,7 @@
         "ol-ext": "^4.0.11",
         "pdfmake": "^0.2.7",
         "persianjs": "^0.4.0",
-        "pusher-js": "4.3.0",
+        "pusher-js": "^8.3.0",
         "simple-datatables": "^7.1.2",
         "sweetalert2": "^11.7.3",
         "tiny-slider": "^2.9.4",
