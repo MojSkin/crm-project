@@ -45,10 +45,12 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: window.location.hostname,
     wsPort: 6001,
-    forceTLS: false,
+    wssPort: 6001,
+    forceTLS: true,
     disableStats: false,
     authEndpoint: '/api/broadcasting/auth',
-    enabledTransports: ['ws'], // only use websockets
+    enabledTransports: ['ws', 'wss'],
+    encrypted: true,
     auth: {
         headers: {
             Authorization: 'Bearer ' + Requests.token(),
