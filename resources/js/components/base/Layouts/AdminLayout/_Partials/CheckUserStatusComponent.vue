@@ -2,10 +2,10 @@
     <div class="w-100">
         <progress class="progress is-success is-tiny" :value="uploadProgress" max="100" v-if="saving"/>
     </div>
-<!--    <audio ref="notification">-->
-<!--        <source :src="audio+'.ogg'" type="audio/ogg">-->
-<!--        <source :src="audio+'.mp3'" type="audio/mpeg">-->
-<!--    </audio>-->
+    <audio ref="notification">
+        <source :src="audio+'.ogg'" type="audio/ogg">
+        <source :src="audio+'.mp3'" type="audio/mpeg">
+    </audio>
 </template>
 
 <script>
@@ -42,7 +42,7 @@ export default {
                 type                    : 'default',
                 title                   : null,
             },
-            // audio: this.base_url+'/assets/sounds/notification'
+            audio: this.base_url+'/assets/sounds/notification'
         }
     },
     created() {
@@ -50,6 +50,7 @@ export default {
         let crmState = localStorage?.crmState
         crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
         const currentUser = crmState?.userData
+        console.log(currentUser.username)
         Echo.private('user-alarms-'+currentUser.username).listen("AlarmEvent", (event) => {
             const alarms = event.alarms
             for (const alarmKey in alarms) {
@@ -65,16 +66,16 @@ export default {
                 this.toastOptions.closeButton = (props) => h(CloseAlarmNotification, {alarmId: alarm.id})
                 this.toastOptions.title = ''
                 this.toastOptions.toastId = 'alarm-'+alarm.id
-                // this.$refs.notification.play()
+                this.$refs.notification.play()
                 toast(htmlMessage, this.toastOptions)
             }
         })
     },
     mounted() {
-        // this.$refs.notification.load()
+        this.$refs.notification.load()
     },
     beforeUnmount() {
-        // this.$refs.notification.pause()
+        this.$refs.notification.pause()
     },
     computed: {},
     watch: {
