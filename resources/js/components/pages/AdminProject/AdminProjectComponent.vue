@@ -17,7 +17,6 @@
             </div>
         </b-card>
         <b-card no-header :no-footer="!newRec && !editing" :body-class="{'px-0': newRec || editing}" class="overflow-visible position-relative">
-            <b-overlay :show="saving || loading" loader-custom-class="has-text-info" :loader-text="loading ? 'در حال دریافت اطلاعات...' : 'در حال ذخیره پروژه... '">
                 <div class="columns is-multiline is-flex" v-if="!newRec && !editing">
                     <div class="column is-12" v-if="projects.length > 0">
 <!--                        <b-accordion-->
@@ -771,86 +770,84 @@
                                             <i class="fad fa-tasks fa-3x has-text-primary"></i>
                                         </template>
                                         <template #body>
-                                            <Transition>
-                                                <div class="card-body" v-if="form.addTodo">
-                                                    <div class="inner-content">
-                                                        <div class="columns is-flex is-multiline">
-                                                            <div class="column is-12-mobile is-12-tablet is-6-desktop is-6-widescreen">
-                                                                <b-input
-                                                                    label='عنوان:'
-                                                                    placeholder="عنوان"
-                                                                    v-model="todo.title"
-                                                                    :is-error="validator?.todo?.title?.$errors?.length"
-                                                                    :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"
-                                                                ></b-input>
-                                                            </div>
-                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
-                                                                <b-input
-                                                                    label='سررسید:'
-                                                                    placeholder="سررسید"
-                                                                    v-model="todo.due_date"
-                                                                >
-                                                                    <template #input>
-                                                                        <date-picker
-                                                                            :initial-value='Date(Date.now())'
-                                                                            format='YYYY/MM/DD'
-                                                                            display-format='jYYYY/jMM/jDD'
-                                                                            type="date"
-                                                                            v-model="todo.due_date"
-                                                                            input-class="is-ltr has-text-left input"
-                                                                            key="todo-due_date"
-                                                                        ></date-picker>
-                                                                    </template>
-                                                                </b-input>
-                                                            </div>
-                                                            <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
-                                                                <b-input
-                                                                    label='درجه اهمیت:'
-                                                                    placeholder="درجه اهمیت"
-                                                                    v-model="todo.due_date"
-                                                                    :is-error="validator?.todo?.flag?.$errors?.length"
-                                                                    :error-message="validator?.todo?.flag?.$errors[0]?.$message || ''"
-                                                                >
-                                                                    <template #input>
-                                                                        <b-select
-                                                                            autoclose
-                                                                            searchable
-                                                                            clearable
-                                                                            v-model="todo.flag"
-                                                                            :options="this.todoFlags"
-                                                                            :is-error="validator?.todo?.flag?.$errors?.length"
-                                                                            :error-message="validator?.todo?.flag?.$errors[0]?.$message || ''"
-                                                                        />
-                                                                    </template>
-                                                                </b-input>
-                                                            </div>
-                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">
-                                                                <b-input
-                                                                    label='توضیحات:'
-                                                                    placeholder="توضیحات"
-                                                                    v-model="todo.description"
-                                                                    :error-message="validator?.todo?.description?.$errors[0]?.$message || ''"
-                                                                >
-                                                                    <template #input>
-                                                            <textarea
+                                            <div class="card-body" v-if="form.addTodo">
+                                                <div class="inner-content">
+                                                    <div class="columns is-flex is-multiline">
+                                                        <div class="column is-12-mobile is-12-tablet is-6-desktop is-6-widescreen">
+                                                            <b-input
+                                                                label='عنوان:'
+                                                                placeholder="عنوان"
+                                                                v-model="todo.title"
+                                                                :is-error="validator?.todo?.title?.$errors?.length"
+                                                                :error-message="validator?.todo?.title?.$errors[0]?.$message || ''"
+                                                            ></b-input>
+                                                        </div>
+                                                        <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
+                                                            <b-input
+                                                                label='سررسید:'
+                                                                placeholder="سررسید"
+                                                                v-model="todo.due_date"
+                                                            >
+                                                                <template #input>
+                                                                    <date-picker
+                                                                        :initial-value='Date(Date.now())'
+                                                                        format='YYYY/MM/DD'
+                                                                        display-format='jYYYY/jMM/jDD'
+                                                                        type="date"
+                                                                        v-model="todo.due_date"
+                                                                        input-class="is-ltr has-text-left input"
+                                                                        key="todo-due_date"
+                                                                    ></date-picker>
+                                                                </template>
+                                                            </b-input>
+                                                        </div>
+                                                        <div class="column is-6-mobile is-6-tablet is-3-desktop is-3-widescreen">
+                                                            <b-input
+                                                                label='درجه اهمیت:'
+                                                                placeholder="درجه اهمیت"
+                                                                v-model="todo.due_date"
+                                                                :is-error="validator?.todo?.flag?.$errors?.length"
+                                                                :error-message="validator?.todo?.flag?.$errors[0]?.$message || ''"
+                                                            >
+                                                                <template #input>
+                                                                    <b-select
+                                                                        autoclose
+                                                                        searchable
+                                                                        clearable
+                                                                        v-model="todo.flag"
+                                                                        :options="this.todoFlags"
+                                                                        :is-error="validator?.todo?.flag?.$errors?.length"
+                                                                        :error-message="validator?.todo?.flag?.$errors[0]?.$message || ''"
+                                                                    />
+                                                                </template>
+                                                            </b-input>
+                                                        </div>
+                                                        <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen">
+                                                            <b-input
+                                                                label='توضیحات:'
+                                                                placeholder="توضیحات"
                                                                 v-model="todo.description"
-                                                                rows="3"
-                                                                class="textarea no-resize"
-                                                                :class="{ 'is-error': validator?.todo?.description?.$errors?.length }"
-                                                            />
-                                                                    </template>
-                                                                </b-input>
-                                                            </div>
-                                                            <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-flex" v-if="todo?.id">
-                                                                <button class="button is-warning is-hoverable ml-auto" @click="deleteTodo(todo.id)" :disabled="saving">
-                                                                    <i class="fal fa-times"></i>
-                                                                    <span class="ml-2">حذف از فهرست کارها</span>
-                                                                </button>
-                                                            </div>
+                                                                :error-message="validator?.todo?.description?.$errors[0]?.$message || ''"
+                                                            >
+                                                                <template #input>
+                                                        <textarea
+                                                            v-model="todo.description"
+                                                            rows="3"
+                                                            class="textarea no-resize"
+                                                            :class="{ 'is-error': validator?.todo?.description?.$errors?.length }"
+                                                        />
+                                                                </template>
+                                                            </b-input>
+                                                        </div>
+                                                        <div class="column is-12-mobile is-12-tablet is-12-desktop is-12-widescreen is-flex" v-if="todo?.id">
+                                                            <button class="button is-warning is-hoverable ml-auto" @click="deleteTodo(todo.id)" :disabled="saving">
+                                                                <i class="fal fa-times"></i>
+                                                                <span class="ml-2">حذف از فهرست کارها</span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </Transition>
+                                            </div>
                                         </template>
                                     </b-card>
                                 </div>
@@ -858,7 +855,6 @@
                         </div>
                     </template>
                 </b-tabs>
-            </b-overlay>
             <template #footer-left>
                 <button class="button is-success mr-2" @click="saveItem()" :disabled="saving || loading">
                     <i class="fal fa-spinner-third fa-spin" v-if="saving || loading"></i>
@@ -1731,7 +1727,6 @@ export default {
             this.savingComment = false
         },
         saveItem() {
-            debugger
             let perm = false
             let message = ''
             if (this.editing) {
@@ -1752,24 +1747,26 @@ export default {
                 return false
             }
             if (!this.loading && !this.saving) {
-                this.validator.$reset();
-                this.validator.note.$reset();
-                this.validator.todo.$reset();
-                this.validator.alarm.$reset();
-                this.validator.form.$touch()
+                this.validator.$reset()
+                this.validator.note.$reset()
+                this.validator.todo.$reset()
+                this.validator.alarm.$reset()
+                this.validator.form.$validate()
                 let formInvalid = this.validator.form.$invalid
+
                 if (this.newRec) {
-                    this.validator.note.$touch();
+                    this.validator.note.$validate();
                     formInvalid = this.validator.note.$invalid || formInvalid
                 }
                 if (this.form.addTodo) {
-                    this.validator.todo.$touch()
+                    this.validator.todo.$validate()
                     formInvalid = this.validator.todo.$invalid || formInvalid
                 }
                 if (this.form.addAlarm) {
-                    this.validator.alarm.$touch()
+                    this.validator.alarm.$validate()
                     formInvalid = this.validator.alarm.$invalid || formInvalid
                 }
+
                 if (formInvalid) {
                     this.$helpers.notify('خطای کاربر', 'خطاهی فرم را برطرف کنید', { type: 'error' })
                 } else {

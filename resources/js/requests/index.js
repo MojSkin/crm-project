@@ -412,8 +412,8 @@ export default {
             data: form,
             ...headers,
         }
-        const res = await axios(axiosParams)
-        // const res = await axios.post(route('api.projects.saveProject'), form, this.tokenHeader({'Content-Type': 'multipart/form-data'}))
+        // const res = await axios(axiosParams)
+        const res = await axios.post(route('api.projects.saveProject'), form, this.tokenHeader({'Content-Type': 'multipart/form-data'}))
         return res?.data
     },
 
