@@ -72,8 +72,15 @@ export default {
         })
     },
     mounted() {
-        Echo.connector.pusher.connection.bind('error', (e) => {
-            console.log(e, 'error')
+        window.Echo.connector.pusher.connection.bind('message', (payload) => {
+            console.log('message', payload);
+        });
+        window.Echo.connector.pusher.connection.bind('unavailable', (payload) => {
+            console.log('unavailable', payload);
+        });
+
+        window.Echo.connector.pusher.connection.bind('failed', (payload) => {
+            console.log('failed', payload);
         });
 
         Echo.connector.pusher.connection.bind('connected', (socketId) => {
