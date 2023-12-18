@@ -13,6 +13,7 @@
         "plyr": "^3.7.3",
         "postcss-html": "^1.5.0",
         "postcss-scss": "^4.0.6",
+        "sass": "^1.69.5",
         "vite": "^4.1.4"
     },
     "dependencies": {
@@ -57,7 +58,7 @@
         "sweetalert2": "^11.7.3",
         "tiny-slider": "^2.9.4",
         "tippy.js": "^6.3.7",
-        "url": "^0.11.0",
+        "url": "^0.11.3",
         "vee-validate": "^4.7.4",
         "vue": "^3.2.47",
         "vue-advanced-cropper": "^2.8.8",
