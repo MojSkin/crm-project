@@ -73,6 +73,13 @@ export default {
         })
     },
     mounted() {
+        Echo.connector.pusher.connection.bind('connected', (socketId) => {
+            console.log(socketId, 'connected')
+        });
+
+        Echo.connector.pusher.connection.bind('disconnected', () => {
+            console.log('disconnected')
+        });
     },
     beforeUnmount() {
     },
