@@ -31,7 +31,6 @@ class AlarmEvent implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        dd($this->username);
         return [new PrivateChannel('user-alarms-'.$this->username, $this->alarms)];
     }
 }

@@ -44,7 +44,6 @@ class CheckAlarm extends Command
             $userAlarm = $userAlarm->whereUserId($user);
             $userAlarm = $userAlarm->whereAlarmTime($now->format('H:i:00'));
             $userAlarm = $userAlarm->orderBy('alarm_date', 'ASC')->orderBy('alarm_time', 'ASC')->get();
-            $userAlarm = Alarm::limit(2)->get();
             if ($userAlarm->count() > 0) {
                 $count += $userAlarm->count();
                 $alarms = AlarmResource::collection($userAlarm);
