@@ -43,11 +43,12 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    encrypted: false,
     forceTLS: false,
     disableStats: false,
     wsHost: window.location.hostname,
     wsPort: 6001,
-    enabledTransports: ['ws'],
+    enabledTransports: ['ws', 'wss'],
     authEndpoint: '/api/broadcasting/auth',
     auth: {
         headers: {

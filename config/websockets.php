@@ -34,12 +34,6 @@ return [
         ],
     ],
 
-    'websocket' => [
-        'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
-        'use_pusher' => true,
-        'use_ssl' => false, // Set to false to use ws instead of wss
-    ],
-
     /*
      * This class is responsible for finding the apps. The default provider
      * will use the apps defined in this config file.
