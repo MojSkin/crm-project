@@ -59,4 +59,6 @@ const echoOptions = {
     },
 }
 
+console.log(echoOptions)
+
 window.Echo = new Echo(echoOptions);
