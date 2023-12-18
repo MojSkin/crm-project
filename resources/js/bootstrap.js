@@ -48,7 +48,7 @@ const echoOptions = {
     wsPort: 6001,
     wssPort: 6001,
     forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
-    disableStats: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    disableStats: false,
     authEndpoint: '/api/broadcasting/auth',
     enabledTransports: [import.meta.env.VITE_PUSHER_SCHEME === 'https' ? 'wss' : 'ws'],
     encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
