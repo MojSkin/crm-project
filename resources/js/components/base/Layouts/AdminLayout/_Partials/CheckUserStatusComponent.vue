@@ -2,25 +2,22 @@
     <div class="w-100">
         <progress class="progress is-success is-tiny" :value="uploadProgress" max="100" v-if="saving"/>
     </div>
-    <audio ref="notification">
-        <source :src="audio+'.ogg'" type="audio/ogg">
-        <source :src="audio+'.mp3'" type="audio/mpeg">
-    </audio>
 </template>
 
 <script>
 import router from "@/router";
 import {toast} from "vue3-toastify";
 import { h } from 'vue';
+import { useToast } from "vue-toastification";
 
-import CloseAlarmNotification from "./CloseAlarmNotification.vue";
+import AlarmToastContent from "./AlarmToastContent.vue";
 
 export default {
     name: "CheckUserStatusComponent",
     props: {},
     inject: ['base_url'],
     components: {
-        CloseAlarmNotification
+        AlarmToastContent
     },
     data() {
         return {
@@ -42,7 +39,6 @@ export default {
                 type                    : 'default',
                 title                   : null,
             },
-            audio: this.base_url+'/assets/sounds/notification'
         }
     },
     created() {
@@ -50,32 +46,39 @@ export default {
         let crmState = localStorage?.crmState
         crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
         const currentUser = crmState?.userData
-        console.log(currentUser.username)
-        Echo.private('user-alarms-'+currentUser.username).listen("AlarmEvent", (event) => {
+
+        Echo.private('user-alarms-'+currentUser.username).listen('AlarmEvent', (event) => {
             const alarms = event.alarms
+            console.log(alarms.length)
             for (const alarmKey in alarms) {
                 const alarm = alarms[alarmKey]
-                let htmlMessage
-                htmlMessage = '<div class="is-weight-700 is-size-6 is-font-alt"><i class="fad fa-alarm-clock fa-2x mr-2 has-text-warning-dark"></i>'+alarm.title+'</div><hr class="mt-0 mb-2"><p class="is-weight-400 is-size-6 has-text-justified mb-3 is-flex">'
-                if (alarm.alarm_date) {
-                    htmlMessage += '<span>تاریخ: '+this.$helpers.jDate(alarm.alarm_date)+'</span>'
-                } else {
-                    htmlMessage += '<span>امروز</span>'
+                const alarmContent = {
+                    component: AlarmToastContent,
+                    props: {
+                        alarm: alarm
+                    },
                 }
-                htmlMessage += '<span class="ml-auto">ساعت: '+this.$helpers.jDate(alarm.alarm_time, 'H:mm')+'</span></p><p class="is-weight-400 is-size-6 has-text-justified mb-0">'+alarm.description+'</p>'
-                this.toastOptions.closeButton = (props) => h(CloseAlarmNotification, {alarmId: alarm.id})
-                this.toastOptions.title = ''
-                this.toastOptions.toastId = 'alarm-'+alarm.id
-                // this.$refs.notification.play()
-                toast(htmlMessage, this.toastOptions)
+                useToast().info(alarmContent, {
+                    position: 'top-left',
+                    rtl: true,
+                    maxToasts: 10,
+                    draggable: false,
+                    closeOnClick: false,
+                    timeout: false,
+                    icon: 'fas fa-alarm-clock fa-2x has-text-light',
+                    toastClassName: 'p-3',
+                    closeButton: false,
+                    showCloseButtonOnHover: false
+                });
+                // console.log(alarm.id)
+                // useToast().info(AlarmToastContent);
+                // toast(htmlMessage, this.toastOptions)
             }
         })
     },
     mounted() {
-        // this.$refs.notification.load()
     },
     beforeUnmount() {
-        // this.$refs.notification.pause()
     },
     computed: {},
     watch: {

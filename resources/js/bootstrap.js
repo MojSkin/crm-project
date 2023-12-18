@@ -39,23 +39,24 @@ window.Pusher = Pusher;
 
 import Requests from './requests'
 
-window.Echo = new Echo({
+const echoOptions = {
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
-    forceTLS: true,
-    disableStats: true,
+    forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    disableStats: import.meta.env.VITE_PUSHER_SCHEME === 'https',
     authEndpoint: '/api/broadcasting/auth',
-    enabledTransports: ['ws', 'wss'],
-    encrypted: true,
+    enabledTransports: [import.meta.env.VITE_PUSHER_SCHEME === 'https' ? 'wss' : 'ws'],
+    encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
     auth: {
         headers: {
             Authorization: 'Bearer ' + Requests.token(),
             'X-CSRF-TOKEN': window.csrfToken
         },
     },
+}
 
-});
+window.Echo = new Echo(echoOptions);

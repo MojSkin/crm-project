@@ -12,6 +12,7 @@ import VueEasyLightbox from 'vue-easy-lightbox'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import Flicking from "@egjs/vue3-flicking";
 import OpenLayersMap from "vue3-openlayers";
+import Toast from "vue-toastification";
 
 import Helpers from './helpers'
 window.Helpers = Helpers
@@ -163,7 +164,7 @@ app
             autoSubmit: true,
         }
     })
-    // .use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHAV2_SITEKEY, loaderOptions: {size: 'invisible', autoHideBadge: true} })
+    .use(Toast, {})
     .provide('base_url', window.location.origin)
     .provide('app_key', import.meta.VITE_APP_KEY)
     .mount("#app")
