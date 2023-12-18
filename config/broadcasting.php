@@ -42,10 +42,6 @@ return [
                 'port' => 6001,
                 'useTLS' => env('PUSHER_USE_TLS', false),
                 'scheme' => env('PUSHER_SCHEME', 'http'),
-                'curl_options' => [
-                    'CURLOPT_SSL_VERIFYHOST' => 0,
-                    'CURLOPT_SSL_VERIFYPEER' => 0,
-                ]
             ],
         ],
 
