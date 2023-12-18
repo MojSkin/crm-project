@@ -29,8 +29,8 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'enable_client_messages' => false,
             'enable_statistics' => true,
-            'enabled_transports' => 'ws',
-            'scheme' => 'http'
+            'enabled_transports' => ['ws', 'wss'],
+            'scheme' => 'https'
         ],
     ],
 
