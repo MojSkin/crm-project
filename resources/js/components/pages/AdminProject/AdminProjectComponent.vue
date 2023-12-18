@@ -1731,6 +1731,7 @@ export default {
             this.savingComment = false
         },
         saveItem() {
+            debugger
             let perm = false
             let message = ''
             if (this.editing) {
