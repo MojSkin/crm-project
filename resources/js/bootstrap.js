@@ -45,10 +45,12 @@ const echoOptions = {
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     wsHost: window.location.hostname,
     wssHost: window.location.hostname,
+    httpHost: window.location.hostname,
+    httpsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
     forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
-    disableStats: false,
+    disableStats: true,
     authEndpoint: '/api/broadcasting/auth',
     enabledTransports: [import.meta.env.VITE_PUSHER_SCHEME === 'https' ? 'wss' : 'ws'],
     encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
@@ -57,6 +59,9 @@ const echoOptions = {
             Authorization: 'Bearer ' + Requests.token(),
             'X-CSRF-TOKEN': window.csrfToken
         },
+        bearerToken: Requests.token(),
+        csrfToken: window.csrfToken,
+
     },
 }
 
