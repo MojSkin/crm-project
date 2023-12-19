@@ -39,6 +39,8 @@ window.Pusher = Pusher;
 
 import Requests from './requests'
 
+console.log(import.meta.env)
+
 const echoOptions = {
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
@@ -54,13 +56,13 @@ const echoOptions = {
     authEndpoint: '/api/broadcasting/auth',
     enabledTransports: [import.meta.env.VITE_PUSHER_SCHEME === 'https' ? 'wss' : 'ws'],
     encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    bearerToken: Requests.token(),
+    csrfToken: window.csrfToken,
     auth: {
         headers: {
             Authorization: 'Bearer ' + Requests.token(),
             'X-CSRF-TOKEN': window.csrfToken
         },
-        bearerToken: Requests.token(),
-        csrfToken: window.csrfToken,
 
     },
 }
