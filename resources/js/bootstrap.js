@@ -51,11 +51,11 @@ const echoOptions = {
     httpsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
-    forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    forceTLS: false,
     disableStats: true,
     authEndpoint: '/api/broadcasting/auth',
     enabledTransports: [import.meta.env.VITE_PUSHER_SCHEME === 'https' ? 'wss' : 'ws'],
-    encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    encrypted: false,
     bearerToken: Requests.token(),
     csrfToken: window.csrfToken,
     auth: {
@@ -63,7 +63,6 @@ const echoOptions = {
             Authorization: 'Bearer ' + Requests.token(),
             'X-CSRF-TOKEN': window.csrfToken
         },
-
     },
 }
 
