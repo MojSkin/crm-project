@@ -19,7 +19,7 @@ class CheckAlarm extends Command
      *
      * @var string
      */
-    protected $signature = 'alarm';
+    protected $signature = 'alarm {--test}';
 
     /**
      * The console command description.
@@ -33,6 +33,25 @@ class CheckAlarm extends Command
      */
     public function handle(): void
     {
+        $test = $this->options();
+        if ($test['test'] ?? false === true) {
+            $this->info('Test alarm sent to MojSkin');
+            $alarm = [
+                'id' => time(),
+                'title' => 'پیام تست '.rand(1000, 999),
+                'description' => 'توضیحات تست',
+//                'alarm_date' => Carbon::now()->format('Y-m-d'),
+                'alarm_time' => Carbon::now()->format('H-i'),
+                'weekdays' => '|0|1|2|3|4|5|6|',
+                'is_active' => true,
+                'user' => null,
+            ];
+            event(new AlarmEvent('mojskin', [$alarm]));
+
+            return;
+        }
+
+
         $now = Carbon::now();
         $users = Alarm::whereIsActive(true)->distinct('user_id')->pluck('user_id')->toArray();
         $alarms = [];
@@ -50,6 +69,7 @@ class CheckAlarm extends Command
                 event(new AlarmEvent($alarms[0]->user->username, $alarms));
             }
         }
+
         if ($count > 0) {
             $this->info($count . ' alarm(s) were found.');
         } else {
