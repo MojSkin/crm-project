@@ -53,7 +53,7 @@ const echoOptions = {
     forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
     disableStats: true,
     authEndpoint: '/api/broadcasting/auth',
-    enabledTransports: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['ws', 'wss'] : ['ws'],
+    enabledTransports: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['wss'] : ['ws'],
     encrypted: false,
     bearerToken: Requests.token(),
     csrfToken: window.csrfToken,
