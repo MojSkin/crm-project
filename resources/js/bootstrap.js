@@ -39,31 +39,42 @@ window.Pusher = Pusher;
 
 import Requests from './requests'
 
-const echoOptions = {
+// const echoOptions = {
+//     broadcaster: 'pusher',
+//     key: import.meta.env.VITE_PUSHER_APP_KEY,
+//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+//     // wsHost: '127.0.0.1',
+//     // wssHost: '127.0.0.1',
+//     // httpHost: '127.0.0.1',
+//     // httpsHost: '127.0.0.1',
+//     // host: '127.0.0.1',
+//     // wsPort: 6001,
+//     // wssPort: 6001,
+//     // forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+//     // disableStats: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+//     authEndpoint: '/api/broadcasting/auth',
+//     // enabledTransports: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['wss'] : ['ws'],
+//     // features: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['wss'] : ['ws'],
+//     // encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+//     bearerToken: Requests.token(),
+//     csrfToken: window.csrfToken,
+//     // auth: {
+//     //     headers: {
+//     //         Authorization: 'Bearer ' + Requests.token(),
+//     //         'X-CSRF-TOKEN': window.csrfToken
+//     //     },
+//     // },
+// }
+// window.Echo = new Echo(echoOptions);
+
+
+window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    wsHost: '127.0.0.1',
-    wssHost: '127.0.0.1',
-    httpHost: '127.0.0.1',
-    httpsHost: '127.0.0.1',
-    host: '127.0.0.1',
-    wsPort: 6001,
-    wssPort: 6001,
-    forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
-    disableStats: import.meta.env.VITE_PUSHER_SCHEME === 'https',
+    forceTLS: true,
     authEndpoint: '/api/broadcasting/auth',
-    enabledTransports: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['wss'] : ['ws'],
-    features: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['wss'] : ['ws'],
-    encrypted: import.meta.env.VITE_PUSHER_SCHEME === 'https',
     bearerToken: Requests.token(),
     csrfToken: window.csrfToken,
-    // auth: {
-    //     headers: {
-    //         Authorization: 'Bearer ' + Requests.token(),
-    //         'X-CSRF-TOKEN': window.csrfToken
-    //     },
-    // },
-}
+});
 
-window.Echo = new Echo(echoOptions);
