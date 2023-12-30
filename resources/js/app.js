@@ -166,5 +166,7 @@ app
     })
     .use(Toast, {})
     .provide('base_url', window.location.origin)
+    .provide('neshanWeb_api_key', 'web.6634a312455947c4b24280fa05e39143')
+    .provide('neshanSrv_api_key', 'service.7649ecbd7fd6425a9da2013265bc395c')
     .provide('app_key', import.meta.VITE_APP_KEY)
     .mount("#app")

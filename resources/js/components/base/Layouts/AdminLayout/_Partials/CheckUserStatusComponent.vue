@@ -46,7 +46,7 @@ export default {
         let crmState = localStorage?.crmState
         crmState = (crmState) ? JSON.parse(localStorage?.crmState || '{}') : {}
         const currentUser = crmState?.userData
-        console.log(Echo.private('user-alarms-'+currentUser.username).listen('AlarmEvent', (event) => {
+        Echo.private('user-alarms-'+currentUser.username).listen('AlarmEvent', (event) => {
             const alarms = event?.alarms || {}
             for (const alarmKey in alarms) {
                 const alarm = alarms[alarmKey]
@@ -69,7 +69,7 @@ export default {
                     showCloseButtonOnHover: false
                 });
             }
-        }))
+        })
     },
     mounted() {
     },

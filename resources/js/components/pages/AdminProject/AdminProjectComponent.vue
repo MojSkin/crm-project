@@ -346,7 +346,7 @@
                                 </div>
                             </div>
                             <div class="columns is-multiline is-flex">
-                                <div class="column is-12">
+                                <div class="column is-12" style="min-height: 300px">
                                     <ol-map
                                         ref="map"
                                         style="height: 400px; border-radius: 5px; overflow: hidden"
@@ -372,7 +372,7 @@
                                                     <ol-geom-point ref="geompoint" :coordinates="mapOptions.center"/>
 
                                                     <ol-style>
-                                                        <ol-style-icon ref="geompointicon" :src="mapOptions.icon" :scale="0.65"/>
+                                                        <ol-style-icon ref="geompointicon" :src="mapOptions.icon"/>
                                                     </ol-style>
                                                 </ol-feature>
                                             </ol-source-vector>
@@ -905,12 +905,20 @@
 import { useVuelidate } from '@vuelidate/core'
 import 'vue3-openlayers/styles.css';
 import ProjectSingleCardComponent from "@/components/pages/AdminProject/ProjectSingleCardComponent.vue";
-import Form from '/resources/js/form'
+import Form from '/resources/js/form';
 
 export default {
     name: "AdminProjectComponent",
-    components: {ProjectSingleCardComponent},
-    inject: ['base_url', 'ol-format', 'ol-selectconditions'],
+    components: {
+        ProjectSingleCardComponent,
+    },
+    inject: [
+        'base_url',
+        'neshanWeb_api_key',
+        'neshanSrv_api_key',
+        'ol-format',
+        'ol-selectconditions'
+    ],
     setup () {
         return { validator: useVuelidate() }
     },
@@ -1066,10 +1074,10 @@ export default {
                 center: [52.5452, 29.6151],
                 projection: 'EPSG:4326',
                 projectionDef: '+proj=utm +zone=40 +datum=WGS84 +units=m +no_defs',
-                zoom: 10,
+                zoom: 18,
                 rotation: 0,
                 geoJson: new this['ol-format'].GeoJSON(),
-                icon: this.base_url+'/assets/images/png/location.png',
+                icon: this.base_url+'/assets/images/png/location-pin.png',
                 conditions: this['ol-selectconditions'],
             },
             imageToPreview: null,
@@ -1464,7 +1472,6 @@ export default {
         } else {
             this.refreshTable(false, 12)
         }
-        // this.getCurrentPosition(false)
     },
     watch: {
         active_tab(o, n) {
@@ -1720,11 +1727,9 @@ export default {
             this.newRec      = true
             this.editing     = false
             this.editingItem = []
-            this.$nextTick(res => {
-                this.getCurrentPosition(false)
-            })
             this.comment = null
             this.savingComment = false
+            this.getCurrentPosition(true)
         },
         saveItem() {
             let perm = false
@@ -1987,7 +1992,7 @@ export default {
                             this.$helpers.notify('خطا', 'خطای غیرمنتظره! حذف پروژه مورد نظر با مشکل مواجه شد...', { type: 'error' })
                         }
                     }).catch(err => {
-                        console.log(err);
+                        // console.log(err);
                     }).then(res => {
                         this.saving = false
                     })
@@ -1998,35 +2003,29 @@ export default {
             if (!this.gettingLocationInfo) {
                 this.gettingLocationInfo = true
                 const position = this.$refs?.view?.view?.values_?.center ?? this.mapOptions.center
-
-                Requests.reverseGeocode(position).then(res => {
-                    let addressArray = (res?.display_name || '').split(', ').reverse()
-                    this.form.region = res?.address?.suburb || res?.address?.town || ''
-                    this.form.main_street = res?.address?.neighbourhood || null
-                    this.form.aux1 = res?.address?.road || null
+                axios.get('https://api.neshan.org/v5/reverse?lat='+position[1]+'&lng='+position[0], {
+                    headers: {
+                        'Api-Key': this.neshanSrv_api_key
+                    }
+                }).then(res => {
+                    let addressArray = (res?.data?.formatted_address || res?.data?.ormatted_address || '')
+                    this.form.region = res?.data?.municipality_zone || res?.data?.district || ''
+                    this.form.main_street = res?.data?.neighbourhood || null
+                    this.form.aux1 = res?.data?.route_name || null
                     this.form.aux2 = null
                     this.form.alley1 = null
                     this.form.alley2 = null
-                    this.form.po_code = res?.address?.postcode || ''
+                    this.form.po_code = res?.data?.address?.postcode || ''
                     this.form.city = { id: 728, title: '' }
+
+
+                    this.form.aux1 = this.form.aux1 === 'معبر بدون نام' ? null : this.form.aux1
                     this.original_cities.find(item => {
-                        if (item.title.localeCompare(res?.address?.city) === 0 || item.title.localeCompare(res?.address?.town?.replace('شهر ','')) === 0) {
+                        if (item.title.localeCompare(res?.data?.address?.city) === 0 || item.title.localeCompare(res?.data?.address?.town?.replace('شهر ','')) === 0) {
                             this.form.city.id = item.id
                         }
                     })
-                    let i = 0;
-                    while (addressArray.length > 0) {
-                        if (this.form.region.localeCompare(addressArray[i]) === 0) {
-                            addressArray.splice(i, 1)
-                            break;
-                        }
-                        addressArray.splice(i, 1)
-                    }
-                    this.form.address = addressArray.join('، ')
-                    this.form.region = this.form.region.replace("منطقه ", "");
-                    this.form.po_code = this.form.po_code.replace(/-/g, "");
-                }).catch(err => {
-                    this.$helpers.notify('خطا', 'خطا هنگام دریافت اطلاعات تکمیلی موقعیت مورد نظر.', { type: 'error' })
+                    this.form.address = addressArray
                 }).finally(res => {
                     this.gettingLocationInfo = false
                 })
@@ -2034,31 +2033,55 @@ export default {
         },
         getCurrentPosition(centerMap = false) {
             if (!navigator.geolocation) {
-                axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=0d3a52966a2b443fbbef13ece6b436db&fields=geo').then(res => {
-                    this.currentPosition.lat = res?.data?.latitude
-                    this.currentPosition.long = res?.data?.longitude
+                // axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=0d3a52966a2b443fbbef13ece6b436db&fields=geo').then(res => {
+                axios.get('http://ip-api.com/json').then(res => {
+                    this.currentPosition.long = res?.data?.lon || 52.5452
+                    this.currentPosition.lat = res?.data?.lat || 29.6151
+
+                    this.$nextTick(e => {
+                        if (centerMap) {
+                            this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
+                            this.mapOptions.zoom = 18
+                            if (this.$refs.map) {
+                                this.$refs.map.updateSize()
+                            }
+                        }
+                    })
+
+                    if (centerMap) {
+                        this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
+                        this.mapOptions.zoom = 18
+                        this.$refs.map.updateSize()
+                    }
+
+                    this.form.lat = this.currentPosition.lat
+                    this.form.long = this.currentPosition.long
                 }).catch(err => {
-                    this.$helpers.notify('خطا', 'خطا در دریافت موقعیت مکانی کاربر', { type: 'error' })
+                    this.$helpers.notify('خطا', 'مرورگر شما از موقعیت مکانی پشتیبانی نمی‌کند.', { type: 'error' })
                 })
-                return
             } else {
                 navigator.geolocation.getCurrentPosition((position) => {
                     this.currentPosition.lat = position.coords.latitude;
                     this.currentPosition.long = position.coords.longitude;
                 }, (err) => {
-                    axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=0d3a52966a2b443fbbef13ece6b436db&fields=geo').then(res => {
-                        this.currentPosition.lat = res?.data?.latitude
-                        this.currentPosition.long = res?.data?.longitude
-                        if (centerMap) {
-                            this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
-                            this.mapOptions.zoom = 18
-                            this.$refs.map.updateSize()
-                            const view = this.$refs.view
-                        }
+                    axios.get('http://ip-api.com/json').then(res => {
+                        this.currentPosition.long = res?.data?.lon || 52.5452
+                        this.currentPosition.lat = res?.data?.lat || 29.6151
 
+                        this.$nextTick(e => {
+                            if (centerMap) {
+                                this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
+                                this.mapOptions.zoom = 18
+                                if (this.$refs.map) {
+                                    this.$refs.map.updateSize()
+                                }
+                            }
+                        })
+
+                        const view = this.$refs.view
                         const position = this.$refs?.view?.view?.values_?.center ?? this.mapOptions.center
-                        this.form.lat = position[1]
-                        this.form.long = position[0]
+                        this.form.lat = this.currentPosition.lat
+                        this.form.long = this.currentPosition.long
                     }).catch(err => {
                         this.$helpers.notify('خطا', 'خطا در دریافت موقعیت مکانی کاربر', { type: 'error' })
                     })
@@ -2067,12 +2090,15 @@ export default {
                 })
             }
 
-            if (centerMap) {
-                this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
-                this.mapOptions.zoom = 18
-                this.$refs.map.updateSize()
-                const view = this.$refs.view
-            }
+            this.$nextTick(e => {
+                if (centerMap) {
+                    this.mapOptions.center = [this.currentPosition.long, this.currentPosition.lat]
+                    this.mapOptions.zoom = 18
+                    if (this.$refs.map) {
+                        this.$refs.map.updateSize()
+                    }
+                }
+            })
 
             const position = this.$refs?.view?.view?.values_?.center ?? this.mapOptions.center
             this.form.lat = position[1]
@@ -2297,7 +2323,7 @@ export default {
                         document.body.removeChild(a)
                     }
                 }).catch(err => {
-                    console.log(err)
+                    // console.log(err)
                 })
             }
         },
