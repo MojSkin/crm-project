@@ -50,7 +50,7 @@ const echoOptions = {
     host: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
-    forceTLS: false,
+    forceTLS: import.meta.env.VITE_PUSHER_SCHEME === 'https',
     disableStats: true,
     authEndpoint: '/api/broadcasting/auth',
     enabledTransports: import.meta.env.VITE_PUSHER_SCHEME === 'https' ? ['ws', 'wss'] : ['ws'],
