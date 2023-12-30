@@ -72,24 +72,6 @@ export default {
         }))
     },
     mounted() {
-        window.Echo.connector.pusher.connection.bind('message', (payload) => {
-            console.log('message', payload);
-        });
-        window.Echo.connector.pusher.connection.bind('unavailable', (payload) => {
-            console.log('unavailable', payload);
-        });
-
-        window.Echo.connector.pusher.connection.bind('failed', (payload) => {
-            console.log('failed', payload);
-        });
-
-        Echo.connector.pusher.connection.bind('connected', (socketId) => {
-            console.log(socketId, 'connected')
-        });
-
-        Echo.connector.pusher.connection.bind('disconnected', () => {
-            console.log('disconnected')
-        });
     },
     beforeUnmount() {
     },
