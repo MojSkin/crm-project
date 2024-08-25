@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('form_fields', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('form_id');
-            $table->string('name', 100);
             $table->string('title', 100);
             $table->string('hint', 250)->nullable();
             $table->string('description', 250)->nullable();
@@ -29,7 +28,7 @@ return new class extends Migration
             $table->integer('steps')->nullable();
             $table->mediumText('options')->nullable();
             $table->tinyText('validator')->nullable();
-            $table->tinyInteger('tab_index')->default(0);
+            $table->tinyInteger('tab_order')->default(0);
             $table->tinyInteger('col_mobile')->default(12);
             $table->tinyInteger('col_tablet')->default(12);
             $table->tinyInteger('col_desktop')->default(12);
